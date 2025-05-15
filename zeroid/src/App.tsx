@@ -87,7 +87,7 @@ const App: React.FC = () => {
               resources={[
                 {
                   name: "dashboard", // Unique name for the dashboard
-                  list: DashboardPage, // Component reference
+                  list: "/", // Component reference
                   meta: {
                     label: t("dashboard.title", "Dashboard"),
                     icon: <DashboardIcon />,
