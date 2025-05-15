@@ -7,66 +7,50 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
 import Paper from "@mui/material/Paper";
 import {
-  ProductListTable,
-  ProductListCard,
+  BusinessListTable,
+  BusinessListCard,
   RefineListView,
-  ProductDrawerForm,
 } from "../../components";
 import { ICategory, ICandidate } from "../../interfaces";
 import { resources } from "../../utility";
-
+import { CandidateListCard, CandidateListTable } from "../../components/candidate";
 type View = "table" | "card";
 
-export const ProductList = ({ children }: PropsWithChildren) => {
-  const { dataGridProps } = useDataGrid<ICandidate>({
-    resource: resources.candidates,
-    pagination: {
-      pageSize: 100,
-    },
-  });
-
-  const { filterMode, filterModel, onFilterModelChange, ...restDataGridProps } =
-    dataGridProps;
-
+export const CandidatesList = ({ children }: PropsWithChildren) => {
   const [view, setView] = useState<View>(() => {
-    const view = localStorage.getItem("product-view") as View;
+    const view = localStorage.getItem("business-view") as View;
     return view || "table";
   });
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const go = useGo();
   const { replace } = useNavigation();
   const t = useTranslate();
 
   const dataGrid = useDataGrid<ICandidate>({
     resource: resources.candidates,
+    pagination: {
+      pageSize: 12,
+    },
   });
 
-  // const { data: categoriesData } = useList<ICategory>({
-  //   resource: resources.categories,
-  //   pagination: {
-  //     mode: "off",
-  //   },
-  // });
-  // const categories = categoriesData?.data || [];
+  const { data: categoriesData } = useList<ICategory>({
+    resource: resources.candidates,
+    pagination: {
+      mode: "off",
+    },
+  });
+  const categories = categoriesData?.data || [];
 
   const handleViewChange = (
     _e: React.MouseEvent<HTMLElement>,
     newView: View
   ) => {
+    // remove query params (pagination, filters, etc.) when changing view
     replace("");
+
     setView(newView);
-    localStorage.setItem("product-view", newView);
+    localStorage.setItem("business-view", newView);
   };
-
-  const handleDrawerOpen = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setIsDrawerOpen(false);
-  };
-
   return (
     <>
       <RefineListView
@@ -76,7 +60,7 @@ export const ProductList = ({ children }: PropsWithChildren) => {
             value={view}
             exclusive
             onChange={handleViewChange}
-            aria-label="view toggle"
+            aria-label="text alignment"
           >
             <ToggleButton value="table" aria-label="table view" size="small">
               <ListOutlinedIcon />
@@ -90,7 +74,14 @@ export const ProductList = ({ children }: PropsWithChildren) => {
             key="create"
             size="medium"
             sx={{ height: "40px" }}
-            onClick={handleDrawerOpen}
+            onClick={() => {
+              go({
+                to: {
+                  action: "create",
+                  resource: resources.candidates,
+                },
+              });
+            }}
           >
             {t("buttons.add")}
           </CreateButton>,
@@ -98,22 +89,13 @@ export const ProductList = ({ children }: PropsWithChildren) => {
       >
         {view === "table" && (
           <Paper>
-            {/* <ProductListTable
-              dataGrid={dataGridProps}
-              categories={categories}
-            /> */}
+            <CandidateListTable {...dataGrid} categories={categories} />
           </Paper>
         )}
-        {view === "card" && <ProductListCard {...dataGrid} />}
+        {view === "card" && (
+          <CandidateListCard {...dataGrid} categories={categories} />
+        )}
       </RefineListView>
-      {isDrawerOpen && (
-        <ProductDrawerForm
-          action="create"
-          open={isDrawerOpen}
-          onClose={handleDrawerClose}
-          // isDrawerOpen={isDrawerOpen}
-        />
-      )}
       {children}
     </>
   );

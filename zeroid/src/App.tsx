@@ -25,7 +25,7 @@ import { DashboardPage } from "./pages/dashboard";
 import { AuthPage } from "./pages/auth";
 import {
   CandidatesCreate,
-  ProductList, // Assuming this is CandidatesList
+  CandidatesList, // Assuming this is CandidatesList
   ProductShow,  // Assuming this is CandidatesShow
 } from "./pages/candidates";
 import { ColorModeContextProvider } from "./contexts";
@@ -154,7 +154,7 @@ const App: React.FC = () => {
                     </Route>
 
                     <Route path="/candidates">
-                      <Route index element={<ProductList />} />
+                      <Route index element={<CandidatesList />} />
                       <Route path="create" element={<CandidatesCreate />} />
                       {/* <Route path=":id/edit" element={<CandidatesEdit />} /> */}
                       <Route path=":id/show" element={<ProductShow />} />
