@@ -4,8 +4,7 @@ from appwrite.exception import AppwriteException
 def main(context):
 
     try:
-        context.log(dir(context.req))
-        body = context.req.bodyJson or {}
+        body = context.req.body_json or {}
         blob_text = body.get("blob_text", "")
 
         context.log(f"Received blob_text: {blob_text}")
