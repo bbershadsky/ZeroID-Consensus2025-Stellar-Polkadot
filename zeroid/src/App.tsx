@@ -32,8 +32,8 @@ import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { EmployersList, EmployersCreate, BusinessShow as EmployerShow } from "./pages/employers"; // BusinessShow was already imported
 import { useTranslation } from "react-i18next";
-import { accessControlProvider } from "./utils";
-import { authProvider } from "./auth-provider";
+import { accessControlProvider } from "./utils"; // Assuming this exists and is correctly set up
+import { authProvider } from "./auth-provider"; // Assuming this exists and is correctly set up
 
 interface I18nProviderProps {
   translate: (key: string, params?: Record<string, any>) => string;
@@ -99,6 +99,7 @@ const App: React.FC = () => {
                   meta: {
                     label: t("employers.employers", "Employers"),
                     icon: <PeopleIcon />, // Example icon
+                    // canDelete: true, // Example, if you want delete action
                     // path: "/employers" // Optional
                   },
                 },
@@ -111,6 +112,7 @@ const App: React.FC = () => {
                   meta: {
                     label: t("candidates.candidates", "Candidates"),
                     icon: <AccountBoxIcon />, // Example icon (Inventory can also be used)
+                    // canDelete: true, // Example
                     // path: "/candidates" // Optional
                   },
                 },
@@ -121,11 +123,15 @@ const App: React.FC = () => {
                   {/* Protected Routes (Dashboard, Employers, Candidates) */}
                   <Route
                     element={
-                      <Authenticated fallback={<CatchAllNavigate to="/login" />}> 
+                      <Authenticated
+                        key="protected-routes" // ADDED KEY HERE
+                        fallback={<CatchAllNavigate to="/login" />}
+                      >
                         <ThemedLayoutV2
                           Header={Header}
-                          Sider={() => (
+                          Sider={(props) => ( // Added props here for Title if needed, or remove if not used
                             <ThemedSiderV2
+                              Title={Title} // Pass Title component to Sider
                               render={({ items, logout, collapsed }) => {
                                 return (
                                   <>
@@ -158,10 +164,19 @@ const App: React.FC = () => {
                   {/* Auth Pages (Unprotected) */}
                   <Route
                     element={
+                      // This Authenticated block is for redirecting if already logged in
+                      // or showing Outlet (login/register pages) if not.
                       <Authenticated
                         key="auth-pages"
-                        fallback={<Outlet />}
-                      />
+                        fallback={<Outlet />} // If not authenticated, show AuthPage routes
+                      // You might want to redirect if already authenticated:
+                      // redirectOnAuthenticated="/" // Or your dashboard path
+                      >
+                        {/* If authenticated, you might want to redirect away from auth pages */}
+                        {/* <NavigateToResource resource="dashboard" /> */}
+                        {/* Or simply render null or a redirect component */}
+                        <CatchAllNavigate to="/" /> {/* Example: redirect to dashboard if authenticated and tries to access auth pages */}
+                      </Authenticated>
                     }
                   >
                     <Route

@@ -65,6 +65,15 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
     }
   }, [searchTerm, data]);
 
+  const handleNavigateToShow = (employerId: string) => {
+    // Construct the path string directly
+    const path = `/employers/${employerId}/show`;
+    go({
+      to: path,
+      type: "push", // Or "replace" if you prefer
+    });
+  };
+
   return (
     <TableContainer component={Paper}>
       <TextField
@@ -100,17 +109,8 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
           <TableBody>
             {filteredData?.map((business) => (
               <TableRow key={business.id} style={{ cursor: "pointer" }}>
-                <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.employers,
-                        id: business.id!,
-                      },
-                    });
-                  }}
-                >
+                <TableCell onClick={() => handleNavigateToShow(business.id!)}>
+
                   <Avatar
                     variant="rounded"
                     sx={{}}
@@ -119,15 +119,7 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
                   />
                 </TableCell>
                 <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.employers,
-                        id: business.id!,
-                      },
-                    });
-                  }}
+                  onClick={() => handleNavigateToShow(business.id!)}
                 >
                   {business.name}
                 </TableCell>

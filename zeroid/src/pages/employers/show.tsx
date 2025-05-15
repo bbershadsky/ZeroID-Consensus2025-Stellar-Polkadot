@@ -20,15 +20,34 @@ import { useState } from "react";
 import CurrencySelector from "../../components/currency-selector";
 import { BusinessLanguagesDisplay } from "../../components/languages-chip";
 import PaymentMethodsList from "../../components/payment-methods-list";
+import { useParams } from "react-router-dom"; // <--- IMPORT useParams
+import { resources } from "../../utility"; // <--- IMPORT your resources object
 
 export const BusinessShow = () => {
-  const { queryResult } = useShow<IEmployer>({});
-  const { data: businessData, isLoading: businessLoading } = queryResult;
+  const { id } = useParams<{ id: string }>(); // <--- GET id FROM URL PARAMS
+
+  const { queryResult } = useShow<IEmployer>({
+    resource: resources.employers, // <--- EXPLICITLY PROVIDE THE RESOURCE NAME
+    id: id,                        // <--- EXPLICITLY PROVIDE THE ID
+  });
+  const { data: businessData, isLoading: businessLoading, error } = queryResult; // <--- ADD error for debugging
   const business = businessData?.data;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { data: user } = useGetIdentity<IIdentity | null>();
+
+  // For debugging:
+  console.log("BusinessShow - Resource:", resources.employers);
+  console.log("BusinessShow - ID from useParams:", id);
+  console.log("BusinessShow - Query Result:", queryResult);
+  if (error) {
+    console.error("BusinessShow - Error fetching data:", error);
+    // Optionally display an error message to the user
+    // return <Typography color="error">Error loading business data: {error.message}</Typography>;
+  }
+
+
   if (businessLoading) {
     return (
       <Grid container spacing={2}>
@@ -58,7 +77,6 @@ export const BusinessShow = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          {/* Optionally show skeletons for product list or other content */}
           <Skeleton variant="rectangular" height={300} animation="wave" />
           <Skeleton variant="text" height={30} animation="wave" width="90%" />
           <Skeleton variant="text" height={30} animation="wave" width="90%" />
@@ -67,30 +85,27 @@ export const BusinessShow = () => {
       </Grid>
     );
   }
+
+  if (!business && !businessLoading) {
+    // Handle case where data is not found after loading finishes
+    return <Typography>Business not found.</Typography>;
+  }
+
   const isLoggedIn = !!user;
 
   return (
     <Show
       isLoading={businessLoading}
-      canDelete={isLoggedIn && user?.$id == business?.userID}
-      canEdit={isLoggedIn && user?.$id == business?.userID}
+      canDelete={isLoggedIn && user?.$id === business?.userID}
+      canEdit={isLoggedIn && user?.$id === business?.userID}
       headerButtons={({
-        //   deleteButtonProps,
-        //   editButtonProps,
         listButtonProps,
         refreshButtonProps,
       }) => (
         <>
-          {/* <Button type="primary">Custom Button</Button>*/}
           {listButtonProps && (
-            <ListButton {...listButtonProps} meta={{ foo: "bar" }} />
+            <ListButton {...listButtonProps} />
           )}
-          {/* {editButtonProps && (
-            <EditButton {...editButtonProps} meta={{ foo: "bar" }} />
-          )}
-          {deleteButtonProps && (
-            <DeleteButton {...deleteButtonProps} meta={{ foo: "bar" }} />
-          )} */}
           <RefreshButton {...refreshButtonProps} hideText={true} />
         </>
       )}
@@ -120,21 +135,21 @@ export const BusinessShow = () => {
                       top: "50%",
                       left: "50%",
                       transform: "translate(-50%, -50%)",
-                      width: "auto", // Auto width for responsiveness
-                      maxWidth: "98%", // Slightly less than full screen width
-                      maxHeight: "98%", // Slightly less than full screen height
-                      overflow: "auto", // Adds scroll on overflow
-                      outline: "none", // Removes the focus outline
+                      width: "auto",
+                      maxWidth: "98%",
+                      maxHeight: "98%",
+                      overflow: "auto",
+                      outline: "none",
                     }}
                   >
                     <img
                       src={business.imageURL}
                       alt="Business"
                       style={{
-                        maxWidth: "100%", // Ensures the image is not wider than the box
-                        maxHeight: "100%", // Ensures the image is not taller than the box
-                        display: "block", // Removes extra space below the image
-                        objectFit: "contain", // Ensures the aspect ratio is maintained
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        display: "block",
+                        objectFit: "contain",
                       }}
                     />
                   </Box>
@@ -187,7 +202,8 @@ export const BusinessShow = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <ProductListBusiness businessId={business?.id} />
+          {/* Ensure business.id is the Appwrite document $id */}
+          <ProductListBusiness businessId={business?.$id} /> {/* Changed to business?.$id */}
         </Grid>
       </Grid>
     </Show>
