@@ -40,7 +40,7 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
   });
   const [inputValue, setInputValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState<IEmployer[]>([]);
+  const [filteredData, setFilteredData] = useState<ICandidate[]>([]);
 
   // Debouncing function that updates the search term
   const debouncedUpdateSearchTerm = useCallback(
@@ -57,7 +57,7 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
   useEffect(() => {
     if (data && data.data) {
       const filteredResults = data.data.filter(
-        (item): item is IEmployer =>
+        (item): item is ICandidate =>
           item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -96,111 +96,36 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>{t("businesses.fields.name")}</TableCell>
-              <TableCell>{t("businesses.fields.description")}</TableCell>
-              {/* <TableCell>{t("businesses.fields.languages")}</TableCell> */}
-              {/* <TableCell>@</TableCell> */}
-              {/* <TableCell>{t("businesses.fields.phone")}</TableCell> */}
-              {/* <TableCell>{t("businesses.fields.currency")}</TableCell> */}
-              {/* <TableCell></TableCell> */}
-              {/* <TableCell></TableCell> */}
+              <TableCell>{t("candidates.fields.name")}</TableCell>
+              <TableCell>{t("candidates.fields.email")}</TableCell>
+              <TableCell>{t("candidates.fields.isVerified")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {filteredData?.map((candidate) => (
               <TableRow key={candidate.id} style={{ cursor: "pointer" }}>
+                <TableCell></TableCell>
                 <TableCell onClick={() => handleNavigateToShow(candidate.id!)}>
-
-                  <Avatar
-                    variant="rounded"
-                    sx={{}}
-                    src={candidate.imageURL}
-                    alt={candidate.name}
-                  />
-                </TableCell>
-                <TableCell onClick={() => handleNavigateToShow(candidate.id!)}>
-
                   {candidate.name}
                 </TableCell>
-                <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.candidates,
-                        id: candidate.id!,
-                      },
-                    });
-                  }}
-                >
-                  {candidate.description}
-                </TableCell>
-                <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.candidates,
-                        id: candidate.id!,
-                      },
-                    });
-                  }}
-                >
-                  <BusinessLanguagesDisplay
-                    showAvatarGroup={true}
-                    languages={candidate?.languages}
-                  />
-
-                  {/* <LanguageDisplay currentLanguage={candidate.language} /> */}
-                </TableCell>
                 <TableCell>
-                  {candidate.email && (
+                {candidate.email && (
                     <Tooltip title="Email">
                       <IconButton
-                        size="small"
-                        component="a" // Use 'a' as the root component
-                        href={`mailto:${candidate.email}`} // Set href to dial the phone
-                        aria-label={`Email ${candidate.email}`}
+                          size="small"
+                          component="a" // Use 'a' as the root component
+                          href={`mailto:${candidate.email}`} // Set href to dial the phone
+                          aria-label={`Email ${candidate.email}`}
                       >
                         <EmailIcon />
                       </IconButton>
                     </Tooltip>
-                  )}
+                ) }
                 </TableCell>
-                <TableCell>
-                  {candidate.phone && (
-                    <Tooltip title="Call">
-                      <IconButton
-                        size="small"
-                        component="a" // Use 'a' as the root component
-                        href={`tel:${candidate.phone}`} // Set href to dial the phone
-                        aria-label={`Call ${candidate.phone}`}
-                      >
-                        <PhoneIcon />
-                      </IconButton>
-                    </Tooltip>
-                  )}
+                <TableCell
+                    onClick={() => handleNavigateToShow(candidate.id!)}>
+                  {candidate.is_verified ? "Verified": "Not Verified"}
                 </TableCell>
-                <TableCell align="center">
-                  <CurrencySelector currentCurrency={candidate?.currency} />
-                </TableCell>
-                {/* {business?.userID && (
-                  <TableCell>
-                    <IconButton
-                      onClick={() => {
-                        go({
-                          to: {
-                            action: "edit",
-                            resource: resources.candidates,
-                            id: business.id!,
-                          },
-                        });
-                      }}
-                    >
-                      <Edit />
-                    </IconButton>
-                  </TableCell>
-                )} */}
               </TableRow>
             ))}
           </TableBody>

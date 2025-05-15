@@ -362,5 +362,12 @@
     "required": {
       "field": "This field is required"
     }
+  },
+  "candidates": {
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "isVerified": "Verified"
+    }
   }
 }

@@ -51,19 +51,17 @@ interface NavigationProps {
 export interface ICandidate {
   $id?: string;
   id?: string;
-  productName?: string;
   isActive?: boolean;
-  productDescription?: string;
-  productSku?: string;
-  images?: (IFile & { thumbnailUrl?: string })[];
   createdAt?: string;
-  productPrice?: string;
-  productCategory?: ICategory;
-  userID?: string;
-  businessID?: string;
-  productQuantity?: number;
-  stock?: number;
-  productImageURL?: string; // First one
+  name?: string;
+  email: string;
+  resume_file_id: string;
+  resume_file_hash: string;
+  uploaded_at: string;
+  is_verified: boolean;
+  verification_status: string;
+  first_verified_at: string;
+  verification_notes: string;
 }
 import { BaseRecord } from "@refinedev/core";
 
