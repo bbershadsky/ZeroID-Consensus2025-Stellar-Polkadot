@@ -1,1 +1,3 @@
 appwrite
+substrate-interface
+python-dotenv
