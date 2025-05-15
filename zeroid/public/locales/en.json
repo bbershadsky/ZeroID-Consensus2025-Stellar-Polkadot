@@ -261,40 +261,41 @@
       "deliveryTime": "Delivery Time"
     }
   },
-  "businesses": {
-    "business": "Business",
-    "businesses": "Businesses",
-    "createFirst": "Create a business first to add products",
+  "employers": {
+    "employer": "Employer",
+    "employers": "Employers",
+    "createFirst": "Currently there is no any employers",
     "error": "Error",
     "titles": {
-      "list": "Businesses",
-      "create": "Create Business",
-      "edit": "Edit Business",
+      "list": "Employers",
+      "create": "Create Employer",
+      "edit": "Edit Employer",
       "addPayments": "Add Payments",
       "addPaymentMethod": "Add Payment Method"
     },
     "actions": {
-      "add": "Add Business"
+      "add": "Add Employer"
     },
     "fields": {
       "id": "ID",
       "name": "Name",
-      "nameHelper": "Business name is required",
-      "descriptionHelper": "Business description is required",
-      "description": "Description",
-      "descriptionLabel": "Description (required)",
+      "nameHelper": "Employer name is required",
+      "companyNameHelper": "Company Name is required",
+      "companyName": "Company Name",
+      "companyLabel": "Company Name (required)",
+      "primaryEmail": "Primary Email",
       "phone": "Phone",
-      "currency": "Currency",
+      "verification_email_1": "Verification Email #1",
+      "verification_email_2": "Verification Email #2",
+      "verification_email_3": "Verification Email #3",
       "phoneHelper": "Phone number is required",
-      "email": "Email",
-      "emailHelper": "Email is required",
       "uploadedFile": "Uploaded File",
       "isActive": {
         "label": "Status",
         "true": "Available",
         "false": "Unavailable"
       },
-      "searchPlaceholder": "Search by name or description...",
+      "searchPlaceholder": "Search by name or company...",
       "price": "Price",
       "category": "Category",
       "language": "Language",

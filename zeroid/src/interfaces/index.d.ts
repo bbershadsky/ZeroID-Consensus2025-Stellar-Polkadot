@@ -1,21 +1,15 @@
 export interface IEmployer {
   $id: string;
   id: string;
-  businessID: string;
-  storeID: string;
   userID: string;
   name: string;
-  description: string;
+  company_name: string;
   email?: string;
-  language: string;
-  languages: string[];
-  currency: string;
   imageURL: string;
-  QRImageURL2: string;
-  isPublic: boolean;
-  phone?: string;
-  categoryId: string;
-  payments: string[];
+  primary_email: string;
+  verificationEmail1?: string;
+  verificationEmail2?: string;
+  verificationEmail3?: string;
 }
 
 // export interface IOrder {

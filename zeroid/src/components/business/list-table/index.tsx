@@ -87,26 +87,21 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>{t("businesses.fields.name")}</TableCell>
-              <TableCell>{t("businesses.fields.description")}</TableCell>
-              <TableCell>{t("businesses.fields.languages")}</TableCell>
-              <TableCell>@</TableCell>
-              <TableCell>{t("businesses.fields.phone")}</TableCell>
-              <TableCell>{t("businesses.fields.currency")}</TableCell>
-              {/* <TableCell></TableCell> */}
-              {/* <TableCell></TableCell> */}
+              <TableCell>{t("employers.fields.name")}</TableCell>
+              <TableCell>{t("employers.fields.companyName")}</TableCell>
+              <TableCell>{t("employers.fields.primaryEmail")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData?.map((business) => (
-              <TableRow key={business.id} style={{ cursor: "pointer" }}>
+            {filteredData?.map((employer) => (
+              <TableRow key={employer.id} style={{ cursor: "pointer" }}>
                 <TableCell
                   onClick={() => {
                     go({
                       to: {
                         action: "show",
                         resource: resources.employers,
-                        id: business.id!,
+                        id: employer.id!,
                       },
                     });
                   }}
@@ -114,8 +109,8 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
                   <Avatar
                     variant="rounded"
                     sx={{}}
-                    src={business.imageURL}
-                    alt={business.name}
+                    src={employer.imageURL}
+                    alt={employer.name}
                   />
                 </TableCell>
                 <TableCell
@@ -124,12 +119,12 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
                       to: {
                         action: "show",
                         resource: resources.employers,
-                        id: business.id!,
+                        id: employer.id!,
                       },
                     });
                   }}
                 >
-                  {business.name}
+                  {employer.name}
                 </TableCell>
                 <TableCell
                   onClick={() => {
@@ -137,79 +132,27 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
                       to: {
                         action: "show",
                         resource: resources.employers,
-                        id: business.id!,
+                        id: employer.id!,
                       },
                     });
                   }}
                 >
-                  {business.description}
-                </TableCell>
-                <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.employers,
-                        id: business.id!,
-                      },
-                    });
-                  }}
-                >
-                  <BusinessLanguagesDisplay
-                    showAvatarGroup={true}
-                    languages={business?.languages}
-                  />
-
-                  {/* <LanguageDisplay currentLanguage={business.language} /> */}
+                  {employer.company_name}
                 </TableCell>
                 <TableCell>
-                  {business.email && (
+                  {employer.primary_email && (
                     <Tooltip title="Email">
                       <IconButton
                         size="small"
                         component="a" // Use 'a' as the root component
-                        href={`mailto:${business.email}`} // Set href to dial the phone
-                        aria-label={`Email ${business.email}`}
+                        href={`mailto:${employer.primary_email}`} // Set href to dial the phone
+                        aria-label={`Email ${employer.primary_email}`}
                       >
                         <EmailIcon />
                       </IconButton>
                     </Tooltip>
                   )}
                 </TableCell>
-                <TableCell>
-                  {business.phone && (
-                    <Tooltip title="Call">
-                      <IconButton
-                        size="small"
-                        component="a" // Use 'a' as the root component
-                        href={`tel:${business.phone}`} // Set href to dial the phone
-                        aria-label={`Call ${business.phone}`}
-                      >
-                        <PhoneIcon />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  <CurrencySelector currentCurrency={business?.currency} />
-                </TableCell>
-                {/* {business?.userID && (
-                  <TableCell>
-                    <IconButton
-                      onClick={() => {
-                        go({
-                          to: {
-                            action: "edit",
-                            resource: resources.employers,
-                            id: business.id!,
-                          },
-                        });
-                      }}
-                    >
-                      <Edit />
-                    </IconButton>
-                  </TableCell>
-                )} */}
               </TableRow>
             ))}
           </TableBody>
