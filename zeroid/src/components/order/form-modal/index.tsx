@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -19,27 +19,27 @@ import SendIcon from "@mui/icons-material/Send";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   useTranslate,
-  useCreate,
+  useUpdate, // Changed from useCreate
   HttpError,
   useGetIdentity,
   BaseRecord,
+  useNotification, // For user feedback
 } from "@refinedev/core";
-import { IJobHistory, IIdentity } from "../../../interfaces"; // Ensure IJobHistory is correctly defined
-import { resources } from "../../../utility"; // Ensure resources.verificationRequests is defined
+import { IJobHistory, IIdentity } from "../../../interfaces"; // Ensure IJobHistory includes new verification fields
+import { resources } from "../../../utility";
 
-// Interface for the verification request form
+// Interface for the verification request form values
 interface VerificationFormValues {
   verifierEmail: string;
-  // You might add a custom message field if needed
-  // customMessage?: string;
+  customMessage?: string;
 }
 
 // Props for the modal
 interface JobVerificationRequestModalProps {
   open: boolean;
   onClose: () => void;
-  jobHistoryItem: IJobHistory & BaseRecord; // The specific job history item to verify
-  candidateId: string; // The ID of the candidate to whom this job history belongs
+  jobHistoryItem: (IJobHistory & BaseRecord) | null; // The specific job history item to verify
+  candidateId: string; // The ID of the candidate (owner of the job history)
   candidateName?: string; // Optional: Candidate's name for context
 }
 
@@ -47,64 +47,93 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
   open,
   onClose,
   jobHistoryItem,
-  candidateId,
+  candidateId, // This prop might be redundant if jobHistoryItem already contains candidate_id
   candidateName,
 }) => {
   const t = useTranslate();
-  const { data: user } = useGetIdentity<IIdentity | null>(); // Current logged-in user
+  const { data: user } = useGetIdentity<IIdentity | null>();
+  const { open: openNotification } = useNotification();
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting: isFormSubmitting },
   } = useForm<VerificationFormValues>({
     defaultValues: {
-      verifierEmail: "",
+      verifierEmail: jobHistoryItem?.verifier_email || "", // Pre-fill if attempting to resend/update
+      customMessage: jobHistoryItem?.verification_message || "",
     },
   });
 
-  const { mutate: createVerificationRequest, isLoading: isCreateLoading } =
-    useCreate<BaseRecord>(); // Using BaseRecord as a generic for the verification request payload
+  // Use the useUpdate hook to update the job history item
+  const { mutate: updateJobHistory, isLoading: isUpdateLoading } =
+    useUpdate<IJobHistory>(); // Specify IJobHistory for type safety
+
+  // Reset form when jobHistoryItem changes or modal opens/closes
+  useEffect(() => {
+    if (open && jobHistoryItem) {
+      reset({
+        verifierEmail: jobHistoryItem.verifier_email || "",
+        customMessage: jobHistoryItem.verification_message || "",
+      });
+    } else if (!open) {
+      reset({ verifierEmail: "", customMessage: "" }); // Clear form on close
+    }
+  }, [open, jobHistoryItem, reset]);
 
   const onSubmit: SubmitHandler<VerificationFormValues> = async (data) => {
-    if (!jobHistoryItem?.$id) {
+    if (!jobHistoryItem?.id) { // Use .id as BaseRecord provides it (mapped from $id)
       console.error("Job History ID is missing.");
-      // Optionally, show a notification to the user
+      openNotification?.({
+        type: "error",
+        message: t("verificationRequests.notifications.missingJobIdError", "Job History ID is missing."),
+        description: t("common.errors.tryAgain", "Please try again or contact support."),
+      });
       return;
     }
 
-    createVerificationRequest(
+    updateJobHistory(
       {
-        resource: resources.jobHistory, // IMPORTANT: Define this resource in your utility.ts and App.tsx
+        resource: resources.jobHistory, // Target the jobHistory collection for update
+        id: jobHistoryItem.id,         // ID of the job history record to update
         values: {
-          jobHistory_id: jobHistoryItem.$id, // Link to the job history item
-          candidate_id: candidateId, // Link to the candidate
+          // Fields to update on the jobHistoryItem:
           verifier_email: data.verifierEmail,
-          status: "PENDING_VERIFICATION", // Initial status
-          requested_by_user_id: user?.$id, // ID of the user who initiated the request (optional)
-          job_title: jobHistoryItem.job_title, // For context in the verification request record
-          company_name: jobHistoryItem.company_name, // For context
-          // custom_message: data.customMessage, // If you add a custom message field
-          requested_at: new Date().toISOString(),
+          verification_message: data.customMessage,
+          verification_status: "VERIFICATION_SENT", // Update status
+          verification_requested_by: user?.$id,     // Track who requested
+          verification_requested_at: new Date().toISOString(),
+          // Ensure other existing fields of jobHistoryItem are not accidentally overwritten
+          // by passing them if your backend expects full objects for updates,
+          // or ensure your backend handles partial updates.
+          // Refine's Appwrite data provider typically handles partial updates.
         },
       },
       {
         onError: (error: HttpError) => {
-          console.error("Error creating verification request:", error);
-          // Handle error notification, e.g., using useNotification
+          console.error("Error updating job history for verification:", error);
+          openNotification?.({
+            type: "error",
+            message: t("verificationRequests.notifications.updateError", "Failed to send verification request."),
+            description: error.message || t("common.errors.tryAgain", "Please try again."),
+          });
         },
         onSuccess: () => {
-          reset();
+          // The console.log for blockchain is removed as it's out of scope here.
+          // If blockchain interaction is needed, it should be a separate, well-defined process.
+          // TODO now we send the email through a webhook
+          openNotification?.({
+            type: "success",
+            message: t("verificationRequests.notifications.success", "Verification request sent successfully!"),
+          });
+          // reset(); // Reset is now handled by useEffect on open/close
           onClose();
-          // Handle success notification
-          // notify({ type: "success", message: t("verificationRequests.notifications.success") });
         },
       }
     );
   };
 
-  // Helper to format dates
   const formatDateDisplay = (date?: string | Date | null): string => {
     if (!date) return "N/A";
     try {
@@ -118,6 +147,8 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
     }
   };
 
+  const isLoading = isFormSubmitting || isUpdateLoading;
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -125,7 +156,7 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
         <IconButton
           aria-label="close"
           onClick={onClose}
-          disabled={isSubmitting || isCreateLoading}
+          disabled={isLoading}
           sx={{ color: (theme) => theme.palette.grey[500] }}
         >
           <CloseIcon />
@@ -133,86 +164,95 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
       </DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent dividers>
-          <Stack spacing={2}>
-            <Typography variant="h6">
-              {t("verificationRequests.jobDetails", "Job Details:")}
+          {!jobHistoryItem ? (
+            <Typography color="error" sx={{ textAlign: 'center', py: 3 }}>
+              {t("verificationRequests.errors.noJobHistorySelected", "No job history item selected or data is invalid.")}
             </Typography>
-            <Box sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-              <Typography variant="subtitle1" gutterBottom>
-                <strong>{t("jobHistory.fields.jobTitle", "Job Title:")}</strong> {jobHistoryItem?.job_title || "N/A"}
+          ) : (
+            <Stack spacing={2}>
+              <Typography variant="h6">
+                {t("verificationRequests.jobDetails", "Job Details to Verify:")}
               </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>{t("jobHistory.fields.companyName", "Company:")}</strong> {jobHistoryItem?.company_name || "N/A"}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>{t("jobHistory.fields.dates", "Dates:")}</strong>{" "}
-                {formatDateDisplay(jobHistoryItem?.start_date)} –{" "}
-                {jobHistoryItem?.is_current_job
-                  ? t("jobHistory.present", "Present")
-                  : formatDateDisplay(jobHistoryItem?.end_date)}
-              </Typography>
-              {jobHistoryItem?.description && (
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxHeight: 100, overflowY: 'auto' }}>
-                  <strong>{t("jobHistory.fields.description", "Description:")}</strong> {jobHistoryItem.description}
+              <Box sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'action.hover' }}>
+                <Typography variant="subtitle1" gutterBottom>
+                  <strong>{t("jobHistory.fields.jobTitle", "Job Title:")}</strong> {jobHistoryItem.job_title || "N/A"}
+                </Typography>
+                {/* Displaying jobHistoryItem.id for debugging, can be removed */}
+                {/* <Typography variant="caption" gutterBottom>
+                  <strong>ID:</strong> {jobHistoryItem.id}
+                </Typography> */}
+                <Typography variant="body1" gutterBottom>
+                  <strong>{t("jobHistory.fields.companyName", "Company:")}</strong> {jobHistoryItem.company_name || "N/A"}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>{t("jobHistory.fields.dates", "Dates:")}</strong>{" "}
+                  {formatDateDisplay(jobHistoryItem.start_date)} –{" "}
+                  {jobHistoryItem.is_current_job
+                    ? t("jobHistory.present", "Present")
+                    : formatDateDisplay(jobHistoryItem.end_date)}
+                </Typography>
+                {jobHistoryItem.description && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxHeight: 100, overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
+                    <strong>{t("jobHistory.fields.description", "Description:")}</strong> {jobHistoryItem.description}
+                  </Typography>
+                )}
+              </Box>
+
+              {candidateName && (
+                <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                  {t("verificationRequests.forCandidate", `This experience is part of ${candidateName}'s profile.`)}
                 </Typography>
               )}
-            </Box>
 
-            {candidateName && (
-              <Typography variant="body2" color="text.secondary">
-                {t("verificationRequests.forCandidate", `This request is for candidate: ${candidateName}`)}
-              </Typography>
-            )}
+              <Controller
+                name="verifierEmail"
+                control={control}
+                rules={{
+                  required: t("validation.requiredRule", { field: t("verificationRequests.fields.verifierEmail", "Verifier's Email") }),
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: t("validation.emailRule", "Invalid email address"),
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t("verificationRequests.fields.verifierEmail", "Verifier's Email Address")}
+                    type="email"
+                    variant="outlined"
+                    error={!!errors.verifierEmail}
+                    helperText={errors.verifierEmail?.message}
+                    fullWidth
+                    disabled={isLoading}
+                  />
+                )}
+              />
 
-            <Controller
-              name="verifierEmail"
-              control={control}
-              defaultValue=""
-              rules={{
-                required: t("validation.required", { field: t("verificationRequests.fields.verifierEmail", "Verifier's Email") }),
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: t("validation.email", "Invalid email address"),
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("verificationRequests.fields.verifierEmail", "Verifier's Email Address")}
-                  type="email"
-                  variant="outlined"
-                  error={!!errors.verifierEmail}
-                  helperText={errors.verifierEmail?.message}
-                  fullWidth
-                  disabled={isSubmitting || isCreateLoading}
-                />
-              )}
-            />
-            {/*
-            <Controller
-              name="customMessage"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label={t("verificationRequests.fields.customMessage", "Optional Message")}
-                  variant="outlined"
-                  multiline
-                  rows={3}
-                  fullWidth
-                  disabled={isSubmitting || isCreateLoading}
-                />
-              )}
-            />
-            */}
-            <Alert severity="info" sx={{ mt: 1 }}>
-              {t("verificationRequests.info", "A verification request will be sent to the email address provided. Ensure you have their consent.")}
-            </Alert>
-          </Stack>
+              <Controller
+                name="customMessage"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t("verificationRequests.fields.customMessage", "Optional Message to Verifier")}
+                    variant="outlined"
+                    multiline
+                    rows={3}
+                    fullWidth
+                    disabled={isLoading}
+                    placeholder={t("verificationRequests.placeholders.customMessage", "e.g., Please confirm my role and dates of employment.")}
+                  />
+                )}
+              />
+
+              <Alert severity="info" sx={{ mt: 1 }}>
+                {t("verificationRequests.info", "An email will be sent to the verifier. This action will update the job history item with the request details.")}
+              </Alert>
+            </Stack>
+          )}
         </DialogContent>
         <DialogActions sx={{ p: '16px 24px' }}>
-          <Button onClick={onClose} disabled={isSubmitting || isCreateLoading}>
+          <Button onClick={onClose} disabled={isLoading}>
             {t("buttons.cancel", "Cancel")}
           </Button>
           <Button
@@ -220,11 +260,11 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
             variant="contained"
             color="primary"
             startIcon={<SendIcon />}
-            disabled={isSubmitting || isCreateLoading}
+            disabled={isLoading || !jobHistoryItem}
           >
-            {isSubmitting || isCreateLoading
+            {isLoading
               ? <CircularProgress size={24} color="inherit" />
-              : t("buttons.sendRequest", "Send Request")}
+              : t("buttons.sendRequest", "Send Verification Request")}
           </Button>
         </DialogActions>
       </form>

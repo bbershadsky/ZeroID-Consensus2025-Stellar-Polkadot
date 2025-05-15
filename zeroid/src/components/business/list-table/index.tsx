@@ -65,6 +65,15 @@ export const BusinessListTable = ({ categories, ...dataGridProps }: Props) => {
     }
   }, [searchTerm, data]);
 
+  const handleNavigateToShow = (employerId: string) => {
+    // Construct the path string directly
+    const path = `/employers/${employerId}/show`;
+    go({
+      to: path,
+      type: "push", // Or "replace" if you prefer
+    });
+  };
+
   return (
     <TableContainer component={Paper}>
       <TextField
