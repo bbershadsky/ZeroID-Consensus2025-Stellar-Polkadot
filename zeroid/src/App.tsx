@@ -118,79 +118,69 @@ const App: React.FC = () => {
             >
               <>
                 <Routes>
-                  {/* Routes using ThemedLayoutV2 */}
+                  {/* Protected Routes (Dashboard, Employers, Candidates) */}
                   <Route
                     element={
-                      <ThemedLayoutV2
-                        Header={Header}
-                        Sider={() => (
-                          <ThemedSiderV2
-                            Title={Title} // You can also pass Title to ThemedSiderV2
-                            render={({ items, logout, collapsed }) => (
-                              <>
-                                {items}
-                                {logout}
-                              </>
-                            )}
-                          />
-                        )}
-                      >
-                        <Outlet />
-                      </ThemedLayoutV2>
+                      <Authenticated fallback={<CatchAllNavigate to="/login" />}> 
+                        <ThemedLayoutV2
+                          Header={Header}
+                          Sider={() => (
+                            <ThemedSiderV2
+                              render={({ items, logout, collapsed }) => {
+                                return (
+                                  <>
+                                    {items}
+                                    {logout}
+                                  </>
+                                );
+                              }}
+                            />
+                          )}
+                        >
+                          <Outlet />
+                        </ThemedLayoutV2>
+                      </Authenticated>
                     }
                   >
-                    {/* Unauthenticated accessible or common routes */}
                     <Route index element={<DashboardPage />} />
-
                     <Route path="/employers">
                       <Route index element={<EmployersList />} />
                       <Route path="create" element={<EmployersCreate />} />
-                      {/* <Route path=":id/edit" element={<EmployersEdit />} /> */}
                       <Route path=":id/show" element={<EmployerShow />} />
                     </Route>
-
                     <Route path="/candidates">
                       <Route index element={<CandidatesList />} />
                       <Route path="create" element={<CandidatesCreate />} />
-                      {/* <Route path=":id/edit" element={<CandidatesEdit />} /> */}
                       <Route path=":id/show" element={<CandidateShow />} />
                     </Route>
-
-                    {/* Add other routes that should use ThemedLayoutV2 here */}
-                    {/* If some routes need authentication, they can be nested under an <Authenticated> wrapper */}
-                    {/* Example for authenticated routes within ThemedLayoutV2:
-                    <Route
-                      element={
-                        <Authenticated key="authenticated-main-routes" fallback={<CatchAllNavigate to="/login" />}>
-                          <Outlet />
-                        </Authenticated>
-                      }
-                    >
-                       Place authenticated routes like /profile, /settings here if they use ThemedLayoutV2
-                    </Route>
-                    */}
                   </Route>
 
-                  {/* Routes that don't use ThemedLayoutV2 (e.g., auth pages) */}
+                  {/* Auth Pages (Unprotected) */}
                   <Route
                     element={
                       <Authenticated
                         key="auth-pages"
-                        fallback={<Outlet />} // Allows access to login/register if not authenticated
-                      >
-                        {/* If authenticated, and tries to go to /login, redirect to dashboard */}
-                        <CatchAllNavigate to="/" />
-                      </Authenticated>
+                        fallback={<Outlet />}
+                      />
                     }
                   >
-                    <Route path="/login" element={<AuthPage type="login" />} />
-                    <Route path="/register" element={<AuthPage type="register" />} />
-                    <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
-                    <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
+                    <Route
+                      path="/login"
+                      element={<AuthPage type="login" />}
+                    />
+                    <Route
+                      path="/register"
+                      element={<AuthPage type="register" />}
+                    />
+                    <Route
+                      path="/forgot-password"
+                      element={<AuthPage type="forgotPassword" />}
+                    />
+                    <Route
+                      path="/update-password"
+                      element={<AuthPage type="updatePassword" />}
+                    />
                   </Route>
-
-                  {/* Catch-all for any other unmatched routes (optional) */}
-                  {/* <Route path="*" element={<ErrorComponent />} /> */}
                 </Routes>
                 <Analytics />
               </>
