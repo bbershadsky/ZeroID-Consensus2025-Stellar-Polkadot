@@ -1,0 +1,371 @@
+{
+  "pages": {
+    "login": {
+      "title": "登录到您的帐户",
+      "signin": "登录",
+      "signup": "注册",
+      "divider": "或",
+      "fields": {
+        "email": "电子邮件",
+        "password": "密码"
+      },
+      "errors": {
+        "validEmail": "无效的电子邮件地址"
+      },
+      "buttons": {
+        "submit": "登录",
+        "forgotPassword": "忘记密码？",
+        "noAccount": "没有账户？",
+        "rememberMe": "记住我"
+      }
+    },
+    "forgotPassword": {
+      "title": "忘记密码？",
+      "fields": {
+        "email": "电子邮件"
+      },
+      "errors": {
+        "validEmail": "无效的电子邮件地址"
+      },
+      "buttons": {
+        "submit": "发送重置说明"
+      }
+    },
+    "register": {
+      "title": "注册您的帐户",
+      "fields": {
+        "email": "电子邮件",
+        "password": "密码"
+      },
+      "errors": {
+        "validEmail": "无效的电子邮件地址"
+      },
+      "buttons": {
+        "submit": "注册",
+        "haveAccount": "已有账户？"
+      }
+    },
+    "updatePassword": {
+      "title": "更新密码",
+      "enterPassword": "输入密码",
+      "confirm": "确认",
+      "fields": {
+        "password": "新密码",
+        "confirmPassword": "确认新密码"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "密码不匹配"
+      },
+      "buttons": {
+        "submit": "更新"
+      }
+    },
+    "error": {
+      "info": "您可能忘记将 {{action}} 组件添加到 {{resource}} 资源中。",
+      "404": "抱歉，您访问的页面不存在。",
+      "resource404": "您确定已创建 {{resource}} 资源吗？",
+      "backHome": "返回主页"
+    }
+  },
+  "messages": {
+    "messages": "消息",
+    "myMessages": "我的消息",
+    "newMessage": "新消息",
+    "typeMessage": "输入消息",
+    "searchMessages": "搜索消息",
+    "selectMessage": "从左侧选择一条消息",
+    "noMessages": "无消息",
+    "text": "文本",
+    "user": "用户"
+  },
+  "quotes": {
+    "quotes": "引言",
+    "addQuote": "添加引言",
+    "quote": "引言",
+    "author": "作者",
+    "votes": "投票",
+    "searchPlaceholder": "搜索引言"
+  },
+  "users": {
+    "add": "添加用户",
+    "personal": "个人",
+    "payment": "支付",
+    "name": "姓名",
+    "nameHelper": "我们应该怎么称呼您？",
+    "description": "简介",
+    "descriptionHelper": "您喜欢什么？",
+    "email": "电子邮件",
+    "language": "语言",
+    "address": "地址",
+    "payments": "支付",
+    "profilePhoto": "个人照片",
+    "country": "国家",
+    "phoneNumber": "电话号码",
+    "preferredPaymentMethod": "首选支付方式",
+    "view": "查看或编辑公开资料",
+    "info": "您可以随时点击页面右上角的个人资料来更新您的支付信息"
+  },
+  "lists": {
+    "incomplete": "未完成",
+    "complete": "完成",
+    "delete": "您确定要删除此项目吗？",
+    "confirm": "确认删除",
+    "search": "搜索食品项目"
+  },
+  "languages": {
+    "en": "英语",
+    "zh": "中文（简体）",
+    "ru": "俄语",
+    "it": "意大利语",
+    "fr": "法语",
+    "de": "德语",
+    "hi": "印地语"
+  },
+  "profile": {
+    "myProfile": "我的个人资料设置",
+    "usersProfile": "用户资料",
+    "updatePrefs": "更新偏好",
+    "updateEmail": "更新电子邮件"
+  },
+  "common": {
+    "no-image": "没有可用图像",
+    "business-overview": "业务概述"
+  },
+  "actions": {
+    "list": "列表",
+    "create": "创建",
+    "edit": "编辑",
+    "show": "显示",
+    "delete": "删除",
+    "cancel": "取消"
+  },
+  "recipes": {
+    "recipes": "食谱",
+    "selectRight": "从右侧选择一个食谱",
+    "noRecipes": "未找到食谱",
+    "communityRecipes": "社区食谱",
+    "searchRecipes": "搜索食谱"
+  },
+  "buttons": {
+    "buy": "购买",
+    "add": "添加",
+    "buyAgain": "再次购买",
+    "add-product": "添加产品",
+    "replace-image": "替换图片",
+    "create": "创建",
+    "save": "保存",
+    "logout": "退出",
+    "delete": "删除",
+    "edit": "编辑",
+    "cancel": "取消",
+    "confirm": "您确定吗？",
+    "filter": "筛选",
+    "clear": "清除",
+    "refresh": "刷新",
+    "show": "显示",
+    "undo": "撤销",
+    "import": "导入",
+    "export": "导出",
+    "clone": "克隆",
+    "accept": "接受",
+    "acceptAll": "全部接受",
+    "reject": "拒绝",
+    "rejectAll": "全部拒绝",
+    "nextStep": "下一步",
+    "previousStep": "上一步",
+    "saveChanges": "保存更改",
+    "markPaid": "标记为已支付",
+    "send": "发送"
+  },
+  "loading": "加载中",
+  "table": {
+    "actions": "操作",
+    "inTotal": "总计",
+    "name": "产品名称",
+    "price": "价格",
+    "title": "标题",
+    "description": "描述"
+  },
+  "status": {
+    "enable": "启用",
+    "disable": "禁用"
+  },
+  "warnWhenUnsavedChanges": "您确定要离开吗？您有未保存的更改。",
+  "notifications": {
+    "success": "成功",
+    "error": "错误（状态码：{{statusCode}}）",
+    "undoable": "您有 {{seconds}} 秒时间撤销",
+    "createSuccess": "成功创建 {{resource}}",
+    "createError": "创建 {{resource}} 时出错（状态码：{{statusCode}}）",
+    "deleteSuccess": "成功删除 {{resource}}",
+    "deleteError": "删除 {{resource}} 时出错（状态码：{{statusCode}}）",
+    "editSuccess": "成功编辑 {{resource}}",
+    "editError": "编辑 {{resource}} 时出错（状态码：{{statusCode}}）",
+    "importProgress": "导入中：{{processed}}/{{total}}"
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "total-businesses": "总业务数",
+    "total-products": "总产品数",
+    "total-orders": "总订单数",
+    "total-todos": "总待办事项数",
+    "total-users": "总用户数",
+    "total-quotes": "总引言数",
+    "realtime-stats": "实时统计",
+    "goldenkey-beta": "GoldenKey Beta",
+    "certain-features": "业务和产品搜索可供公众测试",
+    "description": "免费0%佣金多语言全球实时电子商务业务+产品搜索漏斗。试试看吧！"
+  },
+  "enum": {
+    "orderStatuses": {
+      "Pending": "待处理",
+      "Ready": "准备就绪",
+      "On The Way": "在路上",
+      "Delivered": "已送达",
+      "Cancelled": "已取消"
+    }
+  },
+  "orders": {
+    "orders": "订单",
+    "order": "订单",
+    "newOrder": "新订单",
+    "notes": "订单备注",
+    "customerID": "联系电子邮件",
+    "notLoggedIn": "您尚未登录",
+    "enterEmail": "输入您的电子邮件",
+    "titles": {
+      "orderDetails": "订单详情",
+      "deliveryMap": "配送地图",
+      "deliveryDetails": "配送详情",
+      "businessDetails": "业务详情",
+      "products": "产品",
+      "list": "订单",
+      "show": "订单",
+      "send": "发送"
+    },
+    "fields": {
+      "message": "输入消息...",
+      "payment": "支付",
+      "paymentUnpaid": "未支付",
+      "paymentPaid": "已支付",
+      "paymentURL": "支付二维码",
+      "updatedAt": "更新于",
+      "orderNumber": "订单编号",
+      "orderID": "订单ID",
+      "status": "状态",
+      "orderStatus": "状态",
+      "store": "商店",
+      "user": "用户",
+      "products": "产品",
+      "product": "产品",
+      "createdAt": "创建时间",
+      "amount": "金额",
+      "itemsAmount": "{{amount}} 件商品",
+      "order": "订单",
+      "customer": "客户",
+      "phone": "电话",
+      "deliveryTime": "配送时间"
+    }
+  },
+  "businesses": {
+    "business": "业务",
+    "businesses": "业务",
+    "createFirst": "先创建业务以添加产品",
+    "error": "错误",
+    "titles": {
+      "list": "业务",
+      "create": "创建业务",
+      "edit": "编辑业务",
+      "addPayments": "添加支付",
+      "addPaymentMethod": "添加支付方式"
+    },
+    "actions": {
+      "add": "添加业务"
+    },
+    "fields": {
+      "id": "ID",
+      "name": "名称",
+      "nameHelper": "业务名称是必需的",
+      "descriptionHelper": "业务描述是必需的",
+      "description": "描述",
+      "descriptionLabel": "描述（必需）",
+      "phone": "电话",
+      "currency": "货币",
+      "phoneHelper": "电话号码是必需的",
+      "email": "电子邮件",
+      "emailHelper": "电子邮件是必需的",
+      "uploadedFile": "已上传文件",
+      "isActive": {
+        "label": "状态",
+        "true": "可用",
+        "false": "不可用"
+      },
+      "searchPlaceholder": "按名称或描述搜索...",
+      "price": "价格",
+      "category": "类别",
+      "language": "语言",
+      "languages": "语言",
+      "createdAt": "创建时间",
+      "dropImageHere": "将图像拖到此处",
+      "dragNDrop": "拖放图像或点击选择"
+    },
+    "products": {
+      "products-services": "产品 / 服务",
+      "noneFound": "未找到其他产品。",
+      "products": "产品",
+      "selectedProduct": "选定的产品",
+      "titles": {
+        "list": "产品",
+        "create": "创建产品",
+        "edit": "编辑产品"
+      },
+      "fields": {
+        "id": "ID",
+        "name": "产品名称",
+        "description": "描述",
+        "isActive": {
+          "label": "状态",
+          "true": "可用",
+          "false": "不可用"
+        },
+        "price": "价格",
+        "category": "类别",
+        "createdAt": "创建时间"
+      },
+      "actions": {
+        "add": "添加新产品",
+        "edit": "编辑产品"
+      }
+    },
+    "reviews": {
+      "reviews": "评价",
+      "titles": {
+        "list": "评价"
+      },
+      "fields": {
+        "user": "用户",
+        "orderId": "订单",
+        "review": "评价",
+        "rating": "评分"
+      }
+    },
+    "buttons": {
+      "editProducts": "编辑产品",
+      "addProduct": "添加产品",
+      "outOfStock": "缺货",
+      "edit": "编辑产品"
+    },
+    "storeProducts": "店铺产品",
+    "tagFilterDescription": "使用标签筛选搜索结果",
+    "all": "全部",
+    "productSearch": "产品搜索",
+    "addNewStore": "添加新店铺"
+  },
+  "errors": {
+    "minLength": "最小长度为 {{min}}",
+    "maxLength": "最大长度为 {{max}}",
+    "required": {
+      "field": "这是必填字段"
+    }
+  }
+}

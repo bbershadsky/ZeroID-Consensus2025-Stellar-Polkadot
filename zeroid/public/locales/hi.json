@@ -1,0 +1,371 @@
+{
+  "pages": {
+    "login": {
+      "title": "अपने खाते में साइन इन करें",
+      "signin": "साइन इन करें",
+      "signup": "साइन अप करें",
+      "divider": "या",
+      "fields": {
+        "email": "ईमेल",
+        "password": "पासवर्ड"
+      },
+      "errors": {
+        "validEmail": "अमान्य ईमेल पता"
+      },
+      "buttons": {
+        "submit": "लॉगिन",
+        "forgotPassword": "पासवर्ड भूल गए?",
+        "noAccount": "खाता नहीं है?",
+        "rememberMe": "मुझे याद रखें"
+      }
+    },
+    "forgotPassword": {
+      "title": "क्या आप पासवर्ड भूल गए?",
+      "fields": {
+        "email": "ईमेल"
+      },
+      "errors": {
+        "validEmail": "अमान्य ईमेल पता"
+      },
+      "buttons": {
+        "submit": "रीसेट निर्देश भेजें"
+      }
+    },
+    "register": {
+      "title": "अपने खाते के लिए साइन अप करें",
+      "fields": {
+        "email": "ईमेल",
+        "password": "पासवर्ड"
+      },
+      "errors": {
+        "validEmail": "अमान्य ईमेल पता"
+      },
+      "buttons": {
+        "submit": "रजिस्टर करें",
+        "haveAccount": "क्या आपका खाता है?"
+      }
+    },
+    "updatePassword": {
+      "title": "पासवर्ड अपडेट करें",
+      "enterPassword": "पासवर्ड दर्ज करें",
+      "confirm": "पुष्टि करें",
+      "fields": {
+        "password": "नया पासवर्ड",
+        "confirmPassword": "नए पासवर्ड की पुष्टि करें"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "पासवर्ड मेल नहीं खाते"
+      },
+      "buttons": {
+        "submit": "अपडेट करें"
+      }
+    },
+    "error": {
+      "info": "आपने {{action}} घटक को {{resource}} संसाधन में जोड़ना भूल सकते हैं।",
+      "404": "क्षमा करें, आपके द्वारा देखी गई पृष्ठ मौजूद नहीं है।",
+      "resource404": "क्या आप सुनिश्चित हैं कि आपने {{resource}} संसाधन बनाया है?",
+      "backHome": "होम पर वापस जाएं"
+    }
+  },
+  "messages": {
+    "messages": "संदेश",
+    "myMessages": "मेरे संदेश",
+    "newMessage": "नया संदेश",
+    "typeMessage": "संदेश टाइप करें",
+    "searchMessages": "संदेश खोजें",
+    "selectMessage": "बाईं ओर एक संदेश चुनें",
+    "noMessages": "कोई संदेश नहीं",
+    "text": "पाठ",
+    "user": "उपयोगकर्ता"
+  },
+  "quotes": {
+    "quotes": "उद्धरण",
+    "addQuote": "उद्धरण जोड़ें",
+    "quote": "उद्धरण",
+    "author": "लेखक",
+    "votes": "वोट",
+    "searchPlaceholder": "उद्धरण खोजें"
+  },
+  "users": {
+    "add": "उपयोगकर्ता जोड़ें",
+    "personal": "व्यक्तिगत",
+    "payment": "भुगतान",
+    "name": "नाम",
+    "nameHelper": "हम आपको क्या कहें?",
+    "description": "बायो",
+    "descriptionHelper": "आपको क्या पसंद है?",
+    "email": "ईमेल",
+    "language": "भाषा",
+    "address": "पता",
+    "payments": "भुगतान",
+    "profilePhoto": "प्रोफाइल फोटो",
+    "country": "देश",
+    "phoneNumber": "फोन नंबर",
+    "preferredPaymentMethod": "पसंदीदा भुगतान विधि",
+    "view": "सार्वजनिक प्रोफ़ाइल देखें या संपादित करें",
+    "info": "आप पृष्ठ के ऊपरी दाएँ कोने में अपने प्रोफ़ाइल पर क्लिक करके अपनी भुगतान जानकारी को हमेशा अपडेट कर सकते हैं"
+  },
+  "lists": {
+    "incomplete": "अपूर्ण",
+    "complete": "पूर्ण",
+    "delete": "क्या आप वाकई इस आइटम को हटाना चाहते हैं?",
+    "confirm": "हटाने की पुष्टि करें",
+    "search": "खाद्य वस्तुओं को खोजें"
+  },
+  "languages": {
+    "en": "अंग्रेजी",
+    "zh": "चीनी (सरलीकृत)",
+    "ru": "रूसी",
+    "it": "इतालवी",
+    "fr": "फ्रेंच",
+    "de": "जर्मन",
+    "hi": "हिंदी"
+  },
+  "profile": {
+    "myProfile": "मेरी प्रोफ़ाइल सेटिंग्स",
+    "usersProfile": "उपयोगकर्ता की प्रोफ़ाइल",
+    "updatePrefs": "प्राथमिकताएँ अपडेट करें",
+    "updateEmail": "ईमेल अपडेट करें"
+  },
+  "common": {
+    "no-image": "कोई छवि उपलब्ध नहीं है",
+    "business-overview": "व्यवसाय अवलोकन"
+  },
+  "actions": {
+    "list": "सूची",
+    "create": "बनाएं",
+    "edit": "संपादित करें",
+    "show": "दिखाएं",
+    "delete": "हटाएं",
+    "cancel": "रद्द करें"
+  },
+  "recipes": {
+    "recipes": "व्यंजन विधियाँ",
+    "selectRight": "दाईं ओर एक रेसिपी चुनें",
+    "noRecipes": "कोई व्यंजन विधि नहीं मिली",
+    "communityRecipes": "समुदाय व्यंजन विधियाँ",
+    "searchRecipes": "व्यंजन विधियों को खोजें"
+  },
+  "buttons": {
+    "buy": "खरीदें",
+    "add": "जोड़ें",
+    "buyAgain": "फिर से खरीदें",
+    "add-product": "उत्पाद जोड़ें",
+    "replace-image": "छवि बदलें",
+    "create": "बनाएं",
+    "save": "सहेजें",
+    "logout": "लॉग आउट करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "cancel": "रद्द करें",
+    "confirm": "क्या आप सुनिश्चित हैं?",
+    "filter": "फ़िल्टर",
+    "clear": "हटाएं",
+    "refresh": "ताज़ा करें",
+    "show": "दिखाएं",
+    "undo": "पूर्ववत करें",
+    "import": "आयात करें",
+    "export": "निर्यात करें",
+    "clone": "क्लोन करें",
+    "accept": "स्वीकार करें",
+    "acceptAll": "सभी को स्वीकार करें",
+    "reject": "अस्वीकार करें",
+    "rejectAll": "सभी को अस्वीकार करें",
+    "nextStep": "अगला",
+    "previousStep": "पिछला",
+    "saveChanges": "परिवर्तनों को सहेजें",
+    "markPaid": "भुगतान के रूप में चिह्नित करें",
+    "send": "भेजें"
+  },
+  "loading": "लोड हो रहा है",
+  "table": {
+    "actions": "क्रियाएँ",
+    "inTotal": "कुल में",
+    "name": "उत्पाद का नाम",
+    "price": "मूल्य",
+    "title": "शीर्षक",
+    "description": "विवरण"
+  },
+  "status": {
+    "enable": "सक्रिय करें",
+    "disable": "अक्षम करें"
+  },
+  "warnWhenUnsavedChanges": "क्या आप वाकई छोड़ना चाहते हैं? आपके पास असुरक्षित परिवर्तन हैं।",
+  "notifications": {
+    "success": "सफलतापूर्वक",
+    "error": "त्रुटि (स्थिति कोड: {{statusCode}})",
+    "undoable": "आपके पास {{seconds}} सेकंड हैं पूर्ववत करने के लिए",
+    "createSuccess": "{{resource}} सफलतापूर्वक बनाया गया",
+    "createError": "{{resource}} बनाते समय त्रुटि (स्थिति कोड: {{statusCode}})",
+    "deleteSuccess": "{{resource}} सफलतापूर्वक हटाया गया",
+    "deleteError": "{{resource}} हटाते समय त्रुटि (स्थिति कोड: {{statusCode}})",
+    "editSuccess": "{{resource}} सफलतापूर्वक संपादित किया गया",
+    "editError": "{{resource}} संपादित करते समय त्रुटि (स्थिति कोड: {{statusCode}})",
+    "importProgress": "आयात हो रहा है: {{processed}}/{{total}}"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "total-businesses": "कुल व्यवसाय",
+    "total-products": "कुल उत्पाद",
+    "total-orders": "कुल आदेश",
+    "total-todos": "कुल सूचियाँ",
+    "total-users": "कुल उपयोगकर्ता",
+    "total-quotes": "कुल उद्धरण",
+    "realtime-stats": "रीयलटाइम आँकड़े",
+    "goldenkey-beta": "GoldenKey बीटा",
+    "certain-features": "व्यवसाय और उत्पाद खोज सार्वजनिक परीक्षण के लिए उपलब्ध हैं",
+    "description": "मुफ्त 0% कमीशन बहुभाषी, वैश्विक रीयलटाइम ईकॉमर्स व्यवसाय + उत्पाद खोज फ़नल। इसे आज़माएं!"
+  },
+  "enum": {
+    "orderStatuses": {
+      "Pending": "अपूर्ण",
+      "Ready": "तैयार",
+      "On The Way": "रास्ते में",
+      "Delivered": "प्रदत्त",
+      "Cancelled": "रद्द"
+    }
+  },
+  "orders": {
+    "orders": "आदेश",
+    "order": "आदेश",
+    "newOrder": "नया आदेश",
+    "notes": "आदेश नोट्स",
+    "customerID": "संपर्क ईमेल",
+    "notLoggedIn": "आप लॉग इन नहीं हैं",
+    "enterEmail": "अपना ईमेल दर्ज करें",
+    "titles": {
+      "orderDetails": "आदेश विवरण",
+      "deliveryMap": "वितरण मानचित्र",
+      "deliveryDetails": "वितरण विवरण",
+      "businessDetails": "व्यवसाय विवरण",
+      "products": "उत्पाद",
+      "list": "आदेश",
+      "show": "आदेश",
+      "send": "भेजें"
+    },
+    "fields": {
+      "message": "एक संदेश टाइप करें...",
+      "payment": "भुगतान",
+      "paymentUnpaid": "अवैतनिक",
+      "paymentPaid": "भुगतान किया गया",
+      "paymentURL": "भुगतान क्यूआर",
+      "updatedAt": "अपडेट किया गया",
+      "orderNumber": "आदेश #",
+      "orderID": "आदेश आईडी",
+      "status": "स्थिति",
+      "orderStatus": "स्थिति",
+      "store": "स्टोर",
+      "user": "उपयोगकर्ता",
+      "products": "उत्पाद",
+      "product": "उत्पाद",
+      "createdAt": "निर्माण तिथि",
+      "amount": "मात्रा",
+      "itemsAmount": "{{amount}} वस्तुएं",
+      "order": "आदेश",
+      "customer": "ग्राहक",
+      "phone": "फ़ोन",
+      "deliveryTime": "वितरण समय"
+    }
+  },
+  "businesses": {
+    "business": "व्यवसाय",
+    "businesses": "व्यवसाय",
+    "createFirst": "उत्पाद जोड़ने के लिए पहले एक व्यवसाय बनाएं",
+    "error": "त्रुटि",
+    "titles": {
+      "list": "व्यवसाय",
+      "create": "व्यवसाय बनाएं",
+      "edit": "व्यवसाय संपादित करें",
+      "addPayments": "भुगतान जोड़ें",
+      "addPaymentMethod": "भुगतान विधि जोड़ें"
+    },
+    "actions": {
+      "add": "व्यवसाय जोड़ें"
+    },
+    "fields": {
+      "id": "आईडी",
+      "name": "नाम",
+      "nameHelper": "व्यवसाय का नाम आवश्यक है",
+      "descriptionHelper": "व्यवसाय का विवरण आवश्यक है",
+      "description": "विवरण",
+      "descriptionLabel": "विवरण (आवश्यक)",
+      "phone": "फ़ोन",
+      "currency": "मुद्रा",
+      "phoneHelper": "फोन नंबर आवश्यक है",
+      "email": "ईमेल",
+      "emailHelper": "ईमेल आवश्यक है",
+      "uploadedFile": "अपलोड की गई फ़ाइल",
+      "isActive": {
+        "label": "स्थिति",
+        "true": "उपलब्ध",
+        "false": "अनुपलब्ध"
+      },
+      "searchPlaceholder": "नाम या विवरण द्वारा खोजें...",
+      "price": "मूल्य",
+      "category": "श्रेणी",
+      "language": "भाषा",
+      "languages": "भाषाएँ",
+      "createdAt": "निर्माण तिथि",
+      "dropImageHere": "छवि यहाँ डालें",
+      "dragNDrop": "अपनी छवि खींचें और छोड़ें या चयन करने के लिए टैप करें"
+    },
+    "products": {
+      "products-services": "उत्पाद / सेवाएँ",
+      "noneFound": "कोई अन्य उत्पाद नहीं मिला।",
+      "products": "उत्पाद",
+      "selectedProduct": "चयनित उत्पाद",
+      "titles": {
+        "list": "उत्पाद",
+        "create": "उत्पाद बनाएं",
+        "edit": "उत्पाद संपादित करें"
+      },
+      "fields": {
+        "id": "आईडी",
+        "name": "उत्पाद का नाम",
+        "description": "विवरण",
+        "isActive": {
+          "label": "स्थिति",
+          "true": "उपलब्ध",
+          "false": "अनुपलब्ध"
+        },
+        "price": "मूल्य",
+        "category": "श्रेणी",
+        "createdAt": "निर्माण तिथि"
+      },
+      "actions": {
+        "add": "नया उत्पाद जोड़ें",
+        "edit": "उत्पाद संपादित करें"
+      }
+    },
+    "reviews": {
+      "reviews": "समीक्षाएँ",
+      "titles": {
+        "list": "समीक्षाएँ"
+      },
+      "fields": {
+        "user": "उपयोगकर्ता",
+        "orderId": "आदेश",
+        "review": "समीक्षा",
+        "rating": "रेटिंग"
+      }
+    },
+    "buttons": {
+      "editProducts": "उत्पाद संपादित करें",
+      "addProduct": "उत्पाद जोड़ें",
+      "outOfStock": "स्टॉक समाप्त",
+      "edit": "उत्पाद संपादित करें"
+    },
+    "storeProducts": "स्टोर उत्पाद",
+    "tagFilterDescription": "अपनी खोज को फ़िल्टर करने के लिए टैग का उपयोग करें",
+    "all": "सभी",
+    "productSearch": "उत्पाद खोज",
+    "addNewStore": "नया स्टोर जोड़ें"
+  },
+  "errors": {
+    "minLength": "न्यूनतम लंबाई {{min}} है",
+    "maxLength": "अधिकतम लंबाई {{max}} है",
+    "required": {
+      "field": "यह फ़ील्ड आवश्यक है"
+    }
+  }
+}

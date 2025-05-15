@@ -1,0 +1,371 @@
+{
+  "pages": {
+    "login": {
+      "title": "Accedi al tuo account",
+      "signin": "Accedi",
+      "signup": "Registrati",
+      "divider": "oppure",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Indirizzo email non valido"
+      },
+      "buttons": {
+        "submit": "Login",
+        "forgotPassword": "Hai dimenticato la password?",
+        "noAccount": "Non hai un account?",
+        "rememberMe": "Ricordami"
+      }
+    },
+    "forgotPassword": {
+      "title": "Hai dimenticato la tua password?",
+      "fields": {
+        "email": "Email"
+      },
+      "errors": {
+        "validEmail": "Indirizzo email non valido"
+      },
+      "buttons": {
+        "submit": "Invia istruzioni di reimpostazione"
+      }
+    },
+    "register": {
+      "title": "Iscriviti per il tuo account",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Indirizzo email non valido"
+      },
+      "buttons": {
+        "submit": "Registrati",
+        "haveAccount": "Hai già un account?"
+      }
+    },
+    "updatePassword": {
+      "title": "Aggiorna la password",
+      "enterPassword": "Inserisci Password",
+      "confirm": "Conferma",
+      "fields": {
+        "password": "Nuova Password",
+        "confirmPassword": "Conferma nuova password"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "Le password non corrispondono"
+      },
+      "buttons": {
+        "submit": "Aggiorna"
+      }
+    },
+    "error": {
+      "info": "Potresti aver dimenticato di aggiungere il componente {{action}} alla risorsa {{resource}}.",
+      "404": "Spiacenti, la pagina che hai visitato non esiste.",
+      "resource404": "Sei sicuro di aver creato la risorsa {{resource}}?",
+      "backHome": "Torna alla Home"
+    }
+  },
+  "messages": {
+    "messages": "Messaggi",
+    "myMessages": "I miei messaggi",
+    "newMessage": "Nuovo messaggio",
+    "typeMessage": "Digita un messaggio",
+    "searchMessages": "Cerca messaggi",
+    "selectMessage": "Seleziona un messaggio a sinistra",
+    "noMessages": "Nessun messaggio",
+    "text": "Testo",
+    "user": "Utente"
+  },
+  "quotes": {
+    "quotes": "Citazioni",
+    "addQuote": "Aggiungi citazione",
+    "quote": "Citazione",
+    "author": "Autore",
+    "votes": "Voti",
+    "searchPlaceholder": "Cerca citazioni"
+  },
+  "users": {
+    "add": "Aggiungi Utente",
+    "personal": "Personale",
+    "payment": "Pagamento",
+    "name": "Nome",
+    "nameHelper": "Come dovremmo chiamarti?",
+    "description": "Biografia",
+    "descriptionHelper": "Cosa ti piace?",
+    "email": "Email",
+    "language": "Lingua",
+    "address": "Indirizzo",
+    "payments": "Pagamenti",
+    "profilePhoto": "Foto del Profilo",
+    "country": "Paese",
+    "phoneNumber": "Numero di Telefono",
+    "preferredPaymentMethod": "Metodo di Pagamento Preferito",
+    "view": "Visualizza o modifica il profilo pubblico",
+    "info": "Puoi sempre aggiornare le tue informazioni di pagamento cliccando sul tuo profilo in alto a destra della pagina"
+  },
+  "lists": {
+    "incomplete": "Incompleto",
+    "complete": "Completo",
+    "delete": "Sei sicuro di voler eliminare questo elemento?",
+    "confirm": "Conferma Eliminazione",
+    "search": "Cerca articoli alimentari"
+  },
+  "languages": {
+    "en": "Inglese",
+    "zh": "Cinese (semplificato)",
+    "ru": "Russo",
+    "it": "Italiano",
+    "fr": "Francese",
+    "de": "Tedesco",
+    "hi": "Hindi"
+  },
+  "profile": {
+    "myProfile": "Impostazioni del mio profilo",
+    "usersProfile": "Profilo dell'utente",
+    "updatePrefs": "Aggiorna Preferenze",
+    "updateEmail": "Aggiorna Email"
+  },
+  "common": {
+    "no-image": "Nessuna Immagine Disponibile",
+    "business-overview": "Panoramica del Business"
+  },
+  "actions": {
+    "list": "Elenco",
+    "create": "Crea",
+    "edit": "Modifica",
+    "show": "Mostra",
+    "delete": "Elimina",
+    "cancel": "Annulla"
+  },
+  "recipes": {
+    "recipes": "Ricette",
+    "selectRight": "Seleziona una ricetta a destra",
+    "noRecipes": "Nessuna ricetta trovata",
+    "communityRecipes": "Ricette della Comunità",
+    "searchRecipes": "Cerca ricette"
+  },
+  "buttons": {
+    "buy": "Compra",
+    "add": "Aggiungi",
+    "buyAgain": "Compra di nuovo",
+    "add-product": "Aggiungi Prodotto",
+    "replace-image": "Sostituisci Immagine",
+    "create": "Crea",
+    "save": "Salva",
+    "logout": "Logout",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "cancel": "Annulla",
+    "confirm": "Sei sicuro?",
+    "filter": "Filtra",
+    "clear": "Cancella",
+    "refresh": "Aggiorna",
+    "show": "Mostra",
+    "undo": "Annulla",
+    "import": "Importa",
+    "export": "Esporta",
+    "clone": "Clona",
+    "accept": "Accetta",
+    "acceptAll": "Accetta Tutto",
+    "reject": "Rifiuta",
+    "rejectAll": "Rifiuta Tutto",
+    "nextStep": "Successivo",
+    "previousStep": "Precedente",
+    "saveChanges": "Salva Modifiche",
+    "markPaid": "Segna come Pagato",
+    "send": "Invia"
+  },
+  "loading": "Caricamento in corso",
+  "table": {
+    "actions": "Azioni",
+    "inTotal": "in totale",
+    "name": "Nome del Prodotto",
+    "price": "Prezzo",
+    "title": "Titolo",
+    "description": "Descrizione"
+  },
+  "status": {
+    "enable": "Abilita",
+    "disable": "Disabilita"
+  },
+  "warnWhenUnsavedChanges": "Sei sicuro di voler uscire? Hai delle modifiche non salvate.",
+  "notifications": {
+    "success": "Operazione riuscita",
+    "error": "Errore (codice di stato: {{statusCode}})",
+    "undoable": "Hai {{seconds}} secondi per annullare",
+    "createSuccess": "Creazione riuscita di {{resource}}",
+    "createError": "Errore durante la creazione di {{resource}} (codice di stato: {{statusCode}})",
+    "deleteSuccess": "Eliminazione riuscita di {{resource}}",
+    "deleteError": "Errore durante l'eliminazione di {{resource}} (codice di stato: {{statusCode}})",
+    "editSuccess": "Modifica riuscita di {{resource}}",
+    "editError": "Errore durante la modifica di {{resource}} (codice di stato: {{statusCode}})",
+    "importProgress": "Importazione in corso: {{processed}}/{{total}}"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "total-businesses": "Totale Aziende",
+    "total-products": "Totale Prodotti",
+    "total-orders": "Totale Ordini",
+    "total-todos": "Totale Liste",
+    "total-users": "Totale Utenti",
+    "total-quotes": "Totale Citazioni",
+    "realtime-stats": "Statistiche in Tempo Reale",
+    "goldenkey-beta": "GoldenKey Beta",
+    "certain-features": "La ricerca aziendale e di prodotti è disponibile per i test pubblici",
+    "description": "Funzionalità di ricerca aziendale e di prodotti in tempo reale, multilingue, globale e senza commissioni. Provalo!"
+  },
+  "enum": {
+    "orderStatuses": {
+      "Pending": "In sospeso",
+      "Ready": "Pronto",
+      "On The Way": "In arrivo",
+      "Delivered": "Consegnato",
+      "Cancelled": "Annullato"
+    }
+  },
+  "orders": {
+    "orders": "Ordini",
+    "order": "Ordine",
+    "newOrder": "Nuovo Ordine",
+    "notes": "Note dell'Ordine",
+    "customerID": "Email di Contatto",
+    "notLoggedIn": "Non sei connesso",
+    "enterEmail": "Inserisci la tua email",
+    "titles": {
+      "orderDetails": "Dettagli dell'Ordine",
+      "deliveryMap": "Mappa della Consegna",
+      "deliveryDetails": "Dettagli della Consegna",
+      "businessDetails": "Dettagli dell'Azienda",
+      "products": "Prodotti",
+      "list": "Ordini",
+      "show": "Ordine",
+      "send": "Invia"
+    },
+    "fields": {
+      "message": "Digita un messaggio...",
+      "payment": "Pagamento",
+      "paymentUnpaid": "NON PAGATO",
+      "paymentPaid": "PAGATO",
+      "paymentURL": "QR di Pagamento",
+      "updatedAt": "Aggiornato",
+      "orderNumber": "Ordine #",
+      "orderID": "ID Ordine",
+      "status": "Stato",
+      "orderStatus": "Stato",
+      "store": "Negozio",
+      "user": "Utente",
+      "products": "Prodotti",
+      "product": "Prodotto",
+      "createdAt": "Creato il",
+      "amount": "Quantità",
+      "itemsAmount": "{{amount}} articoli",
+      "order": "Ordine",
+      "customer": "Cliente",
+      "phone": "Telefono",
+      "deliveryTime": "Orario di Consegna"
+    }
+  },
+  "businesses": {
+    "business": "Azienda",
+    "businesses": "Aziende",
+    "createFirst": "Crea prima un'azienda per aggiungere prodotti",
+    "error": "Errore",
+    "titles": {
+      "list": "Aziende",
+      "create": "Crea Azienda",
+      "edit": "Modifica Azienda",
+      "addPayments": "Aggiungi Pagamenti",
+      "addPaymentMethod": "Aggiungi Metodo di Pagamento"
+    },
+    "actions": {
+      "add": "Aggiungi Azienda"
+    },
+    "fields": {
+      "id": "ID",
+      "name": "Nome",
+      "nameHelper": "Il nome dell'azienda è obbligatorio",
+      "descriptionHelper": "La descrizione dell'azienda è obbligatoria",
+      "description": "Descrizione",
+      "descriptionLabel": "Descrizione (obbligatoria)",
+      "phone": "Telefono",
+      "currency": "Valuta",
+      "phoneHelper": "Il numero di telefono è obbligatorio",
+      "email": "Email",
+      "emailHelper": "L'email è obbligatoria",
+      "uploadedFile": "File Caricato",
+      "isActive": {
+        "label": "Stato",
+        "true": "Disponibile",
+        "false": "Non disponibile"
+      },
+      "searchPlaceholder": "Cerca per nome o descrizione...",
+      "price": "Prezzo",
+      "category": "Categoria",
+      "language": "Lingua",
+      "languages": "Lingue",
+      "createdAt": "Creato il",
+      "dropImageHere": "Rilascia l'immagine qui",
+      "dragNDrop": "Trascina e rilascia la tua immagine o tocca per selezionare"
+    },
+    "products": {
+      "products-services": "Prodotti / Servizi",
+      "noneFound": "Nessun altro prodotto trovato.",
+      "products": "Prodotti",
+      "selectedProduct": "Prodotto Selezionato",
+      "titles": {
+        "list": "Prodotti",
+        "create": "Crea Prodotto",
+        "edit": "Modifica Prodotto"
+      },
+      "fields": {
+        "id": "ID",
+        "name": "Nome del Prodotto",
+        "description": "Descrizione",
+        "isActive": {
+          "label": "Stato",
+          "true": "Disponibile",
+          "false": "Non disponibile"
+        },
+        "price": "Prezzo",
+        "category": "Categoria",
+        "createdAt": "Creato il"
+      },
+      "actions": {
+        "add": "Aggiungi nuovo prodotto",
+        "edit": "Modifica prodotto"
+      }
+    },
+    "reviews": {
+      "reviews": "Recensioni",
+      "titles": {
+        "list": "Recensioni"
+      },
+      "fields": {
+        "user": "Utente",
+        "orderId": "Ordine",
+        "review": "Recensione",
+        "rating": "Valutazione"
+      }
+    },
+    "buttons": {
+      "editProducts": "Modifica Prodotti",
+      "addProduct": "Aggiungi Prodotto",
+      "outOfStock": "Esaurito",
+      "edit": "Modifica Prodotto"
+    },
+    "storeProducts": "Prodotti del Negozio",
+    "tagFilterDescription": "Usa i tag per filtrare la tua ricerca",
+    "all": "Tutti",
+    "productSearch": "Ricerca Prodotti",
+    "addNewStore": "Aggiungi Nuovo Negozio"
+  },
+  "errors": {
+    "minLength": "La lunghezza minima è {{min}}",
+    "maxLength": "La lunghezza massima è {{max}}",
+    "required": {
+      "field": "Questo campo è obbligatorio"
+    }
+  }
+}

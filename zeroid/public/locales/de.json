@@ -1,0 +1,371 @@
+{
+  "pages": {
+    "login": {
+      "title": "Melden Sie sich bei Ihrem Konto an",
+      "signin": "Anmelden",
+      "signup": "Registrieren",
+      "divider": "oder",
+      "fields": {
+        "email": "E-Mail",
+        "password": "Passwort"
+      },
+      "errors": {
+        "validEmail": "Ungültige E-Mail-Adresse"
+      },
+      "buttons": {
+        "submit": "Login",
+        "forgotPassword": "Passwort vergessen?",
+        "noAccount": "Sie haben kein Konto?",
+        "rememberMe": "Angemeldet bleiben"
+      }
+    },
+    "forgotPassword": {
+      "title": "Passwort vergessen?",
+      "fields": {
+        "email": "E-Mail"
+      },
+      "errors": {
+        "validEmail": "Ungültige E-Mail-Adresse"
+      },
+      "buttons": {
+        "submit": "Anweisungen zum Zurücksetzen senden"
+      }
+    },
+    "register": {
+      "title": "Registrieren Sie sich für Ihr Konto",
+      "fields": {
+        "email": "E-Mail",
+        "password": "Passwort"
+      },
+      "errors": {
+        "validEmail": "Ungültige E-Mail-Adresse"
+      },
+      "buttons": {
+        "submit": "Registrieren",
+        "haveAccount": "Haben Sie ein Konto?"
+      }
+    },
+    "updatePassword": {
+      "title": "Passwort aktualisieren",
+      "enterPassword": "Passwort eingeben",
+      "confirm": "Bestätigen",
+      "fields": {
+        "password": "Neues Passwort",
+        "confirmPassword": "Neues Passwort bestätigen"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "Passwörter stimmen nicht überein"
+      },
+      "buttons": {
+        "submit": "Aktualisieren"
+      }
+    },
+    "error": {
+      "info": "Sie haben möglicherweise vergessen, die {{action}} Komponente zur {{resource}} Ressource hinzuzufügen.",
+      "404": "Entschuldigung, die Seite, die Sie besucht haben, existiert nicht.",
+      "resource404": "Sind Sie sicher, dass Sie die {{resource}} Ressource erstellt haben?",
+      "backHome": "Zurück nach Hause"
+    }
+  },
+  "messages": {
+    "messages": "Nachrichten",
+    "myMessages": "Meine Nachrichten",
+    "newMessage": "Neue Nachricht",
+    "typeMessage": "Nachricht eingeben",
+    "searchMessages": "Nachrichten durchsuchen",
+    "selectMessage": "Wählen Sie eine Nachricht links aus",
+    "noMessages": "Keine Nachrichten",
+    "text": "Text",
+    "user": "Benutzer"
+  },
+  "quotes": {
+    "quotes": "Zitate",
+    "addQuote": "Zitat hinzufügen",
+    "quote": "Zitat",
+    "author": "Autor",
+    "votes": "Stimmen",
+    "searchPlaceholder": "Zitate durchsuchen"
+  },
+  "users": {
+    "add": "Benutzer hinzufügen",
+    "personal": "Persönlich",
+    "payment": "Zahlung",
+    "name": "Name",
+    "nameHelper": "Wie sollen wir Sie nennen?",
+    "description": "Biografie",
+    "descriptionHelper": "Was mögen Sie?",
+    "email": "E-Mail",
+    "language": "Sprache",
+    "address": "Adresse",
+    "payments": "Zahlungen",
+    "profilePhoto": "Profilfoto",
+    "country": "Land",
+    "phoneNumber": "Telefonnummer",
+    "preferredPaymentMethod": "Bevorzugte Zahlungsmethode",
+    "view": "Öffentliches Profil anzeigen oder bearbeiten",
+    "info": "Sie können Ihre Zahlungsinformationen jederzeit aktualisieren, indem Sie auf Ihr Profil oben rechts auf der Seite klicken"
+  },
+  "lists": {
+    "incomplete": "Unvollständig",
+    "complete": "Vollständig",
+    "delete": "Sind Sie sicher, dass Sie dieses Element löschen möchten?",
+    "confirm": "Löschung bestätigen",
+    "search": "Lebensmittel durchsuchen"
+  },
+  "languages": {
+    "en": "Englisch",
+    "zh": "Chinesisch (Vereinfacht)",
+    "ru": "Russisch",
+    "it": "Italienisch",
+    "fr": "Französisch",
+    "de": "Deutsch",
+    "hi": "Hindi"
+  },
+  "profile": {
+    "myProfile": "Meine Profileinstellungen",
+    "usersProfile": "Benutzerprofil",
+    "updatePrefs": "Einstellungen aktualisieren",
+    "updateEmail": "E-Mail aktualisieren"
+  },
+  "common": {
+    "no-image": "Kein Bild verfügbar",
+    "business-overview": "Geschäftsübersicht"
+  },
+  "actions": {
+    "list": "Liste",
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "show": "Anzeigen",
+    "delete": "Löschen",
+    "cancel": "Abbrechen"
+  },
+  "recipes": {
+    "recipes": "Rezepte",
+    "selectRight": "Wählen Sie ein Rezept rechts aus",
+    "noRecipes": "Keine Rezepte gefunden",
+    "communityRecipes": "Community-Rezepte",
+    "searchRecipes": "Rezepte durchsuchen"
+  },
+  "buttons": {
+    "buy": "Kaufen",
+    "add": "Hinzufügen",
+    "buyAgain": "Erneut kaufen",
+    "add-product": "Produkt hinzufügen",
+    "replace-image": "Bild ersetzen",
+    "create": "Erstellen",
+    "save": "Speichern",
+    "logout": "Abmelden",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "cancel": "Abbrechen",
+    "confirm": "Sind Sie sicher?",
+    "filter": "Filter",
+    "clear": "Löschen",
+    "refresh": "Aktualisieren",
+    "show": "Anzeigen",
+    "undo": "Rückgängig machen",
+    "import": "Importieren",
+    "export": "Exportieren",
+    "clone": "Klonen",
+    "accept": "Akzeptieren",
+    "acceptAll": "Alle akzeptieren",
+    "reject": "Ablehnen",
+    "rejectAll": "Alle ablehnen",
+    "nextStep": "Weiter",
+    "previousStep": "Zurück",
+    "saveChanges": "Änderungen speichern",
+    "markPaid": "Als bezahlt markieren",
+    "send": "Senden"
+  },
+  "loading": "Laden",
+  "table": {
+    "actions": "Aktionen",
+    "inTotal": "insgesamt",
+    "name": "Produktname",
+    "price": "Preis",
+    "title": "Titel",
+    "description": "Beschreibung"
+  },
+  "status": {
+    "enable": "Aktivieren",
+    "disable": "Deaktivieren"
+  },
+  "warnWhenUnsavedChanges": "Sind Sie sicher, dass Sie verlassen möchten? Sie haben ungespeicherte Änderungen.",
+  "notifications": {
+    "success": "Erfolgreich",
+    "error": "Fehler (Statuscode: {{statusCode}})",
+    "undoable": "Sie haben {{seconds}} Sekunden, um rückgängig zu machen",
+    "createSuccess": "Erfolgreich erstellt {{resource}}",
+    "createError": "Fehler beim Erstellen von {{resource}} (Statuscode: {{statusCode}})",
+    "deleteSuccess": "Erfolgreich gelöscht {{resource}}",
+    "deleteError": "Fehler beim Löschen von {{resource}} (Statuscode: {{statusCode}})",
+    "editSuccess": "Erfolgreich bearbeitet {{resource}}",
+    "editError": "Fehler beim Bearbeiten von {{resource}} (Statuscode: {{statusCode}})",
+    "importProgress": "Importieren: {{processed}}/{{total}}"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "total-businesses": "Gesamtunternehmen",
+    "total-products": "Gesamtprodukte",
+    "total-orders": "Gesamtbestellungen",
+    "total-todos": "Gesamtlisten",
+    "total-users": "Gesamtnutzer",
+    "total-quotes": "Gesamtzitate",
+    "realtime-stats": "Echtzeitstatistiken",
+    "goldenkey-beta": "GoldenKey Beta",
+    "certain-features": "Geschäfts- und Produktsuche sind für öffentliche Tests verfügbar",
+    "description": "Kostenloser, mehrsprachiger, globaler Echtzeit-E-Commerce-Geschäfts- und Produktsuchtrichter ohne Provision. Probieren Sie es aus!"
+  },
+  "enum": {
+    "orderStatuses": {
+      "Pending": "Ausstehend",
+      "Ready": "Bereit",
+      "On The Way": "Unterwegs",
+      "Delivered": "Geliefert",
+      "Cancelled": "Storniert"
+    }
+  },
+  "orders": {
+    "orders": "Bestellungen",
+    "order": "Bestellung",
+    "newOrder": "Neue Bestellung",
+    "notes": "Bestellnotizen",
+    "customerID": "Kontakt E-Mail",
+    "notLoggedIn": "Sie sind nicht angemeldet",
+    "enterEmail": "Geben Sie Ihre E-Mail ein",
+    "titles": {
+      "orderDetails": "Bestelldetails",
+      "deliveryMap": "Lieferkarte",
+      "deliveryDetails": "Lieferdetails",
+      "businessDetails": "Geschäftsdetails",
+      "products": "Produkte",
+      "list": "Bestellungen",
+      "show": "Bestellung",
+      "send": "Senden"
+    },
+    "fields": {
+      "message": "Nachricht eingeben...",
+      "payment": "Zahlung",
+      "paymentUnpaid": "NICHT BEZAHLT",
+      "paymentPaid": "BEZAHLT",
+      "paymentURL": "Zahlungs-QR",
+      "updatedAt": "Aktualisiert",
+      "orderNumber": "Bestellnr.",
+      "orderID": "Bestell-ID",
+      "status": "Status",
+      "orderStatus": "Status",
+      "store": "Geschäft",
+      "user": "Benutzer",
+      "products": "Produkte",
+      "product": "Produkt",
+      "createdAt": "Erstellt am",
+      "amount": "Menge",
+      "itemsAmount": "{{amount}} Artikel",
+      "order": "Bestellung",
+      "customer": "Kunde",
+      "phone": "Telefon",
+      "deliveryTime": "Lieferzeit"
+    }
+  },
+  "businesses": {
+    "business": "Geschäft",
+    "businesses": "Geschäfte",
+    "createFirst": "Erstellen Sie zuerst ein Geschäft, um Produkte hinzuzufügen",
+    "error": "Fehler",
+    "titles": {
+      "list": "Geschäfte",
+      "create": "Geschäft erstellen",
+      "edit": "Geschäft bearbeiten",
+      "addPayments": "Zahlungen hinzufügen",
+      "addPaymentMethod": "Zahlungsmethode hinzufügen"
+    },
+    "actions": {
+      "add": "Geschäft hinzufügen"
+    },
+    "fields": {
+      "id": "ID",
+      "name": "Name",
+      "nameHelper": "Geschäftsname ist erforderlich",
+      "descriptionHelper": "Geschäftsbeschreibung ist erforderlich",
+      "description": "Beschreibung",
+      "descriptionLabel": "Beschreibung (erforderlich)",
+      "phone": "Telefon",
+      "currency": "Währung",
+      "phoneHelper": "Telefonnummer ist erforderlich",
+      "email": "E-Mail",
+      "emailHelper": "E-Mail ist erforderlich",
+      "uploadedFile": "Hochgeladene Datei",
+      "isActive": {
+        "label": "Status",
+        "true": "Verfügbar",
+        "false": "Nicht verfügbar"
+      },
+      "searchPlaceholder": "Nach Name oder Beschreibung suchen...",
+      "price": "Preis",
+      "category": "Kategorie",
+      "language": "Sprache",
+      "languages": "Sprachen",
+      "createdAt": "Erstellt am",
+      "dropImageHere": "Bild hier ablegen",
+      "dragNDrop": "Ziehen Sie Ihr Bild per Drag & Drop oder tippen Sie, um auszuwählen"
+    },
+    "products": {
+      "products-services": "Produkte / Dienstleistungen",
+      "noneFound": "Keine weiteren Produkte gefunden.",
+      "products": "Produkte",
+      "selectedProduct": "Ausgewähltes Produkt",
+      "titles": {
+        "list": "Produkte",
+        "create": "Produkt erstellen",
+        "edit": "Produkt bearbeiten"
+      },
+      "fields": {
+        "id": "ID",
+        "name": "Produktname",
+        "description": "Beschreibung",
+        "isActive": {
+          "label": "Status",
+          "true": "Verfügbar",
+          "false": "Nicht verfügbar"
+        },
+        "price": "Preis",
+        "category": "Kategorie",
+        "createdAt": "Erstellt am"
+      },
+      "actions": {
+        "add": "Neues Produkt hinzufügen",
+        "edit": "Produkt bearbeiten"
+      }
+    },
+    "reviews": {
+      "reviews": "Bewertungen",
+      "titles": {
+        "list": "Bewertungen"
+      },
+      "fields": {
+        "user": "Benutzer",
+        "orderId": "Bestellung",
+        "review": "Bewertung",
+        "rating": "Bewertung"
+      }
+    },
+    "buttons": {
+      "editProducts": "Produkte bearbeiten",
+      "addProduct": "Produkt hinzufügen",
+      "outOfStock": "Nicht vorrätig",
+      "edit": "Produkt bearbeiten"
+    },
+    "storeProducts": "Geschäftsprodukte",
+    "tagFilterDescription": "Verwenden Sie Tags, um Ihre Suche zu filtern",
+    "all": "Alle",
+    "productSearch": "Produktsuche",
+    "addNewStore": "Neues Geschäft hinzufügen"
+  },
+  "errors": {
+    "minLength": "Mindestlänge ist {{min}}",
+    "maxLength": "Maximallänge ist {{max}}",
+    "required": {
+      "field": "Dieses Feld ist erforderlich"
+    }
+  }
+}

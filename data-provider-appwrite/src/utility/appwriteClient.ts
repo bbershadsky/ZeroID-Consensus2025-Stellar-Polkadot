@@ -1,7 +1,7 @@
 import { Account, Appwrite, Storage } from "@refinedev/appwrite";
 
-const APPWRITE_URL = "https://cloud.appwrite.io/v1";
-const APPWRITE_PROJECT = "6697687d002cbd31ba6b";
+const APPWRITE_URL = "https://gersu.com/v1";
+const APPWRITE_PROJECT = "6824b106002e3ec3026b";
 
 const appwriteClient = new Appwrite();
 

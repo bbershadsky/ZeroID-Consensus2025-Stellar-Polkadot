@@ -1,0 +1,371 @@
+{
+  "pages": {
+    "login": {
+      "title": "Войдите в свой аккаунт",
+      "signin": "Войти",
+      "signup": "Зарегистрироваться",
+      "divider": "или",
+      "fields": {
+        "email": "Электронная почта",
+        "password": "Пароль"
+      },
+      "errors": {
+        "validEmail": "Недействительный адрес электронной почты"
+      },
+      "buttons": {
+        "submit": "Логин",
+        "forgotPassword": "Забыли пароль?",
+        "noAccount": "Нет аккаунта?",
+        "rememberMe": "Запомнить меня"
+      }
+    },
+    "forgotPassword": {
+      "title": "Забыли пароль?",
+      "fields": {
+        "email": "Электронная почта"
+      },
+      "errors": {
+        "validEmail": "Недействительный адрес электронной почты"
+      },
+      "buttons": {
+        "submit": "Отправить инструкции по сбросу"
+      }
+    },
+    "register": {
+      "title": "Зарегистрируйте свой аккаунт",
+      "fields": {
+        "email": "Электронная почта",
+        "password": "Пароль"
+      },
+      "errors": {
+        "validEmail": "Недействительный адрес электронной почты"
+      },
+      "buttons": {
+        "submit": "Зарегистрироваться",
+        "haveAccount": "У вас есть аккаунт?"
+      }
+    },
+    "updatePassword": {
+      "title": "Обновить пароль",
+      "enterPassword": "Введите пароль",
+      "confirm": "Подтвердите",
+      "fields": {
+        "password": "Новый пароль",
+        "confirmPassword": "Подтвердите новый пароль"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "Пароли не совпадают"
+      },
+      "buttons": {
+        "submit": "Обновить"
+      }
+    },
+    "error": {
+      "info": "Вы могли забыть добавить компонент {{action}} к ресурсу {{resource}}.",
+      "404": "Извините, страница, которую вы посетили, не существует.",
+      "resource404": "Вы уверены, что создали ресурс {{resource}}?",
+      "backHome": "Вернуться на главную"
+    }
+  },
+  "messages": {
+    "messages": "Сообщения",
+    "myMessages": "Мои сообщения",
+    "newMessage": "Новое сообщение",
+    "typeMessage": "Напишите сообщение",
+    "searchMessages": "Поиск сообщений",
+    "selectMessage": "Выберите сообщение слева",
+    "noMessages": "Нет сообщений",
+    "text": "Текст",
+    "user": "Пользователь"
+  },
+  "quotes": {
+    "quotes": "Цитаты",
+    "addQuote": "Добавить цитату",
+    "quote": "Цитата",
+    "author": "Автор",
+    "votes": "Голоса",
+    "searchPlaceholder": "Поиск цитат"
+  },
+  "users": {
+    "add": "Добавить пользователя",
+    "personal": "Личное",
+    "payment": "Оплата",
+    "name": "Имя",
+    "nameHelper": "Как нам вас называть?",
+    "description": "Биография",
+    "descriptionHelper": "Что вам нравится?",
+    "email": "Электронная почта",
+    "language": "Язык",
+    "address": "Адрес",
+    "payments": "Платежи",
+    "profilePhoto": "Фото профиля",
+    "country": "Страна",
+    "phoneNumber": "Номер телефона",
+    "preferredPaymentMethod": "Предпочитаемый способ оплаты",
+    "view": "Просмотр или редактирование публичного профиля",
+    "info": "Вы всегда можете обновить свою платежную информацию, нажав на свой профиль в верхнем правом углу страницы"
+  },
+  "lists": {
+    "incomplete": "Незавершённые",
+    "complete": "Завершённые",
+    "delete": "Вы уверены, что хотите удалить этот элемент?",
+    "confirm": "Подтвердите удаление",
+    "search": "Поиск продуктов питания"
+  },
+  "languages": {
+    "en": "Английский",
+    "zh": "Китайский (упрощенный)",
+    "ru": "Русский",
+    "it": "Итальянский",
+    "fr": "Французский",
+    "de": "Немецкий",
+    "hi": "Хинди"
+  },
+  "profile": {
+    "myProfile": "Настройки моего профиля",
+    "usersProfile": "Профиль пользователя",
+    "updatePrefs": "Обновить настройки",
+    "updateEmail": "Обновить электронную почту"
+  },
+  "common": {
+    "no-image": "Изображение недоступно",
+    "business-overview": "Обзор бизнеса"
+  },
+  "actions": {
+    "list": "Список",
+    "create": "Создать",
+    "edit": "Редактировать",
+    "show": "Показать",
+    "delete": "Удалить",
+    "cancel": "Отменить"
+  },
+  "recipes": {
+    "recipes": "Рецепты",
+    "selectRight": "Выберите рецепт справа",
+    "noRecipes": "Рецептов не найдено",
+    "communityRecipes": "Рецепты сообщества",
+    "searchRecipes": "Поиск рецептов"
+  },
+  "buttons": {
+    "buy": "Купить",
+    "add": "Добавить",
+    "buyAgain": "Купить снова",
+    "add-product": "Добавить продукт",
+    "replace-image": "Заменить изображение",
+    "create": "Создать",
+    "save": "Сохранить",
+    "logout": "Выйти",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "cancel": "Отменить",
+    "confirm": "Вы уверены?",
+    "filter": "Фильтр",
+    "clear": "Очистить",
+    "refresh": "Обновить",
+    "show": "Показать",
+    "undo": "Отменить",
+    "import": "Импортировать",
+    "export": "Экспортировать",
+    "clone": "Клонировать",
+    "accept": "Принять",
+    "acceptAll": "Принять все",
+    "reject": "Отклонить",
+    "rejectAll": "Отклонить все",
+    "nextStep": "Далее",
+    "previousStep": "Назад",
+    "saveChanges": "Сохранить изменения",
+    "markPaid": "Отметить как оплачено",
+    "send": "Отправить"
+  },
+  "loading": "Загрузка",
+  "table": {
+    "actions": "Действия",
+    "inTotal": "всего",
+    "name": "Название продукта",
+    "price": "Цена",
+    "title": "Заголовок",
+    "description": "Описание"
+  },
+  "status": {
+    "enable": "Включить",
+    "disable": "Отключить"
+  },
+  "warnWhenUnsavedChanges": "Вы уверены, что хотите уйти? У вас есть несохраненные изменения.",
+  "notifications": {
+    "success": "Успешно",
+    "error": "Ошибка (код состояния: {{statusCode}})",
+    "undoable": "У вас есть {{seconds}} секунд, чтобы отменить",
+    "createSuccess": "Успешно создано {{resource}}",
+    "createError": "Ошибка при создании {{resource}} (код состояния: {{statusCode}})",
+    "deleteSuccess": "Успешно удалено {{resource}}",
+    "deleteError": "Ошибка при удалении {{resource}} (код состояния: {{statusCode}})",
+    "editSuccess": "Успешно отредактировано {{resource}}",
+    "editError": "Ошибка при редактировании {{resource}} (код состояния: {{statusCode}})",
+    "importProgress": "Импортируется: {{processed}}/{{total}}"
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "total-businesses": "Всего бизнесов",
+    "total-products": "Всего продуктов",
+    "total-orders": "Всего заказов",
+    "total-todos": "Всего списков",
+    "total-users": "Всего пользователей",
+    "total-quotes": "Всего цитат",
+    "realtime-stats": "Статистика в реальном времени",
+    "goldenkey-beta": "GoldenKey Бета",
+    "certain-features": "Поиск бизнеса и продуктов доступен для публичного тестирования",
+    "description": "Бесплатный многоязычный глобальный воронка поиска бизнеса и продуктов в режиме реального времени без комиссий. Попробуйте!"
+  },
+  "enum": {
+    "orderStatuses": {
+      "Pending": "В ожидании",
+      "Ready": "Готово",
+      "On The Way": "В пути",
+      "Delivered": "Доставлено",
+      "Cancelled": "Отменено"
+    }
+  },
+  "orders": {
+    "orders": "Заказы",
+    "order": "Заказ",
+    "newOrder": "Новый заказ",
+    "notes": "Примечания к заказу",
+    "customerID": "Контактный Email",
+    "notLoggedIn": "Вы не вошли в систему",
+    "enterEmail": "Введите ваш email",
+    "titles": {
+      "orderDetails": "Детали заказа",
+      "deliveryMap": "Карта доставки",
+      "deliveryDetails": "Детали доставки",
+      "businessDetails": "Детали бизнеса",
+      "products": "Продукты",
+      "list": "Заказы",
+      "show": "Заказ",
+      "send": "Отправить"
+    },
+    "fields": {
+      "message": "Напишите сообщение...",
+      "payment": "Оплата",
+      "paymentUnpaid": "НЕОПЛАЧЕНО",
+      "paymentPaid": "ОПЛАЧЕНО",
+      "paymentURL": "QR код оплаты",
+      "updatedAt": "Обновлено",
+      "orderNumber": "Заказ №",
+      "orderID": "ID Заказа",
+      "status": "Статус",
+      "orderStatus": "Статус",
+      "store": "Магазин",
+      "user": "Пользователь",
+      "products": "Продукты",
+      "product": "Продукт",
+      "createdAt": "Создано",
+      "amount": "Сумма",
+      "itemsAmount": "{{amount}} предметов",
+      "order": "Заказ",
+      "customer": "Клиент",
+      "phone": "Телефон",
+      "deliveryTime": "Время доставки"
+    }
+  },
+  "businesses": {
+    "business": "Бизнес",
+    "businesses": "Бизнесы",
+    "createFirst": "Сначала создайте бизнес, чтобы добавить продукты",
+    "error": "Ошибка",
+    "titles": {
+      "list": "Бизнесы",
+      "create": "Создать бизнес",
+      "edit": "Редактировать бизнес",
+      "addPayments": "Добавить платежи",
+      "addPaymentMethod": "Добавить способ оплаты"
+    },
+    "actions": {
+      "add": "Добавить бизнес"
+    },
+    "fields": {
+      "id": "ID",
+      "name": "Имя",
+      "nameHelper": "Имя бизнеса обязательно",
+      "descriptionHelper": "Описание бизнеса обязательно",
+      "description": "Описание",
+      "descriptionLabel": "Описание (обязательно)",
+      "phone": "Телефон",
+      "currency": "Валюта",
+      "phoneHelper": "Номер телефона обязателен",
+      "email": "Электронная почта",
+      "emailHelper": "Электронная почта обязательна",
+      "uploadedFile": "Загруженный файл",
+      "isActive": {
+        "label": "Статус",
+        "true": "Доступен",
+        "false": "Недоступен"
+      },
+      "searchPlaceholder": "Искать по имени или описанию...",
+      "price": "Цена",
+      "category": "Категория",
+      "language": "Язык",
+      "languages": "Языки",
+      "createdAt": "Создано",
+      "dropImageHere": "Перетащите изображение сюда",
+      "dragNDrop": "Перетащите изображение или нажмите, чтобы выбрать"
+    },
+    "products": {
+      "products-services": "Продукты / Услуги",
+      "noneFound": "Других продуктов не найдено.",
+      "products": "Продукты",
+      "selectedProduct": "Выбранный продукт",
+      "titles": {
+        "list": "Продукты",
+        "create": "Создать продукт",
+        "edit": "Редактировать продукт"
+      },
+      "fields": {
+        "id": "ID",
+        "name": "Название продукта",
+        "description": "Описание",
+        "isActive": {
+          "label": "Статус",
+          "true": "Доступен",
+          "false": "Недоступен"
+        },
+        "price": "Цена",
+        "category": "Категория",
+        "createdAt": "Создано"
+      },
+      "actions": {
+        "add": "Добавить новый продукт",
+        "edit": "Редактировать продукт"
+      }
+    },
+    "reviews": {
+      "reviews": "Отзывы",
+      "titles": {
+        "list": "Отзывы"
+      },
+      "fields": {
+        "user": "Пользователь",
+        "orderId": "Заказ",
+        "review": "Отзыв",
+        "rating": "Рейтинг"
+      }
+    },
+    "buttons": {
+      "editProducts": "Редактировать продукты",
+      "addProduct": "Добавить продукт",
+      "outOfStock": "Нет в наличии",
+      "edit": "Редактировать продукт"
+    },
+    "storeProducts": "Продукты магазина",
+    "tagFilterDescription": "Используйте теги для фильтрации поиска",
+    "all": "Все",
+    "productSearch": "Поиск продуктов",
+    "addNewStore": "Добавить новый магазин"
+  },
+  "errors": {
+    "minLength": "Минимальная длина {{min}}",
+    "maxLength": "Максимальная длина {{max}}",
+    "required": {
+      "field": "Это поле обязательно"
+    }
+  }
+}

@@ -1,0 +1,365 @@
+{
+  "pages": {
+    "login": {
+      "title": "Sign in to your account",
+      "signin": "Sign in",
+      "signup": "Sign up",
+      "divider": "or",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Invalid email address"
+      },
+      "buttons": {
+        "submit": "Login",
+        "forgotPassword": "Forgot password?",
+        "noAccount": "Don’t have an account?",
+        "rememberMe": "Remember me"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "fields": {
+        "email": "Email"
+      },
+      "errors": {
+        "validEmail": "Invalid email address"
+      },
+      "buttons": {
+        "submit": "Send reset instructions"
+      }
+    },
+    "register": {
+      "title": "Sign up for your account",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Invalid email address"
+      },
+      "buttons": {
+        "submit": "Register",
+        "haveAccount": "Have an account?"
+      }
+    },
+    "updatePassword": {
+      "title": "Update password",
+      "enterPassword": "Enter Password",
+      "confirm": "Confirm",
+      "fields": {
+        "password": "New Password",
+        "confirmPassword": "Confirm new password"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "Passwords do not match"
+      },
+      "buttons": {
+        "submit": "Update"
+      }
+    },
+    "error": {
+      "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
+      "404": "Sorry, the page you visited does not exist.",
+      "resource404": "Are you sure you have created the {{resource}} resource.",
+      "backHome": "Back Home"
+    }
+  },
+  "messages": {
+    "messages": "Messages",
+    "myMessages": "My Messages",
+    "newMessage": "New Message",
+    "typeMessage": "Type a message",
+    "searchMessages": "Search Messsages",
+    "selectMessage": "Select a message on the left",
+    "noMessages": "No Messages",
+    "text": "Text",
+    "user": "User"
+  },
+  "quotes": {
+    "quotes": "Quotes",
+    "addQuote": "Add Quote",
+    "quote": "Quote",
+    "author": "Author",
+    "votes": "Votes",
+    "searchPlaceholder": "Search quotes"
+  },
+  "users": {
+    "add": "Add User",
+    "personal": "Personal",
+    "payment": "Payment",
+    "name": "Name",
+    "nameHelper": "How should we call you?",
+    "description": "Bio",
+    "descriptionHelper": "What do you like?",
+    "email": "Email",
+    "language": "Language",
+    "address": "Address",
+    "payments": "Payments",
+    "profilePhoto": "profile Photo",
+    "country": "Country",
+    "phoneNumber": "Phone Number",
+    "preferredPaymentMethod": "Preferred Payment Method",
+    "view": "View or edit public profile",
+    "info": "You can always update your payment information by clicking on your profile on the top right of the page"
+  },
+  "lists": {
+    "incomplete": "Incomplete",
+    "complete": "Complete",
+    "delete": "Are you sure you want to delete this item?",
+    "confirm": "Confirm Deletion",
+    "search": "Search Food items"
+  },
+  "languages": {
+    "en": "English",
+    "zh": "Chinese (Simplified)",
+    "ru": "Russian",
+    "it": "Italian",
+    "fr": "French",
+    "de": "German",
+    "hi": "Hindi"
+  },
+  "profile": {
+    "myProfile": "My Profile Settings",
+    "usersProfile": "User's Profile",
+    "updatePrefs": "Update Preferences",
+    "updateEmail": "Update Email"
+  },
+  "common": {
+    "no-image": "No Image Available",
+    "business-overview": "Business Overview"
+  },
+  "actions": {
+    "list": "List",
+    "create": "Create",
+    "edit": "Edit",
+    "show": "Show",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "recipes": {
+    "recipes": "Recipes",
+    "selectRight": "Select a recipe on the right",
+    "noRecipes": "No Recipes Found",
+    "communityRecipes": "Community Recipes",
+    "searchRecipes": "Search Recipes"
+  },
+  "buttons": {
+    "buy": "Buy",
+    "add": "Add",
+    "buyAgain": "Buy Again",
+    "add-product": "Add Product",
+    "replace-image": "Replace Image",
+    "create": "Create",
+    "save": "Save",
+    "logout": "Logout",
+    "delete": "Delete",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "confirm": "Are you sure?",
+    "filter": "Filter",
+    "clear": "Clear",
+    "refresh": "Refresh",
+    "show": "Show",
+    "undo": "Undo",
+    "import": "Import",
+    "export": "Export",
+    "clone": "Clone",
+    "accept": "Accept",
+    "acceptAll": "Accept All",
+    "reject": "Reject",
+    "rejectAll": "Reject All",
+    "nextStep": "Next",
+    "previousStep": "Prev",
+    "saveChanges": "Save Changes",
+    "markPaid": "Mark Paid",
+    "send": "Send"
+  },
+  "loading": "Loading",
+  "table": {
+    "actions": "Actions",
+    "inTotal": "in total",
+    "name": "Product Name",
+    "price": "Price",
+    "title": "Title",
+    "description": "Description"
+  },
+  "status": {
+    "enable": "Enable",
+    "disable": "Disable"
+  },
+  "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+  "notifications": {
+    "success": "Successful",
+    "error": "Error (status code: {{statusCode}})",
+    "undoable": "You have {{seconds}} seconds to undo",
+    "createSuccess": "Successfully created {{resource}}",
+    "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
+    "deleteSuccess": "Successfully deleted {{resource}}",
+    "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
+    "editSuccess": "Successfully edited {{resource}}",
+    "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
+    "importProgress": "Importing: {{processed}}/{{total}}"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "total-employers": "Total Employers",
+    "total-candidates": "Total Candidates",
+    "realtime-stats": "Realtime Stats",
+    "description": "Best one!"
+  },
+  "enum": {
+    "orderStatuses": {
+      "Pending": "Pending",
+      "Ready": "Ready",
+      "On The Way": "On the way",
+      "Delivered": "Delivered",
+      "Cancelled": "Cancelled"
+    }
+  },
+  "orders": {
+    "orders": "Orders",
+    "order": "Order",
+    "newOrder": "New Order",
+    "notes": "Order Notes",
+    "customerID": "Contact Email",
+    "notLoggedIn": "You are not logged in",
+    "enterEmail": "Enter your email",
+    "titles": {
+      "orderDetails": "Order Details",
+      "deliveryMap": "Delivery Map",
+      "deliveryDetails": "Delivery Details",
+      "businessDetails": "Business Details",
+      "products": "Products",
+      "list": "Orders",
+      "show": "Order",
+      "send": "Send"
+    },
+    "fields": {
+      "message": "Type a message...",
+      "payment": "Payment",
+      "paymentUnpaid": "UNPAID",
+      "paymentPaid": "PAID",
+      "paymentURL": "Payment QR",
+      "updatedAt": "Updated",
+      "orderNumber": "Order #",
+      "orderID": "Order ID",
+      "status": "Status",
+      "orderStatus": "Status",
+      "store": "Store",
+      "user": "User",
+      "products": "Products",
+      "product": "Product",
+      "createdAt": "CreatedAt",
+      "amount": "Amount",
+      "itemsAmount": "{{amount}} items",
+      "order": "Order",
+      "customer": "Customer",
+      "phone": "Phone",
+      "deliveryTime": "Delivery Time"
+    }
+  },
+  "businesses": {
+    "business": "Business",
+    "businesses": "Businesses",
+    "createFirst": "Create a business first to add products",
+    "error": "Error",
+    "titles": {
+      "list": "Businesses",
+      "create": "Create Business",
+      "edit": "Edit Business",
+      "addPayments": "Add Payments",
+      "addPaymentMethod": "Add Payment Method"
+    },
+    "actions": {
+      "add": "Add Business"
+    },
+    "fields": {
+      "id": "ID",
+      "name": "Name",
+      "nameHelper": "Business name is required",
+      "descriptionHelper": "Business description is required",
+      "description": "Description",
+      "descriptionLabel": "Description (required)",
+      "phone": "Phone",
+      "currency": "Currency",
+      "phoneHelper": "Phone number is required",
+      "email": "Email",
+      "emailHelper": "Email is required",
+      "uploadedFile": "Uploaded File",
+      "isActive": {
+        "label": "Status",
+        "true": "Available",
+        "false": "Unavailable"
+      },
+      "searchPlaceholder": "Search by name or description...",
+      "price": "Price",
+      "category": "Category",
+      "language": "Language",
+      "languages": "Languages",
+      "createdAt": "Created At",
+      "dropImageHere": "Drop Image Here",
+      "dragNDrop": "Drag-n-Drop your image or tap to select"
+    },
+    "products": {
+      "products-services": "Products / Services",
+      "noneFound": "No other products found.",
+      "products": "Products",
+      "selectedProduct": "Selected Product",
+      "titles": {
+        "list": "Products",
+        "create": "Create Product",
+        "edit": "Edit Product"
+      },
+      "fields": {
+        "id": "ID",
+        "name": "Product Name",
+        "description": "Description",
+        "isActive": {
+          "label": "Status",
+          "true": "Available",
+          "false": "Unavailable"
+        },
+        "price": "Price",
+        "category": "Category",
+        "createdAt": "CreatedAt"
+      },
+      "actions": {
+        "add": "Add new product",
+        "edit": "Edit product"
+      }
+    },
+    "reviews": {
+      "reviews": "Reviews",
+      "titles": {
+        "list": "Reviews"
+      },
+      "fields": {
+        "user": "User",
+        "orderId": "Order",
+        "review": "Review",
+        "rating": "Rating"
+      }
+    },
+    "buttons": {
+      "editProducts": "Edit Products",
+      "addProduct": "Add Product",
+      "outOfStock": "Out Of Stock",
+      "edit": "Edit Product"
+    },
+    "storeProducts": "Store Products",
+    "tagFilterDescription": "Use tags to filter your search",
+    "all": "All",
+    "productSearch": "Product Search",
+    "addNewStore": "Add New Store"
+  },
+  "errors": {
+    "minLength": "Minimum length is {{min}}",
+    "maxLength": "Maximum length is {{max}}",
+    "required": {
+      "field": "This field is required"
+    }
+  }
+}
