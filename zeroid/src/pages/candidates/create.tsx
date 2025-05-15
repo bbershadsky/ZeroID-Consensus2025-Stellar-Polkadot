@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ProductDrawerForm } from "../../components";
 
-export const ProductCreate = () => {
+export const CandidatesCreate = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   const handleDrawerClose = () => {
@@ -13,7 +13,6 @@ export const ProductCreate = () => {
       action="create"
       open={isDrawerOpen}
       onClose={handleDrawerClose}
-      isDrawerOpen={false}
     />
   );
 };

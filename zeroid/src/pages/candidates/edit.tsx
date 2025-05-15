@@ -26,8 +26,8 @@ export const ProductEdit = () => {
       action="edit"
       open={true}
       onClose={() => {}}
-      product={data?.data}
-      isDrawerOpen={false}
+      // product={data?.data}
+      // isDrawerOpen={false}
     />
   );
 };

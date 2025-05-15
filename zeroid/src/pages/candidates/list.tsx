@@ -111,7 +111,7 @@ export const ProductList = ({ children }: PropsWithChildren) => {
           action="create"
           open={isDrawerOpen}
           onClose={handleDrawerClose}
-          isDrawerOpen={isDrawerOpen}
+          // isDrawerOpen={isDrawerOpen}
         />
       )}
       {children}

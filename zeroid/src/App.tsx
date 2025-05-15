@@ -1,10 +1,8 @@
-import { DevtoolsProvider, DevtoolsPanel } from "@refinedev/devtools";
 import { Authenticated, Refine } from "@refinedev/core";
 import { KBarProvider } from "@refinedev/kbar";
 import { appwriteClient, resources } from "./utility";
 import { Analytics } from "@vercel/analytics/react";
 import {
-  ErrorComponent,
   useNotificationProvider,
   ThemedLayoutV2,
   ThemedSiderV2,
@@ -24,6 +22,7 @@ import Dashboard from "@mui/icons-material/Dashboard";
 import { DashboardPage } from "./pages/dashboard";
 import { AuthPage } from "./pages/auth";
 import {
+  CandidatesCreate,
   ProductList,
   ProductShow,
 } from "./pages/candidates";
@@ -37,6 +36,7 @@ import { authProvider } from "./auth-provider";
 import {
   Inventory,
 } from "@mui/icons-material";
+import { EmployersCreate } from "./pages/employers";
 
 interface I18nProviderProps {
   translate: (key: string, params?: Record<string, any>) => string;
@@ -61,7 +61,6 @@ const App: React.FC = () => {
           <CssBaseline />
           <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
           <RefineSnackbarProvider>
-            <DevtoolsProvider>
               <Refine
                 dataProvider={{
                   default: DP(appwriteClient, {
@@ -96,7 +95,7 @@ const App: React.FC = () => {
                   {
                     name: resources.employers,
                     list: "/employers",
-                    create: "/employers/new",
+                    create: "/employers/create",
                     edit: "/employers/:id/edit",
                     show: "/employers/:id/show",
                     meta: {
@@ -106,7 +105,7 @@ const App: React.FC = () => {
                   {
                     name: resources.candidates,
                     list: "/candidates",
-                    create: "/candidates/new",
+                    create: "/candidates/create",
                     edit: "/candidates/:id/edit",
                     show: "/candidates/:id/show",
                     meta: {
@@ -144,11 +143,13 @@ const App: React.FC = () => {
                       }
                     >
                       <Route index element={<DashboardPage />} />
-                      <Route path="/employers">
-                        <Route index element={<BusinessList />} />
+                    <Route path="/employers">
+                      <Route index element={<BusinessList />} />
+                      <Route path="create" element={<EmployersCreate />} /> 
                         <Route path=":id/show" element={<BusinessShow />} />
                       </Route>
-                      <Route path="/candidates">
+                    <Route path="/candidates">
+                      <Route path="create" element={<CandidatesCreate />} />
                         <Route index element={<ProductList />} />
                         <Route path=":id/show" element={<ProductShow />} />
                       </Route>
@@ -219,8 +220,6 @@ const App: React.FC = () => {
                 <UnsavedChangesNotifier />
                 <DocumentTitleHandler />
               </Refine>
-              <DevtoolsPanel />
-            </DevtoolsProvider>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
       </KBarProvider>
