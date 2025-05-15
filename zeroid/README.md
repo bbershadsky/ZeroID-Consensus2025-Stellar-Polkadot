@@ -15,6 +15,8 @@
 
 </div>
 
+RESOURCES: https://docs.google.com/document/d/1_OOIK8ZYRTQFpZWE-7ZT2KYUMuBiL6bdWNgisKTSTpY/edit?tab=t.0
+
 ## 📋 <a name="table">Table of Contents</a>
 
 1. 🤖 [Introduction](#introduction)

@@ -65,6 +65,15 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
     }
   }, [searchTerm, data]);
 
+  const handleNavigateToShow = (candidateId: string) => {
+    // Construct the path string directly
+    const path = `/candidates/${candidateId}/show`;
+    go({
+      to: path,
+      type: "push", // Or "replace" if you prefer
+    });
+  };
+
   return (
     <TableContainer component={Paper}>
       <TextField
@@ -98,38 +107,20 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData?.map((business) => (
-              <TableRow key={business.id} style={{ cursor: "pointer" }}>
-                <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.employers,
-                        id: business.id!,
-                      },
-                    });
-                  }}
-                >
+            {filteredData?.map((candidate) => (
+              <TableRow key={candidate.id} style={{ cursor: "pointer" }}>
+                <TableCell onClick={() => handleNavigateToShow(candidate.id!)}>
+
                   <Avatar
                     variant="rounded"
                     sx={{}}
-                    src={business.imageURL}
-                    alt={business.name}
+                    src={candidate.imageURL}
+                    alt={candidate.name}
                   />
                 </TableCell>
-                <TableCell
-                  onClick={() => {
-                    go({
-                      to: {
-                        action: "show",
-                        resource: resources.candidates,
-                        id: business.id!,
-                      },
-                    });
-                  }}
-                >
-                  {business.name}
+                <TableCell onClick={() => handleNavigateToShow(candidate.id!)}>
+
+                  {candidate.name}
                 </TableCell>
                 <TableCell
                   onClick={() => {
@@ -137,12 +128,12 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
                       to: {
                         action: "show",
                         resource: resources.candidates,
-                        id: business.id!,
+                        id: candidate.id!,
                       },
                     });
                   }}
                 >
-                  {business.description}
+                  {candidate.description}
                 </TableCell>
                 <TableCell
                   onClick={() => {
@@ -150,26 +141,26 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
                       to: {
                         action: "show",
                         resource: resources.candidates,
-                        id: business.id!,
+                        id: candidate.id!,
                       },
                     });
                   }}
                 >
                   <BusinessLanguagesDisplay
                     showAvatarGroup={true}
-                    languages={business?.languages}
+                    languages={candidate?.languages}
                   />
 
-                  {/* <LanguageDisplay currentLanguage={business.language} /> */}
+                  {/* <LanguageDisplay currentLanguage={candidate.language} /> */}
                 </TableCell>
                 <TableCell>
-                  {business.email && (
+                  {candidate.email && (
                     <Tooltip title="Email">
                       <IconButton
                         size="small"
                         component="a" // Use 'a' as the root component
-                        href={`mailto:${business.email}`} // Set href to dial the phone
-                        aria-label={`Email ${business.email}`}
+                        href={`mailto:${candidate.email}`} // Set href to dial the phone
+                        aria-label={`Email ${candidate.email}`}
                       >
                         <EmailIcon />
                       </IconButton>
@@ -177,13 +168,13 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
                   )}
                 </TableCell>
                 <TableCell>
-                  {business.phone && (
+                  {candidate.phone && (
                     <Tooltip title="Call">
                       <IconButton
                         size="small"
                         component="a" // Use 'a' as the root component
-                        href={`tel:${business.phone}`} // Set href to dial the phone
-                        aria-label={`Call ${business.phone}`}
+                        href={`tel:${candidate.phone}`} // Set href to dial the phone
+                        aria-label={`Call ${candidate.phone}`}
                       >
                         <PhoneIcon />
                       </IconButton>
@@ -191,7 +182,7 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
                   )}
                 </TableCell>
                 <TableCell align="center">
-                  <CurrencySelector currentCurrency={business?.currency} />
+                  <CurrencySelector currentCurrency={candidate?.currency} />
                 </TableCell>
                 {/* {business?.userID && (
                   <TableCell>
