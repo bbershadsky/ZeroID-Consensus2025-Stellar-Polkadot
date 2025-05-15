@@ -8,17 +8,34 @@ from substrateinterface import ContractInstance, Keypair, SubstrateInterface
 
 load_dotenv()
 
-
 POLKADOT_CONTRACT_ADDRESS = os.environ["POLKADOT_CONTRACT_ADDRESS"]  # '5EXvxAcsG2asmQjGz...LRoJsag7kV9KMu1kR6q'
 POLKADOT_SUBSTRATE_URL = os.environ["POLKADOT_SUBSTRATE_URL"]  # 'ws://127.0.0.1:9944'
 POLKADOT_KEYPAIR_ACCOUNT = os.environ["POLKADOT_KEYPAIR_ACCOUNT"]  # '//Alice'
 
 
-def store_hash_on_chain(hash): ...
+def store_hash_on_chain(hash):
+    substrate = SubstrateInterface(
+        url=POLKADOT_SUBSTRATE_URL,
+        type_registry_preset='substrate-contracts-node'
+    )
+
+    keypair = Keypair.create_from_uri(POLKADOT_KEYPAIR_ACCOUNT)
+
+    contract = ContractInstance.create_from_address(
+        substrate=substrate,
+        contract_address=POLKADOT_CONTRACT_ADDRESS,
+    )
+
+    result = contract.exec(
+        keypair,
+        'store_hash',
+        args={'hash': list(hash)},
+    )
+
+    return result
 
 
 def main(context):
-
     try:
         body = context.req.body_json or {}
 
