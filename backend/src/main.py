@@ -4,7 +4,8 @@ from appwrite.exception import AppwriteException
 def main(context):
 
     try:
-        body = context.req.json_body or {}
+        context.log(dir(context.req))
+        body = context.req.bodyJson or {}
         blob_text = body.get("blob_text", "")
 
         context.log(f"Received blob_text: {blob_text}")
@@ -20,8 +21,9 @@ def main(context):
     except AppwriteException as err:
         context.error("Appwrite error: " + repr(err))
         return context.res.json(
-            {"error": "Appwrite-related issue occurred.",
-             'status_code': 500
+            {
+                "error": "Appwrite-related issue occurred.",
+                'status_code': 500
              }
         )
     except Exception as e:
