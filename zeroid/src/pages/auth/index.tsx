@@ -23,7 +23,7 @@ const authWrapperProps = {
   },
 };
 
-export const AuthPage: React.FC<{ type: "login" | "register" }> = ({ type }) => {
+export const AuthPage: React.FC<{ type: "login" | "register" | "forgotPassword" | "updatePassword"}> = ({ type }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();

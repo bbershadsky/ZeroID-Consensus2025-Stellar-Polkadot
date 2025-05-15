@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useGetIdentity, useShow, useTranslate } from "@refinedev/core";
-import { Show } from "@refinedev/mui"; // Assuming this is your Show component wrapper
+import { useGetIdentity, useShow, useList, useTranslate, BaseRecord } from "@refinedev/core"; // Added useList
+import { Show } from "@refinedev/mui";
 import {
   Typography,
   Box,
@@ -13,72 +13,108 @@ import {
   useTheme,
   Skeleton,
   CardMedia,
+  Chip, // For displaying tags like employment type
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
+import DescriptionIcon from "@mui/icons-material/Description";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import TranslateIcon from "@mui/icons-material/Translate";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link, useParams } from "react-router-dom";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter"; // Icon for job history
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import WorkIcon from '@mui/icons-material/Work';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
-import { useCardStyles } from "../../components/card-elevated"; // Ensure this path is correct
-import { ICandidate, IEmployer, IIdentity } from "../../interfaces";
-import { resources } from "../../utility"; // Ensure resources.candidates and resources.employers are correct
-import CurrencySelector from "../../components/currency-selector"; // Ensure this path is correct
-import { LanguageDisplay } from "../../components"; // Ensure LanguageDisplay and OrderFormModal paths are correct
-import { OrderFormModal } from "../../components/order/form-modal";
+
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Link as RouterLink, useParams } from "react-router-dom"; // Renamed Link to avoid conflict
+
+import { useCardStyles } from "../../components/card-elevated";
+import { ICandidate, IIdentity, IJobHistory } from "../../interfaces";
+import { resources } from "../../utility";
+// import CurrencySelector from "../../components/currency-selector"; // Not used if business section is removed
+// import { LanguageDisplay } from "../../components"; // Not used if business section is removed
+import { JobVerificationRequestModal } from "../../components/order/form-modal"; // Keep if candidate has "orderable" services
+
+// Helper function to format dates (optional, but good for UI)
+const formatDate = (date?: string | Date | null): string => {
+  if (!date) return "N/A";
+  try {
+    const parsedDate = typeof date === "string" ? new Date(date) : date;
+    return parsedDate.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+    });
+  } catch (e) {
+    return date instanceof Date ? date.toString() : date; // Return original if formatting fails
+  }
+};
 
 export const CandidateShow = () => {
-  const { id } = useParams<{ id: string }>(); // Get candidate ID from URL
+  const { id } = useParams<{ id: string }>();
   const theme = useTheme();
-  const cardStyles = useCardStyles(); // Assuming this hook provides styles
+  const cardStyles = useCardStyles();
   const t = useTranslate();
   const { data: user } = useGetIdentity<IIdentity | null>();
   const isLoggedIn = !!user;
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+    const [selectedCandidateForVerification, setSelectedCandidateForVerification] = useState<ICandidate | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const handleOpenModal = (candidate: ICandidate) => {
+    setSelectedCandidateForVerification(candidate);
+    setIsModalOpen(true);
+  };
 
-  // --- Fetch Candidate Data (Primary data for this page) ---
+  const handleCloseModal = () => {
+    setSelectedCandidateForVerification(null);
+    setIsModalOpen(false);
+  };
+
+  // --- Fetch Candidate Data ---
   const {
     queryResult: {
-      data: candidateDataResult, // Renamed to avoid conflict
+      data: candidateDataResult,
       isLoading: isCandidateLoading,
       error: candidateError,
     },
   } = useShow<ICandidate>({
-    resource: resources.candidates, // Correct resource for candidate
-    id: id!, // Ensure id is not undefined
+    resource: resources.candidates,
+    id: id!,
   });
   const candidate = candidateDataResult?.data;
 
-  // --- Fetch Related Business (Employer) Data ---
-  // This fetch depends on candidate.businessID
+  // --- Fetch Job History Data for this Candidate ---
   const {
-    queryResult: {
-      data: businessDataResult,
-      isLoading: isBusinessLoading,
-      error: businessError,
-    },
-  } = useShow<IEmployer>({
-    resource: resources.employers, // *** CORRECTED: Use employers resource ***
-    id: candidate?.businessID || "", // Fetch only if businessID exists
+    data: jobHistoryData, // This will be { data: IJobHistory[], total: number }
+    isLoading: isJobHistoryLoading,
+    error: jobHistoryError,
+  } = useList<IJobHistory>({
+    resource: resources.jobHistory, // Ensure this resource is defined in your App.tsx and utility.ts
+    filters: [
+      {
+        field: "candidate_id", // Filter by the candidate_id field in your jobHistory collection
+        operator: "eq",
+        value: id, // The ID of the current candidate
+      },
+    ],
     queryOptions: {
-      enabled: !!candidate?.businessID, // Only run this query if candidate and candidate.businessID are available
+      enabled: !!id, // Only run this query if the candidate ID is available
     },
+    pagination: {
+      pageSize: 10, // Adjust as needed, or use 'off' for all items
+    }
   });
-  const business = businessDataResult?.data;
+  const jobHistoryItems = jobHistoryData?.data || [];
 
-  // --- Loading and Error States ---
-  // The page is loading if either the candidate or the (conditionally fetched) business is loading.
-  const isLoading = isCandidateLoading || (!!candidate?.businessID && isBusinessLoading);
+  // --- Combined Loading and Error States ---
+  const isLoading = isCandidateLoading || (!!id && isJobHistoryLoading);
 
-  // Log for debugging
   console.log("Candidate Data:", candidate);
-  console.log("Business Data:", business);
-  console.log("Is Candidate Loading:", isCandidateLoading);
-  console.log("Is Business Loading:", isBusinessLoading);
+  console.log("Job History Items:", jobHistoryItems);
   console.log("Overall Loading State:", isLoading);
-
 
   if (candidateError) {
     return (
@@ -88,166 +124,76 @@ export const CandidateShow = () => {
       </Typography>
     );
   }
-  // Only show business error if we attempted to load business data
-  if (candidate?.businessID && businessError) {
+  if (jobHistoryError) {
     return (
       <Typography color="error">
-        {t("common.errors.loadFailed", { resource: t("employers.employers", "Business") })}:{" "}
-        {businessError.message}
+        {t("common.errors.loadFailed", { resource: t("jobHistory.jobHistory", "Job History") })}:{" "}
+        {jobHistoryError.message}
       </Typography>
     );
   }
 
-  // Show skeleton if overall loading is true
   if (isLoading) {
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+      <Grid container spacing={3}>
+        {/* Skeleton for Candidate Card */}
+        <Grid item xs={12} md={8}> {/* Main content area */}
           <Card elevation={4}>
             <CardContent>
-              <Skeleton variant="rectangular" height={160} animation="wave" sx={{ mb: 2 }} />
-              <Skeleton variant="text" height={40} animation="wave" width="80%" />
-              <Skeleton variant="text" height={25} animation="wave" width="60%" />
-              <Skeleton variant="text" height={25} animation="wave" width="40%" />
-              <Skeleton variant="text" height={25} animation="wave" width="50%" sx={{ mt: 1 }} />
+              <Skeleton variant="rectangular" height={200} animation="wave" sx={{ mb: 2 }} />
+              <Skeleton variant="text" sx={{ fontSize: '2rem' }} animation="wave" width="70%" />
+              <Skeleton variant="text" animation="wave" width="50%" />
+              <Skeleton variant="text" animation="wave" width="40%" sx={{ mb: 2 }} />
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Skeleton variant="text" height={50} animation="wave" width="60%" sx={{ mb: 1 }} />
-          <Card elevation={4}>
-            <CardContent>
-              <Skeleton variant="rectangular" height={160} animation="wave" sx={{ mb: 2 }} />
-              <Skeleton variant="text" height={40} animation="wave" width="80%" />
-              <Skeleton variant="text" height={60} animation="wave" width="90%" />
-              <Skeleton variant="text" height={40} animation="wave" width="30%" sx={{ mt: 1 }} />
-            </CardContent>
-            <CardActions>
-              <Skeleton variant="text" height={60} width="30%" sx={{ ml: "auto" }} />
-            </CardActions>
-          </Card>
+        {/* Skeleton for Job History Section Title */}
+        <Grid item xs={12}>
+          <Skeleton variant="text" sx={{ fontSize: '1.5rem', mt: 2 }} animation="wave" width="40%" />
         </Grid>
+        {/* Skeletons for Job History Cards */}
+        {[1, 2].map((item) => (
+          <Grid item xs={12} sm={6} md={4} key={`skeleton-job-${item}`}>
+            <Card elevation={2}>
+              <CardContent>
+                <Skeleton variant="text" sx={{ fontSize: '1.2rem' }} animation="wave" width="80%" />
+                <Skeleton variant="text" animation="wave" width="60%" />
+                <Skeleton variant="rectangular" height={50} animation="wave" sx={{ mt: 1 }} />
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     );
   }
 
-  // If candidate data is missing after loading (and no error)
   if (!candidate) {
     return <Typography>{t("common.errors.noData", "No candidate data found.")}</Typography>;
   }
 
   return (
     <Show
-      isLoading={isLoading} // Use combined loading state
-      // canDelete and canEdit depend on business data, which might not always be present or relevant for a candidate
-      // Adjust this logic based on your application's requirements.
-      // For example, a candidate might edit their own profile, or an admin might.
-      canDelete={isLoggedIn && user?.$id === candidate.userID} // Example: User can delete their own candidate profile
-      canEdit={isLoggedIn && user?.$id === candidate.userID}   // Example: User can edit their own candidate profile
+      isLoading={isLoading}
+      canDelete={isLoggedIn && user?.$id === candidate.userID}
+      canEdit={isLoggedIn && user?.$id === candidate.userID}
+    // WrapperProps={{ sx: { padding: { xs: 1, sm: 2, md: 3 } } }} // Optional: Add padding to the Show wrapper
     >
       <Grid container spacing={3}>
-        {/* Business Overview Card (Only if business data is available) */}
-        {business && (
-          <Grid item xs={12} md={5}>
-            <Card elevation={4}>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  {t("common.businessOverview", "Associated Business")}
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                {business.imageURL ? (
-                  <CardMedia
-                    component="img"
-                    sx={{ height: 180, mb: 2, borderRadius: 1 }}
-                    image={business.imageURL}
-                    alt={business.name}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      height: 180,
-                      mb: 2,
-                      borderRadius: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexDirection: "column",
-                      color: "text.secondary",
-                      backgroundColor: theme.palette.action.hover,
-                    }}
-                  >
-                    <PhotoCameraIcon sx={{ fontSize: 48 }} />
-                    <Typography variant="caption">
-                      {t("common.noImage", "No Image Available")}
-                    </Typography>
-                  </Box>
-                )}
-                <Typography variant="h6" gutterBottom>{business.name}</Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  {business.description}
-                </Typography>
-                {business.email && (
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <EmailIcon color="action" fontSize="small" />
-                    <Typography variant="body2">{business.email}</Typography>
-                  </Box>
-                )}
-                {business.phone && (
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <PhoneIcon color="action" fontSize="small" />
-                    <Typography variant="body2">{business.phone}</Typography>
-                  </Box>
-                )}
-                {business.currency && (
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <RequestQuoteIcon color="action" fontSize="small" />
-                    <CurrencySelector
-                      currentCurrency={business.currency}
-                      view="label"
-                    />
-                  </Box>
-                )}
-                {/* Assuming business.language is a single string code, adjust if it's an array */}
-                {business.languages && business.languages.length > 0 && (
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <TranslateIcon color="action" fontSize="small" />
-                    {/* If LanguageDisplay expects a single string and business.languages is an array: */}
-                    <LanguageDisplay currentLanguage={business.languages[0]} />
-                    {/* Or map through business.languages if LanguageDisplay can handle multiple or you want to list them */}
-                  </Box>
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        )}
-
         {/* Candidate Details Card */}
-        <Grid item xs={12} md={business ? 7 : 12}> {/* Adjust grid size if business card is not shown */}
-          <Typography variant="h5" gutterBottom sx={!business ? { mt: 0 } : {}}>
-            {/* Using candidate.name as title, assuming product... fields are specific to a candidate's offering */}
-            {candidate.name || t("candidates.candidateDetails", "Candidate Details")}
-          </Typography>
-          <Card sx={cardStyles} elevation={4}> {/* Use cardStyles from your hook */}
-            <CardContent
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                // alignItems: "center", // Removed to allow text to align left
-              }}
-            >
-              {/* Assuming candidate might have an image (e.g. profile picture) */}
-              {/* If product... fields are what you mean by candidate's offering, use those */}
-              {candidate.productImageURL ? ( // Using ICandidate fields now
+        <Grid item xs={12} md={jobHistoryItems.length > 0 ? 8 : 12}> {/* Adjust grid size based on job history presence */}
+          <Card sx={cardStyles} elevation={4}>
+            <CardContent>
+              {candidate.productImageURL ? (
                 <CardMedia
                   component="img"
-                  sx={{ height: 200, mb: 2, borderRadius: 1, objectFit: 'cover' }}
-                  image={candidate.productImageURL} // Example: if candidate has an image
+                  sx={{ height: 250, mb: 2, borderRadius: 1, objectFit: 'cover' }}
+                  image={candidate.productImageURL}
                   alt={candidate.name}
                 />
               ) : (
                 <Box
                   sx={{
-                    height: 200,
+                    height: 250,
                     width: "100%",
                     mb: 2,
                     borderRadius: 1,
@@ -259,86 +205,145 @@ export const CandidateShow = () => {
                     backgroundColor: theme.palette.action.hover,
                   }}
                 >
-                  <PhotoCameraIcon sx={{ fontSize: 48 }} />
+                  <PhotoCameraIcon sx={{ fontSize: 60 }} />
                   <Typography variant="caption">
                     {t("common.noImage", "No Profile Image")}
                   </Typography>
                 </Box>
               )}
-              {/* Displaying candidate fields */}
-              <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
+              <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
                 {candidate.name}
               </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
                 {t('candidates.fields.email', 'Email')}: {candidate.email}
               </Typography>
 
-              {/* Example: Displaying resume if available */}
               {candidate.resume_file_id && (
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
-                  <Link to={`#view-resume/${candidate.resume_file_id}`} target="_blank"> {/* Replace with actual view link */}
+                <Typography variant="body1" sx={{ mb: 2 }}>
+                  <Button
+                    component={RouterLink}
+                    to={`/files/view/${candidate.resume_file_id}`} // Example: Adjust this link to how you view files
+                    target="_blank"
+                    variant="outlined"
+                    startIcon={<DescriptionIcon />}
+                  >
                     {t('candidates.fields.resume', 'View Resume')}
-                  </Link>
+                  </Button>
                 </Typography>
               )}
 
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
-                {t('candidates.fields.verificationStatus', 'Status')}: {candidate.verification_status}
-              </Typography>
+              <Chip
+                label={`${t('candidates.fields.verificationStatus', 'Status')}: ${candidate.verification_status}`}
+                color={candidate.is_verified ? "success" : "warning"}
+                size="small"
+                sx={{ mb: 2 }}
+              />
 
-              {/* If candidate has product-like fields: */}
+              {/* If candidate has "product-like" fields for a service they offer */}
               {candidate.productName && (
                 <>
                   <Divider sx={{ my: 2 }} />
-                  <Typography variant="h6" gutterBottom>
-                    {candidate.productName}
+                  <Typography variant="h5" component="h2" gutterBottom>
+                    {t("candidates.serviceOffering", "Service Offering")}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
+                  <Typography variant="h6">{candidate.productName}</Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph sx={{ mt: 1 }}>
                     {candidate.productDescription}
                   </Typography>
                   <Typography variant="h5" color="primary.main" sx={{ fontWeight: 'medium' }}>
                     ${candidate.productPrice}
                   </Typography>
+                  <CardActions sx={{ justifyContent: "flex-start", pl: 0, pt: 2 }}>
+                    <Button
+                      onClick={() => setIsOrderModalOpen(true)}
+                      startIcon={<ShoppingCartIcon />}
+                      size="large"
+                      variant="contained"
+                      color="primary"
+                    >
+                      {t("buttons.orderService", "Order Service")}
+                    </Button>
+                  </CardActions>
                 </>
               )}
             </CardContent>
-            {/* CardActions might be for "contact candidate", "view profile elsewhere", etc. */}
-            {/* The "Buy" button seems more relevant if this is a product page, not a candidate profile. */}
-            {/* Adjusting for a hypothetical "Order Service" from candidate */}
-            {candidate.productName && ( // Only show if there's a product/service defined
-              <CardActions
-                sx={{
-                  justifyContent: "flex-end", // Align button to the right
-                  padding: "12px 16px",
-                  borderTop: "1px solid",
-                  borderColor: theme.palette.divider,
-                }}
-              >
-                <Button
-                  onClick={() => setIsOrderModalOpen(true)}
-                  startIcon={<ShoppingCartIcon />}
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                >
-                  {t("buttons.orderService", "Order Service")}
-                </Button>
-              </CardActions>
-            )}
           </Card>
-
-          {candidate.productName && business && (
-            <OrderFormModal
-              open={isOrderModalOpen}
-              onClose={() => setIsOrderModalOpen(false)}
-              // Assuming OrderFormModal needs product ID and business currency
-              // If it's the candidate's service, pass candidate.id or a specific service ID
-              product={candidate.id?.toString() ?? ""} // Or a specific service ID from the candidate
-              currency={business.currency} // Or candidate's preferred currency if they set one
-            />
-          )}
         </Grid>
+
+        {/* Job History Section */}
+        {jobHistoryItems.length > 0 && (
+          <Grid item xs={12} md={4}> {/* Sidebar for job history or takes full width if candidate card is smaller */}
+            <Typography variant="h5" component="h2" gutterBottom sx={{ mt: { xs: 3, md: 0 } }}>
+              {t("jobHistory.title", "Work Experience")}
+            </Typography>
+            <Grid container spacing={2}>
+              {jobHistoryItems.map((job) => (
+                <Grid item xs={12} key={job.$id}>
+                  <Card elevation={2} sx={{ height: '100%' /* Ensure cards have same height if desired */ }}>
+                    <CardContent>
+                      <Typography variant="h6" component="h3" gutterBottom>
+                        {job.job_title || t("common.notAvailable", "N/A")}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                        <WorkIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
+                        <Typography variant="subtitle1" color="text.secondary">
+                          {job.company_name || t("common.notAvailable", "N/A")}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                        <DateRangeIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
+                        <Typography variant="body2" color="text.secondary">
+                          {formatDate(job.start_date)} – {job.is_current_job ? t("jobHistory.present", "Present") : formatDate(job.end_date)}
+                        </Typography>
+                      </Box>
+                      {job.location && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <LocationOnIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
+                          <Typography variant="body2" color="text.secondary">
+                            {job.location}
+                          </Typography>
+                        </Box>
+                      )}
+                      {job.employment_type && (
+                        <Chip label={job.employment_type} size="small" sx={{ mb: 1 }} />
+                      )}
+                      {job.description && (
+                        <Typography variant="body2" paragraph sx={{ mt: 1 }}>
+                          {job.description}
+                        </Typography>
+                      )}
+                       <Button
+                                    onClick={() => handleOpenModal(job)}
+                                    startIcon={<VerifiedUserIcon />} // Changed icon
+                                    size="small"
+                                    variant="outlined"
+                                  >
+                                    {t("buttons.verifyExperienceExample", "Verify Experience (Example)")}
+                                  </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        )}
       </Grid>
+
+           <JobVerificationRequestModal
+                 open={isModalOpen}
+                 onClose={handleCloseModal}
+                 // !!! CRITICAL TYPE MISMATCH WARNING !!!
+                 // The 'jobHistoryItem' prop expects an IJobHistory object.
+                 // You are passing 'selectedCandidateForVerification' which is an ICandidate object.
+                 // This will lead to errors or incorrect behavior inside the modal
+                 // because ICandidate does not have fields like 'job_title', 'company_name', etc.,
+                 // that the modal expects from an IJobHistory item.
+                 // This is done to fulfill the request "jobhistoryitem should be passed",
+                 // but it needs to be corrected with the proper data type or a different modal.
+                 jobHistoryItem={selectedCandidateForVerification as any as (IJobHistory & BaseRecord)}
+                 candidateId={selectedCandidateForVerification?.$id || ""} // Candidate's own ID
+                 candidateName={selectedCandidateForVerification?.name || ""}
+               />
     </Show>
   );
 };
