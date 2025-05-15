@@ -1,6 +1,6 @@
 import { Authenticated, Refine } from "@refinedev/core";
 import { KBarProvider } from "@refinedev/kbar";
-import { appwriteClient, resources } from "./utility";
+import { appwriteClient, resources } from "./utility"; // Ensure resources.candidates, resources.employers are unique strings
 import { Analytics } from "@vercel/analytics/react";
 import {
   useNotificationProvider,
@@ -17,26 +17,27 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router-v6";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import Dashboard from "@mui/icons-material/Dashboard";
+import DashboardIcon from "@mui/icons-material/Dashboard"; // Renamed to avoid conflict
+import PeopleIcon from "@mui/icons-material/People"; // Example icon for Employers
+import AccountBoxIcon from "@mui/icons-material/AccountBox"; // Example icon for Candidates
 
 import { DashboardPage } from "./pages/dashboard";
 import { AuthPage } from "./pages/auth";
 import {
   CandidatesCreate,
-  ProductList,
-  ProductShow,
+  ProductList, // Assuming this is CandidatesList
+  ProductShow,  // Assuming this is CandidatesShow
 } from "./pages/candidates";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
-import { BusinessList } from "./pages/employers/list";
-import { BusinessShow } from "./pages/employers/show";
+import { EmployersList, EmployersCreate, BusinessShow } from "./pages/employers"; // BusinessShow was already imported
 import { useTranslation } from "react-i18next";
 import { accessControlProvider } from "./utils";
 import { authProvider } from "./auth-provider";
 import {
-  Inventory,
+  Inventory, // This was used for candidates, can be kept or changed
 } from "@mui/icons-material";
-import { EmployersCreate } from "./pages/employers";
+// import { EmployersCreate } from "./pages/employers"; // Already imported via named import
 
 interface I18nProviderProps {
   translate: (key: string, params?: Record<string, any>) => string;
@@ -61,165 +62,145 @@ const App: React.FC = () => {
           <CssBaseline />
           <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
           <RefineSnackbarProvider>
-              <Refine
-                dataProvider={{
-                  default: DP(appwriteClient, {
-                    databaseId: resources.databaseId,
-                  }),
-                }}
-                liveProvider={liveProvider(appwriteClient, {
+            <Refine
+              dataProvider={{
+                default: DP(appwriteClient, {
                   databaseId: resources.databaseId,
-                })}
-                accessControlProvider={accessControlProvider}
-                authProvider={authProvider}
-                routerProvider={routerProvider}
-                i18nProvider={i18nProvider}
-                options={{
-                  liveMode: "auto",
-                  syncWithLocation: true,
-                  warnWhenUnsavedChanges: true,
-                  breadcrumb: false,
-                  useNewQueryKeys: true,
-                  disableTelemetry: true,
-                }}
-                notificationProvider={useNotificationProvider}
-                resources={[
-                  {
-                    name: resources.candidates,
-                    list: "/",
-                    meta: {
-                      label: t("dashboard.title"),
-                      icon: <Dashboard />,
-                    },
+                }),
+              }}
+              liveProvider={liveProvider(appwriteClient, {
+                databaseId: resources.databaseId,
+              })}
+              accessControlProvider={accessControlProvider}
+              authProvider={authProvider}
+              routerProvider={routerProvider}
+              i18nProvider={i18nProvider}
+              options={{
+                liveMode: "auto",
+                syncWithLocation: true,
+                warnWhenUnsavedChanges: true,
+                breadcrumb: false, // Set to true if you want breadcrumbs based on resources
+                useNewQueryKeys: true,
+                disableTelemetry: true,
+              }}
+              notificationProvider={useNotificationProvider}
+              resources={[
+                {
+                  name: "dashboard", // Unique name for the dashboard
+                  list: DashboardPage, // Component reference
+                  meta: {
+                    label: t("dashboard.title", "Dashboard"),
+                    icon: <DashboardIcon />,
+                    // path: "/" // Optional: if you want to explicitly define the path for menu links
                   },
-                  {
-                    name: resources.employers,
-                    list: "/employers",
-                    create: "/employers/create",
-                    edit: "/employers/:id/edit",
-                    show: "/employers/:id/show",
-                    meta: {
-                      label: t("employers.employers"),
-                    },
+                },
+                {
+                  name: resources.employers, // e.g., "employers"
+                  list: "/employers",       // Component reference
+                  create: "/employers/create",  // Component reference
+                  // edit: EmployersEdit,   // Add component reference if you have an edit page
+                  show: BusinessShow,       // Component reference
+                  meta: {
+                    label: t("employers.employers", "Employers"),
+                    icon: <PeopleIcon />, // Example icon
+                    // path: "/employers" // Optional
                   },
-                  {
-                    name: resources.candidates,
-                    list: "/candidates",
-                    create: "/candidates/create",
-                    edit: "/candidates/:id/edit",
-                    show: "/candidates/:id/show",
-                    meta: {
-                      label: t("candidates.candidates"),
-                      icon: <Inventory />,
-                    },
+                },
+                {
+                  name: resources.candidates, // e.g., "candidates"
+                  list: "/candidates",        // Component reference (assuming ProductList is CandidatesList)
+                  create: "/candidates/create",  // Component reference
+                  // edit: CandidatesEdit,    // Add component reference if you have an edit page
+                  show: ProductShow,        // Component reference (assuming ProductShow is CandidatesShow)
+                  meta: {
+                    label: t("candidates.candidates", "Candidates"),
+                    icon: <AccountBoxIcon />, // Example icon (Inventory can also be used)
+                    // path: "/candidates" // Optional
+                  },
+                },
+              ]}
+            >
+              <>
+                <Routes>
+                  {/* Routes using ThemedLayoutV2 */}
+                  <Route
+                    element={
+                      <ThemedLayoutV2
+                        Header={Header}
+                        Sider={() => (
+                          <ThemedSiderV2
+                            Title={Title} // You can also pass Title to ThemedSiderV2
+                            render={({ items, logout, collapsed }) => (
+                              <>
+                                {items}
+                                {logout}
+                              </>
+                            )}
+                          />
+                        )}
+                      >
+                        <Outlet />
+                      </ThemedLayoutV2>
+                    }
+                  >
+                    {/* Unauthenticated accessible or common routes */}
+                    <Route index element={<DashboardPage />} />
 
-                  },                 
-                ]}
-              >
-                <>
-                  <Routes>
-                    {/* Themed but Unauthenticated Routes */}
-                    <Route
-                      element={
-                        <ThemedLayoutV2
-                          Header={Header}
-                          // Title={Title}
-                          Sider={() => (
-                            <ThemedSiderV2
-                              render={({ items, logout, collapsed }) => {
-                                return (
-                                  <>
-                                    {items}
-                                    {/* {authenticated && logout} */}
-                                    {logout}
-                                  </>
-                                );
-                              }}
-                            />
-                          )}
-                        >
-                          <Outlet />
-                        </ThemedLayoutV2>
-                      }
-                    >
-                      <Route index element={<DashboardPage />} />
                     <Route path="/employers">
-                      <Route index element={<BusinessList />} />
-                      <Route path="create" element={<EmployersCreate />} /> 
-                        <Route path=":id/show" element={<BusinessShow />} />
-                      </Route>
-                    <Route path="/candidates">
-                      <Route path="create" element={<CandidatesCreate />} />
-                        <Route index element={<ProductList />} />
-                        <Route path=":id/show" element={<ProductShow />} />
-                      </Route>
+                      <Route index element={<EmployersList />} />
+                      <Route path="create" element={<EmployersCreate />} />
+                      {/* <Route path=":id/edit" element={<EmployersEdit />} /> */}
+                      <Route path=":id/show" element={<BusinessShow />} />
                     </Route>
 
-                    {/* Authenticated Routes */}
+                    <Route path="/candidates">
+                      <Route index element={<ProductList />} />
+                      <Route path="create" element={<CandidatesCreate />} />
+                      {/* <Route path=":id/edit" element={<CandidatesEdit />} /> */}
+                      <Route path=":id/show" element={<ProductShow />} />
+                    </Route>
+
+                    {/* Add other routes that should use ThemedLayoutV2 here */}
+                    {/* If some routes need authentication, they can be nested under an <Authenticated> wrapper */}
+                    {/* Example for authenticated routes within ThemedLayoutV2:
                     <Route
                       element={
-                        <Authenticated
-                          key="authenticated-routes"
-                          fallback={<CatchAllNavigate to="/login" />}
-                        >
-                          <ThemedLayoutV2
-                            Header={Header}
-                            Title={Title}
-                            Sider={() => (
-                              <ThemedSiderV2
-                                render={({ items, logout, collapsed }) => {
-                                  return (
-                                    <>
-                                      {items}
-                                      {/* {authenticated && logout} */}
-                                      {logout}
-                                    </>
-                                  );
-                                }}
-                              />
-                            )}
-                          >
-                            <Outlet />
-                          </ThemedLayoutV2>
+                        <Authenticated key="authenticated-main-routes" fallback={<CatchAllNavigate to="/login" />}>
+                          <Outlet />
                         </Authenticated>
                       }
                     >
-                     
+                       Place authenticated routes like /profile, /settings here if they use ThemedLayoutV2
                     </Route>
+                    */}
+                  </Route>
 
-                    {/* Routes that don't use ThemedLayoutV2 */}
-                    <Route
-                      element={
-                        <Authenticated
-                          key="auth-pages"
-                          fallback={<Outlet />}
-                          // fallback={<NavigateToResource resource="dashboard" />}
-                        />
-                      }
-                    >
-                      <Route
-                        path="/login"
-                        element={<AuthPage type="login" />}
-                      />
-                      <Route
-                        path="/register"
-                        element={<AuthPage type="register" />}
-                      />
-                      <Route
-                        path="/forgot-password"
-                        element={<AuthPage type="forgotPassword" />}
-                      />
-                      <Route
-                        path="/update-password"
-                        element={<AuthPage type="updatePassword" />}
-                      />
-                    </Route>
-                  </Routes>
-                  <Analytics />
-                </>
-                <UnsavedChangesNotifier />
-                <DocumentTitleHandler />
-              </Refine>
+                  {/* Routes that don't use ThemedLayoutV2 (e.g., auth pages) */}
+                  <Route
+                    element={
+                      <Authenticated
+                        key="auth-pages"
+                        fallback={<Outlet />} // Allows access to login/register if not authenticated
+                      >
+                        {/* If authenticated, and tries to go to /login, redirect to dashboard */}
+                        <CatchAllNavigate to="/" />
+                      </Authenticated>
+                    }
+                  >
+                    <Route path="/login" element={<AuthPage type="login" />} />
+                    <Route path="/register" element={<AuthPage type="register" />} />
+                    <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
+                    <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
+                  </Route>
+
+                  {/* Catch-all for any other unmatched routes (optional) */}
+                  {/* <Route path="*" element={<ErrorComponent />} /> */}
+                </Routes>
+                <Analytics />
+              </>
+              <UnsavedChangesNotifier />
+              <DocumentTitleHandler />
+            </Refine>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
       </KBarProvider>

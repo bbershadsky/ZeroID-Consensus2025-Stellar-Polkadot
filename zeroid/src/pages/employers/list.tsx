@@ -15,7 +15,7 @@ import { ICategory, IEmployer } from "../../interfaces";
 import { resources } from "../../utility";
 type View = "table" | "card";
 
-export const BusinessList = ({ children }: PropsWithChildren) => {
+export const EmployersList = ({ children }: PropsWithChildren) => {
   const [view, setView] = useState<View>(() => {
     const view = localStorage.getItem("business-view") as View;
     return view || "table";
