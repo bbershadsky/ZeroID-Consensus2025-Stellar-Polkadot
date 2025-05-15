@@ -13,6 +13,20 @@ const APP_NAME = "ZeroID"; // Replace with your app name
  * Wallet provisioning using Launchtube after successful authentication.
  */
 
+// Utility to generate a random username: color-animal-number
+const COLORS = [
+  "red", "blue", "green", "yellow", "purple", "orange", "pink", "black", "white", "gray", "teal", "cyan", "magenta", "lime", "indigo", "violet"
+];
+const ANIMALS = [
+  "lion", "tiger", "bear", "wolf", "fox", "eagle", "shark", "panda", "koala", "zebra", "giraffe", "leopard", "otter", "owl", "rabbit", "falcon", "goose"
+];
+function generateRandomUsername() {
+  const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  const animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+  const number = Math.floor(100 + Math.random() * 900); // 3-digit number
+  return `${color}-${animal}-${number}`;
+}
+
 export const authProvider: AuthProvider = {
   login: async () => {
     try {
@@ -29,9 +43,11 @@ export const authProvider: AuthProvider = {
   },
   register: async () => {
     try {
-      const { keyIdBase64, contractId, signedTx } = await account.createWallet(APP_NAME, "user123");
+      const username = generateRandomUsername();
+      const { keyIdBase64, contractId, signedTx } = await account.createWallet(APP_NAME, username);
       if (!signedTx) throw new Error("built transaction missing");
-      await server.send(signedTx);
+      const sendResult = await server.send(signedTx);
+      console.log('server.send result:', sendResult);
       savePasskeyId(keyIdBase64);
       saveContractId(contractId);
       return { success: true, redirectTo: "/" };
