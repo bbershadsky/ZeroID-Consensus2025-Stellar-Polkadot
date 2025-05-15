@@ -19,7 +19,7 @@ const authWrapperProps = {
   },
 };
 
-export const AuthPage: React.FC<{ type: "login" | "register" }> = ({ type }) => {
+export const AuthPage: React.FC<{ type: "login" | "register" | "forgotPassword" | "updatePassword"}> = ({ type }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -28,7 +28,13 @@ export const AuthPage: React.FC<{ type: "login" | "register" }> = ({ type }) => 
     setLoading(true);
     setError(null);
     try {
-      const result = await (action === "login" ? authProvider.login({}) : authProvider.register({}));
+      const result = await (action === "login"
+        ? authProvider.login?.({}) 
+        : authProvider.register?.({}));
+
+      if (!result) {
+        throw new Error("Authentication method is not defined");
+      }
       if (result.success) {
         navigate(result.redirectTo || "/");
       } else {
@@ -65,7 +71,11 @@ export const AuthPage: React.FC<{ type: "login" | "register" }> = ({ type }) => 
         <Button
           variant="contained"
           color="primary"
-          onClick={() => handleAuth(type)}
+          onClick={() => {
+            if (type === "login" || type === "register") {
+              handleAuth(type);
+            }
+          }}
           disabled={loading}
           fullWidth
           sx={{ mb: 2 }}
