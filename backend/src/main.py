@@ -1,13 +1,18 @@
 from appwrite.exception import AppwriteException
+import hashlib
 
 
 def main(context):
 
     try:
         body = context.req.body_json or {}
-        blob_text = body.get("blob_text", "")
 
+        blob_text = body.get("blob_text", "")
         context.log(f"Received blob_text: {blob_text}")
+
+        blob_hash = hashlib.sha256(blob_text.encode('utf-8')).digest()
+        context.log(f"Hashed blob_text: {blob_hash}")
+
         tx_hash = "0xef2e65640216c75332aac88cfd8beb1892b9150e3adbcf24c2ff2166c2d04dcb"
         result = {
             "status_code": 200,
