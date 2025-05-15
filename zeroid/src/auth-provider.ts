@@ -1,107 +1,74 @@
 import { AuthProvider } from "@refinedev/core";
+import { account, server } from "./passkeys";
+import { savePasskeyId, saveContractId, clearPasskeyId, clearContractId } from "./utils/storage";
 
-import { account } from "./utility";
-import { AppwriteException, ID } from "@refinedev/appwrite";
+// TODO: Import passkey-kit and Launchtube SDKs when installed
+// import { PasskeyKit } from "passkey-kit";
+// import { Launchtube } from "launchtube";
+
+const APP_NAME = "ZeroID"; // Replace with your app name
 
 /**
- * We'll use the `account` instance to handle authentication.
- * This will be in sync with our appwrite client.
+ * Passwordless authentication using passkey-kit.
+ * Wallet provisioning using Launchtube after successful authentication.
  */
 
 export const authProvider: AuthProvider = {
-  login: async ({ email, password }) => {
+  login: async () => {
     try {
-      await account.createSession(email, password);
-      return {
-        success: true,
-        redirectTo: "/users/new",
-      };
-    } catch (e) {
-      const { type, message, code } = e as AppwriteException;
+      const { keyIdBase64, contractId } = await account.connectWallet();
+      savePasskeyId(keyIdBase64);
+      saveContractId(contractId);
+      return { success: true, redirectTo: "/" };
+    } catch (e: any) {
       return {
         success: false,
-        error: {
-          message,
-          name: `${code} - ${type}`,
-        },
+        error: { message: e.message || "Passkey login error", name: "PasskeyLoginError" },
       };
     }
   },
-  register: async ({ email, password }) => {
+  register: async () => {
     try {
-      const result = await account.create(ID.unique(), email, password);
-      // console.log("register", result);
-      return {
-        success: true,
-        // message: "Successfully registered",
-        redirectTo: "/login",
-      };
-    } catch (e) {
-      const { type, message, code } = e as AppwriteException;
+      const { keyIdBase64, contractId, signedTx } = await account.createWallet(APP_NAME, "user123");
+      if (!signedTx) throw new Error("built transaction missing");
+      await server.send(signedTx);
+      savePasskeyId(keyIdBase64);
+      saveContractId(contractId);
+      return { success: true, redirectTo: "/" };
+    } catch (e: any) {
       return {
         success: false,
-        error: {
-          message,
-          name: `${code} - ${type}`,
-        },
+        error: { message: e.message || "Passkey registration error", name: "PasskeyRegisterError" },
       };
     }
   },
   logout: async () => {
-    try {
-      await account.deleteSession("current");
-    } catch (error: any) {
-      return {
-        success: false,
-        error,
-      };
-    }
-
-    return {
-      success: true,
-      redirectTo: "/login",
-    };
+    clearPasskeyId();
+    clearContractId();
+    return { success: true, redirectTo: "/login" };
   },
   onError: async (error) => {
     console.error(error);
     return { error };
   },
   check: async () => {
-    try {
-      const session = await account.get();
-
-      if (session) {
-        return {
-          authenticated: true,
-        };
-      }
-    } catch (error: any) {
-      return {
-        authenticated: false,
-        error: error,
-        logout: true,
-        redirectTo: "/login",
-      };
+    if (localStorage.getItem("contractId") && localStorage.getItem("passkeyId")) {
+      return { authenticated: true };
     }
-
     return {
       authenticated: false,
-      error: {
-        message: "Check failed",
-        name: "Session not found",
-      },
+      error: { message: "Check failed", name: "Session not found" },
       logout: true,
       redirectTo: "/login",
     };
   },
   getPermissions: async () => null,
-  getIdentity: async () => {
-    const user = await account.get();
-
-    if (user) {
-      return user;
-    }
-
-    return null;
-  },
+  getIdentity: async () => null,
 };
+
+// TODO: Implement wallet provisioning with Launchtube after authentication
+// async function provisionWalletIfNeeded() {
+//   // Check if wallet exists for user in Launchtube
+//   // If not, create one automatically (invisible to user)
+//   // Optionally, store public key in backend
+// }
