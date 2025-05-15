@@ -1,5 +1,20 @@
-from appwrite.exception import AppwriteException
 import hashlib
+import os
+
+from appwrite.exception import AppwriteException
+from dotenv import load_dotenv
+from substrateinterface import ContractInstance, Keypair, SubstrateInterface
+
+
+load_dotenv()
+
+
+POLKADOT_CONTRACT_ADDRESS = os.environ["POLKADOT_CONTRACT_ADDRESS"]  # '5EXvxAcsG2asmQjGz...LRoJsag7kV9KMu1kR6q'
+POLKADOT_SUBSTRATE_URL = os.environ["POLKADOT_SUBSTRATE_URL"]  # 'ws://127.0.0.1:9944'
+POLKADOT_KEYPAIR_ACCOUNT = os.environ["POLKADOT_KEYPAIR_ACCOUNT"]  # '//Alice'
+
+
+def store_hash_on_chain(hash): ...
 
 
 def main(context):
