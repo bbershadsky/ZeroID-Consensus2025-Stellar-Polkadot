@@ -8,28 +8,55 @@ from substrateinterface import ContractInstance, Keypair, SubstrateInterface
 
 load_dotenv()
 
+ENV = os.getenv('ENV')
+IS_LOCAL = ENV == 'local'
+IS_DEV = ENV == 'dev'
+
 POLKADOT_CONTRACT_ADDRESS = os.environ["POLKADOT_CONTRACT_ADDRESS"]  # '5EXvxAcsG2asmQjGz...LRoJsag7kV9KMu1kR6q'
 POLKADOT_SUBSTRATE_URL = os.environ["POLKADOT_SUBSTRATE_URL"]  # 'ws://127.0.0.1:9944'
 POLKADOT_KEYPAIR_ACCOUNT = os.environ["POLKADOT_KEYPAIR_ACCOUNT"]  # '//Alice'
+POLKADOT_KEYPAIR_MNEMONIC = os.environ['POLKADOT_KEYPAIR_MNEMONIC']  # "foo bar ... baz qux"
 
 
-def store_hash_on_chain(hash):
+def store_hash_on_chain(hash, context):
     substrate = SubstrateInterface(
         url=POLKADOT_SUBSTRATE_URL,
-        type_registry_preset='substrate-contracts-node'
+        type_registry_preset='substrate-node-template'
     )
 
-    keypair = Keypair.create_from_uri(POLKADOT_KEYPAIR_ACCOUNT)
+    if IS_LOCAL:
+        keypair = Keypair.create_from_uri(POLKADOT_KEYPAIR_ACCOUNT)
+    elif IS_DEV:
+        keypair = Keypair.create_from_mnemonic(POLKADOT_KEYPAIR_MNEMONIC)
+    else:
+        raise Exception(f'Failed to load valid {ENV=}')
+
+    contract_path = os.path.join(os.path.dirname(__file__), 'zid_contract.json')
+    context.log(f'Creating contract instance from {contract_path=}...')
 
     contract = ContractInstance.create_from_address(
         substrate=substrate,
         contract_address=POLKADOT_CONTRACT_ADDRESS,
+        metadata_file=contract_path
     )
+
+    context.log(f'Successfully created {contract=}')
 
     result = contract.exec(
         keypair,
-        'store_hash',
-        args={'hash': list(hash)},
+        'store_verified_resume_data',
+        args={'hash': hash},
+    )
+
+    context.log(
+        f'Successfully stored resume data, '
+        f'{result.extrinsic_hash=}, '
+        f'{result.block_hash=}, '
+        f'{result.block_number=}, '
+        f'{result.contract_address=}, '
+        f'{result.is_success=}, '
+        f'{result.contract_events=}, '
+        f'{result.contract_metadata=}'
     )
 
     return result
@@ -45,7 +72,9 @@ def main(context):
         blob_hash = hashlib.sha256(blob_text.encode("utf-8")).digest()
         context.log(f"Hashed blob_text: {blob_hash}")
 
-        tx_hash = "0xef2e65640216c75332aac88cfd8beb1892b9150e3adbcf24c2ff2166c2d04dcb"
+        result = store_hash_on_chain(blob_hash, context)
+
+        tx_hash = result.extrinsic_hash
         result = {"status_code": 200, "submitted_value": blob_text, "tx_hash": tx_hash}
 
         return context.res.json(result)
