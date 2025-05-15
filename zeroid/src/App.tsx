@@ -25,19 +25,15 @@ import { DashboardPage } from "./pages/dashboard";
 import { AuthPage } from "./pages/auth";
 import {
   CandidatesCreate,
-  CandidatesList, // Assuming this is CandidatesList
-  ProductShow,  // Assuming this is CandidatesShow
+  CandidatesList,
+  CandidateShow,
 } from "./pages/candidates";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
-import { EmployersList, EmployersCreate, BusinessShow } from "./pages/employers"; // BusinessShow was already imported
+import { EmployersList, EmployersCreate, BusinessShow as EmployerShow } from "./pages/employers"; // BusinessShow was already imported
 import { useTranslation } from "react-i18next";
 import { accessControlProvider } from "./utils";
 import { authProvider } from "./auth-provider";
-import {
-  Inventory, // This was used for candidates, can be kept or changed
-} from "@mui/icons-material";
-// import { EmployersCreate } from "./pages/employers"; // Already imported via named import
 
 interface I18nProviderProps {
   translate: (key: string, params?: Record<string, any>) => string;
@@ -99,7 +95,7 @@ const App: React.FC = () => {
                   list: "/employers",       // Component reference
                   create: "/employers/create",  // Component reference
                   // edit: EmployersEdit,   // Add component reference if you have an edit page
-                  show: BusinessShow,       // Component reference
+                  show: EmployerShow,       // Component reference
                   meta: {
                     label: t("employers.employers", "Employers"),
                     icon: <PeopleIcon />, // Example icon
@@ -111,7 +107,7 @@ const App: React.FC = () => {
                   list: "/candidates",        // Component reference (assuming ProductList is CandidatesList)
                   create: "/candidates/create",  // Component reference
                   // edit: CandidatesEdit,    // Add component reference if you have an edit page
-                  show: ProductShow,        // Component reference (assuming ProductShow is CandidatesShow)
+                  show: CandidateShow,        // Component reference (assuming ProductShow is CandidatesShow)
                   meta: {
                     label: t("candidates.candidates", "Candidates"),
                     icon: <AccountBoxIcon />, // Example icon (Inventory can also be used)
@@ -150,14 +146,14 @@ const App: React.FC = () => {
                       <Route index element={<EmployersList />} />
                       <Route path="create" element={<EmployersCreate />} />
                       {/* <Route path=":id/edit" element={<EmployersEdit />} /> */}
-                      <Route path=":id/show" element={<BusinessShow />} />
+                      <Route path=":id/show" element={<EmployerShow />} />
                     </Route>
 
                     <Route path="/candidates">
                       <Route index element={<CandidatesList />} />
                       <Route path="create" element={<CandidatesCreate />} />
                       {/* <Route path=":id/edit" element={<CandidatesEdit />} /> */}
-                      <Route path=":id/show" element={<ProductShow />} />
+                      <Route path=":id/show" element={<CandidateShow />} />
                     </Route>
 
                     {/* Add other routes that should use ThemedLayoutV2 here */}

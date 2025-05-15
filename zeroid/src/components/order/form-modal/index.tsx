@@ -9,227 +9,225 @@ import {
   Typography,
   Stack,
   DialogActions,
-  CardMedia,
-  Skeleton,
-  AlertTitle,
+  Box,
   Alert,
+  AlertTitle,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useForm, Controller } from "react-hook-form";
+import SendIcon from "@mui/icons-material/Send";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   useTranslate,
   useCreate,
-  useNotification,
-  useGetIdentity,
   HttpError,
-  useOne,
-  useGo,
+  useGetIdentity,
+  BaseRecord,
 } from "@refinedev/core";
-import { ICandidate, IOrder, IIdentity } from "../../../interfaces";
-import { resources } from "../../../utility";
-interface OrderFormModalProps {
+import { IJobHistory, IIdentity } from "../../../interfaces"; // Ensure IJobHistory is correctly defined
+import { resources } from "../../../utility"; // Ensure resources.verificationRequests is defined
+
+// Interface for the verification request form
+interface VerificationFormValues {
+  verifierEmail: string;
+  // You might add a custom message field if needed
+  // customMessage?: string;
+}
+
+// Props for the modal
+interface JobVerificationRequestModalProps {
   open: boolean;
   onClose: () => void;
-  product?: string;
-  currency?: string;
+  jobHistoryItem: IJobHistory & BaseRecord; // The specific job history item to verify
+  candidateId: string; // The ID of the candidate to whom this job history belongs
+  candidateName?: string; // Optional: Candidate's name for context
 }
-export const OrderFormModal: React.FC<OrderFormModalProps> = ({
+
+export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalProps> = ({
   open,
   onClose,
-  product,
-  currency,
+  jobHistoryItem,
+  candidateId,
+  candidateName,
 }) => {
-  const { data: user } = useGetIdentity<IIdentity | null>();
-
   const t = useTranslate();
-  const go = useGo();
+  const { data: user } = useGetIdentity<IIdentity | null>(); // Current logged-in user
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
-  } = useForm<IOrder>({
+    formState: { errors, isSubmitting },
+  } = useForm<VerificationFormValues>({
     defaultValues: {
-      orderCustomerID: user?.$id,
-      // orderCustomerContactEmail: user?.email,
-      orderDescription: "",
-      // orderOfferPrice: 0,
-      // orderOfferPrice: Number(product.productPrice),
+      verifierEmail: "",
     },
   });
-  const { data, isLoading } = useOne<ICandidate, HttpError>({
-    resource: resources.candidates,
-    id: product,
-  });
 
-  const productData = data?.data;
-  const businessID = productData?.businessID;
-  const { mutate } = useCreate<IOrder>();
-  // const notify = useNotification();
+  const { mutate: createVerificationRequest, isLoading: isCreateLoading } =
+    useCreate<BaseRecord>(); // Using BaseRecord as a generic for the verification request payload
 
-  const generateOrderNumber = (customerID: string) => {
-    const timestamp = Date.now();
-    const randomNum = Math.floor(Math.random() * 1000);
-    const prefix = customerID.includes("@") ? "CUS" : "USR";
-    return `${prefix}-${timestamp}-${randomNum}`;
-  };
+  const onSubmit: SubmitHandler<VerificationFormValues> = async (data) => {
+    if (!jobHistoryItem?.$id) {
+      console.error("Job History ID is missing.");
+      // Optionally, show a notification to the user
+      return;
+    }
 
-  const onSubmit = async (data: IOrder) => {
-    const orderNumber = generateOrderNumber(data?.orderCustomerID!);
-    mutate(
+    createVerificationRequest(
       {
-        resource: resources.candidates,
+        resource: resources.jobHistory, // IMPORTANT: Define this resource in your utility.ts and App.tsx
         values: {
-          orderOwnerID: businessID,
-          orderCustomerID: data?.orderCustomerID,
-          orderStatus: "Pending",
-          orderProductID: productData?.id,
-          orderDescription: data.orderDescription,
-          orderOfferPrice: Number(productData?.productPrice),
-          orderCode: orderNumber,
+          jobHistory_id: jobHistoryItem.$id, // Link to the job history item
+          candidate_id: candidateId, // Link to the candidate
+          verifier_email: data.verifierEmail,
+          status: "PENDING_VERIFICATION", // Initial status
+          requested_by_user_id: user?.$id, // ID of the user who initiated the request (optional)
+          job_title: jobHistoryItem.job_title, // For context in the verification request record
+          company_name: jobHistoryItem.company_name, // For context
+          // custom_message: data.customMessage, // If you add a custom message field
+          requested_at: new Date().toISOString(),
         },
       },
       {
-        onError: (error, variables, context) => {
-          console.log("Error creating order", error, variables, context);
+        onError: (error: HttpError) => {
+          console.error("Error creating verification request:", error);
+          // Handle error notification, e.g., using useNotification
         },
-        onSuccess: (data, variables, context) => {
-          reset(); // Reset form fields
-          onClose(); // Close the modal
-          go({
-            to: {
-              action: "show",
-              resource: resources.candidates,
-              id: data.data.id,
-            },
-          });
+        onSuccess: () => {
+          reset();
+          onClose();
+          // Handle success notification
+          // notify({ type: "success", message: t("verificationRequests.notifications.success") });
         },
       }
     );
   };
 
+  // Helper to format dates
+  const formatDateDisplay = (date?: string | Date | null): string => {
+    if (!date) return "N/A";
+    try {
+      const parsedDate = typeof date === "string" ? new Date(date) : date;
+      return parsedDate.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+      });
+    } catch (e) {
+      return date instanceof Date ? date.toString() : String(date);
+    }
+  };
+
   return (
-    <>
-      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{t("orders.newOrder")}</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        {t("verificationRequests.modalTitle", "Request Experience Verification")}
         <IconButton
           aria-label="close"
           onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
+          disabled={isSubmitting || isCreateLoading}
+          sx={{ color: (theme) => theme.palette.grey[500] }}
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent>
-          {isLoading ? (
-            <Skeleton variant="rectangular" width="100%" height={190} />
-          ) : (
-            productData?.productImageURL && (
-              <CardMedia
-                component="img"
-                height="140"
-                image={productData.productImageURL}
-                alt={productData.productName}
-              />
-            )
-          )}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing={2} mt={2}>
-              {isLoading ? (
-                <>
-                  <Skeleton width="80%" height={40} />
-                  <Skeleton width="100%" height={100} />
-                </>
-              ) : (
-                <>
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <Typography variant="h4" gutterBottom>
-                      {productData?.productName || "No product name"}
-                    </Typography>
-                    <Typography variant="h3" color="primary" gutterBottom>
-                      {new Intl.NumberFormat("en-US", {
-                        style: "currency",
-                        currency: currency || "USD",
-                      }).format(Number(productData?.productPrice) || 0)}
-                    </Typography>
-                  </Stack>
-                  <Typography variant="h5" color="text.secondary" gutterBottom>
-                    {productData?.productDescription || "No Description"}
-                  </Typography>
-                  <Controller
-                    name="orderDescription"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label={t("orders.notes")}
-                        variant="outlined"
-                        error={!!errors.orderDescription}
-                        helperText={errors.orderDescription?.message}
-                        fullWidth
-                        multiline
-                      />
-                    )}
-                  />
-                  {!user?.$id && (
-                    <>
-                      <Alert severity="info">
-                        <AlertTitle>{t("orders.notLoggedIn")}</AlertTitle>
-                        {t("orders.enterEmail")}
-                      </Alert>
-                      <Controller
-                        name="orderCustomerID"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            label={t("orders.customerID")}
-                            variant="outlined"
-                            error={!!errors.orderCustomerID}
-                            helperText={errors.orderCustomerID?.message}
-                            fullWidth
-                            multiline
-                            hidden
-                          />
-                        )}
-                      />
-                    </>
-                  )}
-                  {/* <FormControl fullWidth sx={{ m: 1 }}>
-                    <InputLabel htmlFor="outlined-adornment-amount">
-                      Offer Price
-                    </InputLabel>
-                    <OutlinedInput
-                      id="outlined-adornment-amount"
-                      startAdornment={
-                        <InputAdornment position="start">$</InputAdornment>
-                      }
-                      label="Amount"
-                      value={productData?.productPrice || ""}
-                      disabled
-                    />
-                  </FormControl> */}
-                </>
+      </DialogTitle>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent dividers>
+          <Stack spacing={2}>
+            <Typography variant="h6">
+              {t("verificationRequests.jobDetails", "Job Details:")}
+            </Typography>
+            <Box sx={{ p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                <strong>{t("jobHistory.fields.jobTitle", "Job Title:")}</strong> {jobHistoryItem?.job_title || "N/A"}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>{t("jobHistory.fields.companyName", "Company:")}</strong> {jobHistoryItem?.company_name || "N/A"}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <strong>{t("jobHistory.fields.dates", "Dates:")}</strong>{" "}
+                {formatDateDisplay(jobHistoryItem?.start_date)} –{" "}
+                {jobHistoryItem?.is_current_job
+                  ? t("jobHistory.present", "Present")
+                  : formatDateDisplay(jobHistoryItem?.end_date)}
+              </Typography>
+              {jobHistoryItem?.description && (
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxHeight: 100, overflowY: 'auto' }}>
+                  <strong>{t("jobHistory.fields.description", "Description:")}</strong> {jobHistoryItem.description}
+                </Typography>
               )}
-            </Stack>
-            <DialogActions>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="submit" color="primary">
-                Create Order
-              </Button>
-            </DialogActions>
-          </form>
+            </Box>
+
+            {candidateName && (
+              <Typography variant="body2" color="text.secondary">
+                {t("verificationRequests.forCandidate", `This request is for candidate: ${candidateName}`)}
+              </Typography>
+            )}
+
+            <Controller
+              name="verifierEmail"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: t("validation.required", { field: t("verificationRequests.fields.verifierEmail", "Verifier's Email") }),
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: t("validation.email", "Invalid email address"),
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label={t("verificationRequests.fields.verifierEmail", "Verifier's Email Address")}
+                  type="email"
+                  variant="outlined"
+                  error={!!errors.verifierEmail}
+                  helperText={errors.verifierEmail?.message}
+                  fullWidth
+                  disabled={isSubmitting || isCreateLoading}
+                />
+              )}
+            />
+            {/*
+            <Controller
+              name="customMessage"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label={t("verificationRequests.fields.customMessage", "Optional Message")}
+                  variant="outlined"
+                  multiline
+                  rows={3}
+                  fullWidth
+                  disabled={isSubmitting || isCreateLoading}
+                />
+              )}
+            />
+            */}
+            <Alert severity="info" sx={{ mt: 1 }}>
+              {t("verificationRequests.info", "A verification request will be sent to the email address provided. Ensure you have their consent.")}
+            </Alert>
+          </Stack>
         </DialogContent>
-      </Dialog>
-    </>
+        <DialogActions sx={{ p: '16px 24px' }}>
+          <Button onClick={onClose} disabled={isSubmitting || isCreateLoading}>
+            {t("buttons.cancel", "Cancel")}
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            startIcon={<SendIcon />}
+            disabled={isSubmitting || isCreateLoading}
+          >
+            {isSubmitting || isCreateLoading
+              ? <CircularProgress size={24} color="inherit" />
+              : t("buttons.sendRequest", "Send Request")}
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
