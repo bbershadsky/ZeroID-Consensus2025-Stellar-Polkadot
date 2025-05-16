@@ -24,6 +24,7 @@ export interface IJobHistory {
   location?: string;
   employment_type?: string;
   is_current_job?: boolean;
+  verification_status?: string;
 }
 
 // export interface IOrder {

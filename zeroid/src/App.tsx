@@ -34,6 +34,7 @@ import { EmployersList, EmployersCreate, BusinessShow as EmployerShow } from "./
 import { useTranslation } from "react-i18next";
 import { accessControlProvider } from "./utils"; // Assuming this exists and is correctly set up
 import { authProvider } from "./auth-provider"; // Assuming this exists and is correctly set up
+import { ProcessVerificationPage } from "./pages/ProcessVerificationPage";
 
 interface I18nProviderProps {
   translate: (key: string, params?: Record<string, any>) => string;
@@ -159,6 +160,7 @@ const App: React.FC = () => {
                       <Route path="create" element={<CandidatesCreate />} />
                       <Route path=":id/show" element={<CandidateShow />} />
                     </Route>
+                    <Route path="/verify-employment/:jobHistoryId/:verificationAction" element={<ProcessVerificationPage />} />
                   </Route>
 
                   {/* Auth Pages (Unprotected) */}
