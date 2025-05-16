@@ -74,8 +74,13 @@ def main(context):
 
         result = store_hash_on_chain(blob_hash, context)
 
-        tx_hash = result.extrinsic_hash
-        result = {"status_code": 200, "submitted_value": blob_text, "tx_hash": tx_hash}
+        result = {
+            "status_code": 200,
+            "submitted_value": blob_text,
+            "tx_hash": result.extrinsic_hash,
+            "block_hash": result.block_hash,
+            "is_success": result.is_success,
+        }
 
         return context.res.json(result)
 
