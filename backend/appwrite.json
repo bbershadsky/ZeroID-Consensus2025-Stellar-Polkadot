@@ -1,0 +1,457 @@
+{
+    "projectId": "6824b106002e3ec3026b",
+    "projectName": "zeroid",
+    "settings": {
+        "services": {
+            "account": true,
+            "avatars": true,
+            "databases": true,
+            "locale": true,
+            "health": true,
+            "storage": true,
+            "teams": true,
+            "users": true,
+            "functions": true,
+            "graphql": true,
+            "messaging": true
+        },
+        "auth": {
+            "methods": {
+                "jwt": true,
+                "phone": true,
+                "invites": true,
+                "anonymous": true,
+                "email-otp": true,
+                "magic-url": true,
+                "email-password": true
+            },
+            "security": {
+                "duration": 31536000,
+                "limit": 0,
+                "sessionsLimit": 10,
+                "passwordHistory": 0,
+                "passwordDictionary": false,
+                "personalDataCheck": false,
+                "sessionAlerts": false,
+                "mockNumbers": []
+            }
+        }
+    },
+    "functions": [
+        {
+            "$id": "6825648e002b7d6b5f42",
+            "execute": [
+                "any"
+            ],
+            "name": "Store Verified Resume Data",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-3.12",
+            "scopes": [
+                "users.read"
+            ],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.py",
+            "commands": "pip install -r requirements.txt",
+            "path": "functions/Store Verified Resume Data"
+        },
+        {
+            "$id": "6825e8ba00338ad0f048",
+            "execute": [
+                "any"
+            ],
+            "name": "Starter function",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-3.12",
+            "scopes": [
+                "users.read"
+            ],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.py",
+            "commands": "pip install -r requirements.txt",
+            "path": "functions/Starter function"
+        },
+        {
+            "$id": "6826802c003475a79dac",
+            "execute": [
+                "any"
+            ],
+            "name": "Email contact form",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-3.12",
+            "scopes": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.py",
+            "commands": "pip install -r requirements.txt",
+            "path": "functions/Email contact form"
+        },
+        {
+            "$id": "68268379001c012bf58d",
+            "execute": [
+                "any"
+            ],
+            "name": "email2",
+            "enabled": true,
+            "logging": true,
+            "runtime": "python-3.12",
+            "scopes": [
+                "users.read",
+                "databases.read",
+                "collections.read",
+                "attributes.read",
+                "indexes.read",
+                "documents.read",
+                "functions.read",
+                "execution.read",
+                "execution.write"
+            ],
+            "events": [],
+            "schedule": "",
+            "timeout": 15,
+            "entrypoint": "src/main.py",
+            "commands": "pip install -r requirements.txt",
+            "path": "functions/email2"
+        }
+    ],
+    "databases": [
+        {
+            "$id": "6824b79f00151762fd77",
+            "name": "docs",
+            "enabled": true
+        }
+    ],
+    "collections": [
+        {
+            "$id": "6824b7a50015bdf6ca7c",
+            "$permissions": [
+                "create(\"any\")",
+                "read(\"any\")",
+                "update(\"any\")"
+            ],
+            "databaseId": "6824b79f00151762fd77",
+            "name": "candidates",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "email",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                },
+                {
+                    "key": "resume_file_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 64,
+                    "default": null
+                },
+                {
+                    "key": "resume_file_hash",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "uploaded_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "is_verified",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "verification_status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": "AWAITING_CONSENT"
+                },
+                {
+                    "key": "first_verified_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "verification_notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "verification_token",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "token_expires_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "resume_original_filename",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "6824f2c9003936fa2428",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "6824b79f00151762fd77",
+            "name": "employers",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "company_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "primary_email",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                },
+                {
+                    "key": "verification_email_1",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                },
+                {
+                    "key": "verification_email_2",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                },
+                {
+                    "key": "verification_email_3",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "idx_primary_email",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "primary_email"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "6824f92e000279960628",
+            "$permissions": [
+                "create(\"any\")",
+                "read(\"any\")",
+                "update(\"any\")"
+            ],
+            "databaseId": "6824b79f00151762fd77",
+            "name": "job_history",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "candidate_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 64,
+                    "default": null
+                },
+                {
+                    "key": "company_name",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "job_title",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "start_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "end_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "is_current_job",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1024,
+                    "default": null
+                },
+                {
+                    "key": "location",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 128,
+                    "default": null
+                },
+                {
+                    "key": "employment_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                },
+                {
+                    "key": "verifier_email",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "format": "email",
+                    "default": null
+                },
+                {
+                    "key": "verification_message",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1024,
+                    "default": null
+                },
+                {
+                    "key": "verification_requested_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "verification_status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 32,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        }
+    ],
+    "buckets": [
+        {
+            "$id": "6824f408003abc041d0a",
+            "$permissions": [
+                "create(\"any\")",
+                "read(\"any\")",
+                "update(\"any\")"
+            ],
+            "fileSecurity": false,
+            "name": "files",
+            "enabled": true,
+            "maximumFileSize": 5000000,
+            "allowedFileExtensions": [
+                "pdf",
+                "docx",
+                "doc",
+                "json"
+            ],
+            "compression": "none",
+            "encryption": true,
+            "antivirus": true
+        }
+    ]
+}
