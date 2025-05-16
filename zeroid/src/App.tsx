@@ -125,7 +125,7 @@ const App: React.FC = () => {
                     element={
                       <Authenticated
                         key="protected-routes" // ADDED KEY HERE
-                        fallback={<CatchAllNavigate to="/login" />}
+                        fallback={<CatchAllNavigate to="/register" />}
                       >
                         <ThemedLayoutV2
                           Header={Header}

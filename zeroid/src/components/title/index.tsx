@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 
-import { FinefoodsLogoIcon, FinefoodsLogoText } from "../icons/finefoods-logo";
+import { ZeroIdLogo } from "../icons/finefoods-logo";
 
 type TitleProps = {
   collapsed: boolean;
@@ -19,11 +19,10 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => {
         }}
       >
         {collapsed ? (
-          <FinefoodsLogoIcon />
+          <ZeroIdLogo />
         ) : (
           <>
-            <FinefoodsLogoIcon />
-            <FinefoodsLogoText />
+            <ZeroIdLogo />
           </>
         )}
       </Box>

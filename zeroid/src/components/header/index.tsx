@@ -51,7 +51,6 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   // const { data: authenticated } = useIsAuthenticated();
-  const { mode, setMode } = useContext(ColorModeContext);
   const { getLocale, changeLocale } = useTranslation();
   const currentLocale = getLocale();
   const { data: user } = useGetIdentity<IIdentity | null>();
@@ -302,55 +301,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
               }}
             />
           </Stack> */}
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={{
-              xs: "8px",
-              sm: "24px",
-            }}
-          >
-            <IconButton
-              onClick={() => {
-                setMode();
-              }}
-              sx={{
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? "transparent" : "#00000014",
-              }}
-            >
-              {mode === "dark" ? (
-                <BrightnessHighIcon />
-              ) : (
-                <Brightness4Icon
-                  sx={{
-                    fill: "#000000DE",
-                  }}
-                />
-              )}
-            </IconButton>
-            <Stack
-              direction="row"
-              gap={{
-                xs: "8px",
-                sm: "16px",
-              }}
-              alignItems="center"
-              justifyContent="center"
-            >
-              {user?.name && (
-                <>
-                  <Typography variant="subtitle2">{user.name}</Typography>
-                  <Avatar
-                    src={user?.prefs.profilePhoto}
-                    alt={user.name}
-                    sx={{ cursor: "pointer" }}
-                    onClick={handleAvatarClick}
-                  />
-                </>
-              )}
-            </Stack>
-          </Stack>
+
         </Stack>
       </Toolbar>
     </AppBar>
