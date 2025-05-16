@@ -57,7 +57,6 @@
             "commands": "pip install -r requirements.txt",
             "path": "functions/Store Verified Resume Data"
         },
-       
         {
             "$id": "68268379001c012bf58d",
             "execute": [
@@ -70,10 +69,14 @@
             "scopes": [
                 "users.read",
                 "databases.read",
+                "databases.write",
                 "collections.read",
+                "collections.write",
                 "attributes.read",
+                "attributes.write",
                 "indexes.read",
                 "documents.read",
+                "documents.write",
                 "functions.read",
                 "execution.read",
                 "execution.write"
