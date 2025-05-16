@@ -57,42 +57,7 @@
             "commands": "pip install -r requirements.txt",
             "path": "functions/Store Verified Resume Data"
         },
-        {
-            "$id": "6825e8ba00338ad0f048",
-            "execute": [
-                "any"
-            ],
-            "name": "Starter function",
-            "enabled": true,
-            "logging": true,
-            "runtime": "python-3.12",
-            "scopes": [
-                "users.read"
-            ],
-            "events": [],
-            "schedule": "",
-            "timeout": 15,
-            "entrypoint": "src/main.py",
-            "commands": "pip install -r requirements.txt",
-            "path": "functions/Starter function"
-        },
-        {
-            "$id": "6826802c003475a79dac",
-            "execute": [
-                "any"
-            ],
-            "name": "Email contact form",
-            "enabled": true,
-            "logging": true,
-            "runtime": "python-3.12",
-            "scopes": [],
-            "events": [],
-            "schedule": "",
-            "timeout": 15,
-            "entrypoint": "src/main.py",
-            "commands": "pip install -r requirements.txt",
-            "path": "functions/Email contact form"
-        },
+       
         {
             "$id": "68268379001c012bf58d",
             "execute": [
@@ -114,7 +79,7 @@
                 "execution.write"
             ],
             "events": [],
-            "schedule": "",
+            "schedule": "*/1 * * * *",
             "timeout": 15,
             "entrypoint": "src/main.py",
             "commands": "pip install -r requirements.txt",

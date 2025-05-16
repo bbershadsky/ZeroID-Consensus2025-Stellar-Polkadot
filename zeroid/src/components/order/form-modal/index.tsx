@@ -11,7 +11,6 @@ import {
   DialogActions,
   Box,
   Alert,
-  AlertTitle,
   CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -19,14 +18,15 @@ import SendIcon from "@mui/icons-material/Send";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   useTranslate,
-  useUpdate, // Changed from useCreate
+  useUpdate,
+  useCreate, // Added for creating server actions
   HttpError,
   useGetIdentity,
   BaseRecord,
-  useNotification, // For user feedback
+  useNotification,
 } from "@refinedev/core";
 import { IJobHistory, IIdentity } from "../../../interfaces"; // Ensure IJobHistory includes new verification fields
-import { resources } from "../../../utility";
+import { resources } from "../../../utility"; // Assuming resources.serverActions is defined here
 
 // Interface for the verification request form values
 interface VerificationFormValues {
@@ -38,16 +38,16 @@ interface VerificationFormValues {
 interface JobVerificationRequestModalProps {
   open: boolean;
   onClose: () => void;
-  jobHistoryItem: (IJobHistory & BaseRecord) | null; // The specific job history item to verify
-  candidateId: string; // The ID of the candidate (owner of the job history)
-  candidateName?: string; // Optional: Candidate's name for context
+  jobHistoryItem: (IJobHistory & BaseRecord) | null;
+  candidateId: string;
+  candidateName?: string;
 }
 
 export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalProps> = ({
   open,
   onClose,
   jobHistoryItem,
-  candidateId, // This prop might be redundant if jobHistoryItem already contains candidate_id
+  candidateId,
   candidateName,
 }) => {
   const t = useTranslate();
@@ -61,14 +61,18 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
     formState: { errors, isSubmitting: isFormSubmitting },
   } = useForm<VerificationFormValues>({
     defaultValues: {
-      verifierEmail: jobHistoryItem?.verifier_email || "", // Pre-fill if attempting to resend/update
+      verifierEmail: jobHistoryItem?.verifier_email || "",
       customMessage: jobHistoryItem?.verification_message || "",
     },
   });
 
-  // Use the useUpdate hook to update the job history item
+  // Hook to update the job history item
   const { mutate: updateJobHistory, isLoading: isUpdateLoading } =
-    useUpdate<IJobHistory>(); // Specify IJobHistory for type safety
+    useUpdate<IJobHistory>();
+
+  // Hook to create the server action for sending the email
+  const { mutate: createServerAction, isLoading: isCreateServerActionLoading } =
+    useCreate();
 
   // Reset form when jobHistoryItem changes or modal opens/closes
   useEffect(() => {
@@ -78,12 +82,12 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
         customMessage: jobHistoryItem.verification_message || "",
       });
     } else if (!open) {
-      reset({ verifierEmail: "", customMessage: "" }); // Clear form on close
+      reset({ verifierEmail: "", customMessage: "" });
     }
   }, [open, jobHistoryItem, reset]);
 
   const onSubmit: SubmitHandler<VerificationFormValues> = async (data) => {
-    if (!jobHistoryItem?.id) { // Use .id as BaseRecord provides it (mapped from $id)
+    if (!jobHistoryItem?.id) {
       console.error("Job History ID is missing.");
       openNotification?.({
         type: "error",
@@ -93,54 +97,67 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
       return;
     }
 
+    const jobHistoryUpdatePayload = {
+      verifier_email: data.verifierEmail,
+      verification_message: data.customMessage,
+      // Consider changing to "VERIFICATION_PENDING" or "VERIFICATION_QUEUED"
+      // and have the backend update to "VERIFICATION_SENT" after successful email dispatch.
+      verification_status: "VERIFICATION_SENT",
+      verification_requested_by: user?.$id,
+      verification_requested_at: new Date().toISOString(),
+    };
+
     updateJobHistory(
       {
-        resource: resources.jobHistory, // Target the jobHistory collection for update
-        id: jobHistoryItem.id,         // ID of the job history record to update
-        values: {
-          // Fields to update on the jobHistoryItem:
-          verifier_email: data.verifierEmail,
-          verification_message: data.customMessage,
-          verification_status: "VERIFICATION_SENT", // Update status
-          verification_requested_by: user?.$id,     // Track who requested
-          verification_requested_at: new Date().toISOString(),
-          // Ensure other existing fields of jobHistoryItem are not accidentally overwritten
-          // by passing them if your backend expects full objects for updates,
-          // or ensure your backend handles partial updates.
-          // Refine's Appwrite data provider typically handles partial updates.
-        },
+        resource: resources.jobHistory,
+        id: jobHistoryItem.id,
+        values: jobHistoryUpdatePayload,
       },
       {
         onError: (error: HttpError) => {
           console.error("Error updating job history for verification:", error);
           openNotification?.({
             type: "error",
-            message: t("verificationRequests.notifications.updateError", "Failed to send verification request."),
+            message: t("verificationRequests.notifications.updateError", "Failed to update job history."),
             description: error.message || t("common.errors.tryAgain", "Please try again."),
           });
         },
         onSuccess: () => {
-          const body = { "job_history_id": jobHistoryItem.id }
-          fetch("http://68268379bb8b76e21d6f.gersu.com/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          // Now that job history is updated, create the server action to send the email
+          createServerAction(
+            {
+              // Assuming 'resources.serverActions' is defined in your utility.ts
+              // If not, replace with the actual collection name string e.g., "server_actions"
+              resource: resources.serverActions,
+              values: {
+                action_type: "SEND_VERIFICATION_EMAIL",
+                payload: JSON.stringify({ job_history_id: jobHistoryItem.id }),
+                status: "pending", // Will be picked up by the cron job
+                triggered_by: "user",
+                // triggered_by: user?.$id,
+                attempts: 0,
+              },
             },
-            body: JSON.stringify(body),
-            mode: 'no-cors'
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Network response was not ok");
-              }
-              return response.json();
-            })
-          openNotification?.({
-            type: "success",
-            message: t("verificationRequests.notifications.success", "Verification request sent successfully!"),
-          });
-          // reset(); // Reset is now handled by useEffect on open/close
-          onClose();
+            {
+              onError: (error: HttpError) => {
+                console.error("Error creating server action for email verification:", error);
+                openNotification?.({
+                  type: "error",
+                  message: t("verificationRequests.notifications.queueError", "Failed to queue verification email."),
+                  description: error.message || t("common.errors.tryAgain", "The job history was updated, but queuing the email failed. Please contact support or try again."),
+                });
+                // Note: Job history was updated, but email queuing failed.
+                // You might want to implement a retry mechanism or guide the user.
+              },
+              onSuccess: () => {
+                openNotification?.({
+                  type: "success",
+                  message: t("verificationRequests.notifications.success", "Verification request submitted successfully! The email will be sent shortly."),
+                });
+                onClose(); // Close modal only after both operations are successful
+              },
+            }
+          );
         },
       }
     );
@@ -159,7 +176,8 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
     }
   };
 
-  const isLoading = isFormSubmitting || isUpdateLoading;
+  // Combined loading state
+  const isLoading = isFormSubmitting || isUpdateLoading || isCreateServerActionLoading;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -189,10 +207,6 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
                 <Typography variant="subtitle1" gutterBottom>
                   <strong>{t("jobHistory.fields.jobTitle", "Job Title:")}</strong> {jobHistoryItem.job_title || "N/A"}
                 </Typography>
-                {/* Displaying jobHistoryItem.id for debugging, can be removed */}
-                {/* <Typography variant="caption" gutterBottom>
-                  <strong>ID:</strong> {jobHistoryItem.id}
-                </Typography> */}
                 <Typography variant="body1" gutterBottom>
                   <strong>{t("jobHistory.fields.companyName", "Company:")}</strong> {jobHistoryItem.company_name || "N/A"}
                 </Typography>
@@ -258,7 +272,7 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
               />
 
               <Alert severity="info" sx={{ mt: 1 }}>
-                {t("verificationRequests.info", "An email will be sent to the verifier. This action will update the job history item with the request details.")}
+                {t("verificationRequests.info", "An email will be sent to the verifier.")}
               </Alert>
             </Stack>
           )}

@@ -1,104 +1,72 @@
 import os
 import json
 import resend # Make sure the resend library is included in your function's dependencies
-import datetime # For current year
+import datetime
+import traceback # For detailed error logging
 from appwrite.client import Client
-from appwrite.services.users import Users # Not used in this version, but kept if needed later
 from appwrite.services.databases import Databases
+from appwrite.query import Query
 from appwrite.exception import AppwriteException
 
-# This Appwrite function will be executed every time your function is triggered
-def main(context):
-    # --- Essential Configuration ---
-    api_endpoint = os.getenv("APPWRITE_FUNCTION_API_ENDPOINT")
-    project_id = os.getenv("APPWRITE_FUNCTION_PROJECT_ID")
-    # function_id = os.getenv("APPWRITE_FUNCTION_ID") # Not directly used in this logic
+# --- Essential Configuration ---
+# These should be set as environment variables in your Appwrite function settings
+APPWRITE_ENDPOINT = os.getenv("APPWRITE_FUNCTION_API_ENDPOINT")
+APPWRITE_PROJECT_ID = os.getenv("APPWRITE_FUNCTION_PROJECT_ID")
+APPWRITE_API_KEY = os.getenv("APPWRITE_FUNCTION_API_KEY") # API Key for server-side operations
 
-    db_id = os.getenv("APPWRITE_DATABASE_ID")
-    job_history_collection_id = os.getenv("APPWRITE_JOB_HISTORY_ID")
-    resend_api_key = os.getenv("RESEND_API_KEY") # For sending emails
+DB_ID = os.getenv("APPWRITE_DATABASE_ID")
+JOB_HISTORY_COLLECTION_ID = os.getenv("APPWRITE_JOB_HISTORY_ID")
+SERVER_ACTIONS_COLLECTION_ID = os.getenv("APPWRITE_SERVER_ACTIONS_COLLECTION_ID") # New
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
-    # --- Validate Core Configuration ---
-    if not all([api_endpoint, project_id]):
-        context.error("Error: Missing core Appwrite configuration (endpoint or project ID).")
-        return context.res.json({"status": "failure", "message": "Server configuration error."}, status_code=500)
+# Constants
+MAX_TASKS_PER_RUN = 5 # Process up to 5 tasks per cron execution
+ACTION_TYPE_SEND_VERIFICATION_EMAIL = "SEND_VERIFICATION_EMAIL"
 
-    if not db_id:
-        context.error("Error: Environment variable APPWRITE_DATABASE_ID is not set.")
-        return context.res.json({"status": "failure", "message": "APPWRITE_DATABASE_ID is not configured."}, status_code=500)
+def validate_env_vars(context):
+    """Validates that all necessary environment variables are set."""
+    required_vars = {
+        "APPWRITE_FUNCTION_API_ENDPOINT": APPWRITE_ENDPOINT,
+        "APPWRITE_FUNCTION_PROJECT_ID": APPWRITE_PROJECT_ID,
+        "APPWRITE_FUNCTION_API_KEY": APPWRITE_API_KEY,
+        "APPWRITE_DATABASE_ID": DB_ID,
+        "APPWRITE_JOB_HISTORY_ID": JOB_HISTORY_COLLECTION_ID,
+        "APPWRITE_SERVER_ACTIONS_COLLECTION_ID": SERVER_ACTIONS_COLLECTION_ID,
+        "RESEND_API_KEY": RESEND_API_KEY,
+    }
+    missing_vars = [name for name, value in required_vars.items() if not value]
+    if missing_vars:
+        error_message = f"Error: Missing environment variables: {', '.join(missing_vars)}"
+        context.error(error_message)
+        raise ValueError(error_message)
+    return True
 
-    if not job_history_collection_id:
-        context.error("Error: Environment variable APPWRITE_JOB_HISTORY_ID is not set.")
-        return context.res.json({"status": "failure", "message": "APPWRITE_JOB_HISTORY_ID is not configured."}, status_code=500)
+def _send_verification_email(context, databases, job_history_id_to_fetch):
+    """
+    Handles the logic for fetching job history and sending the verification email.
+    Returns True on success, raises an exception on failure.
+    """
+    context.log(f"Fetching document from database '{DB_ID}', collection '{JOB_HISTORY_COLLECTION_ID}', document '{job_history_id_to_fetch}'")
+    document = databases.get_document(
+        database_id=DB_ID,
+        collection_id=JOB_HISTORY_COLLECTION_ID,
+        document_id=job_history_id_to_fetch
+    )
+    context.log(f"Result from get_document for job history: {document}")
 
-    if not resend_api_key:
-        context.error("Error: Environment variable RESEND_API_KEY is not set.")
-        return context.res.json({"status": "failure", "message": "Email sending API key is not configured."}, status_code=500)
+    verifier_email_str = document.get("verifier_email")
+    if not verifier_email_str:
+        raise ValueError(f"Critical: Verifier email is missing for job history ID: {job_history_id_to_fetch}.")
 
-    # Initialize Appwrite Client
-    client = Client().set_endpoint(api_endpoint).set_project(project_id)
-    databases = Databases(client)
+    verification_message_str = document.get("verification_message") or "A candidate has requested employment verification."
+    company_name_str = document.get("company_name") or "N/A"
+    job_title_str = document.get("job_title") or "N/A"
+    start_date_str = document.get("start_date") or "N/A"
+    end_date_str = document.get("end_date") or "N/A"
+    description_str = document.get("description") or "No additional description provided."
+    current_year = datetime.datetime.now().year
 
-    # Initialize Resend API Key
-    resend.api_key = resend_api_key
-
-    context.log(f"Job History Collection ID: {job_history_collection_id}")
-    context.log(f"Database ID: {db_id}")
-
-    # --- Request Handling: Expect POST with job_history_id ---
-    if context.req.method == "POST":
-        job_history_id_to_fetch = None
-        try:
-            body = json.loads(context.req.body)
-            job_history_id_to_fetch = body.get("job_history_id")
-        except json.JSONDecodeError:
-            context.error("Error: Could not parse request body as JSON.")
-            return context.res.json({"status": "failure", "message": "Invalid JSON body."}, status_code=400)
-        except Exception as e:
-            context.error(f"Error processing request body: {str(e)}")
-            return context.res.json({"status": "failure", "message": "Error processing request."}, status_code=400)
-
-        if not job_history_id_to_fetch:
-            context.error("Error: 'job_history_id' not provided in POST request body.")
-            return context.res.json(
-                {"status": "failure", "message": "Missing 'job_history_id'."}, # Changed from Unauthorized
-                status_code=400 # Bad Request is more appropriate
-            )
-
-        context.log(f"Received job_history_id: {job_history_id_to_fetch} via POST request.")
-
-        # --- Database Operation ---
-        try:
-            context.log(f"Fetching document from database '{db_id}', collection '{job_history_collection_id}', document '{job_history_id_to_fetch}'")
-            document = databases.get_document(
-                database_id=db_id,
-                collection_id=job_history_collection_id,
-                document_id=job_history_id_to_fetch
-            )
-            context.log(f"Result from get_document: {document}")
-
-            # --- Extract data from the document with defaults ---
-            verifier_email_str = document.get("verifier_email")
-            # Ensure verifier_email exists, otherwise we can't send the email
-            if not verifier_email_str:
-                context.error(f"Critical: Verifier email is missing for job history ID: {job_history_id_to_fetch}. Cannot send email.")
-                # Optionally, update the job history item status to reflect this error
-                return context.res.json({
-                    "status": "failure",
-                    "message": "Verifier email missing in the job history record. Cannot send verification email.",
-                }, status_code=400) # Bad request as the data is incomplete
-
-            verification_message_str = document.get("verification_message") if document.get("verification_message") else "A candidate has requested employment verification."
-            company_name_str = document.get("company_name") if document.get("company_name") else "N/A"
-            job_title_str = document.get("job_title") if document.get("job_title") else "N/A"
-            start_date_str = document.get("start_date") if document.get("start_date") else "N/A"
-            end_date_str = document.get("end_date") if document.get("end_date") else "N/A"
-            description_str = document.get("description") if document.get("description") else "No additional description provided."
-
-            current_year = datetime.datetime.now().year
-
-            # --- Prepare Email Content (HTML and Text) ---
-            html_body = f"""
+    html_body = f"""
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,7 +82,7 @@ def main(context):
     body {{ height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; font-family: Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #f4f4f4; padding: 20px; }}
     .container {{ background-color: #ffffff; padding: 30px; border-radius: 8px; max-width: 600px; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }}
     .header {{ text-align: center; padding-bottom: 20px; border-bottom: 1px solid #eeeeee; }}
-    .header h1 {{ margin: 0; font-size: 24px; color: #007bff; /* Consider using your brand color */ }}
+    .header h1 {{ margin: 0; font-size: 24px; color: #007bff; }}
     .content p {{ margin: 15px 0; }}
     .content strong {{ color: #555555; }}
     .data-item {{ margin-bottom: 10px; padding-left: 10px; }}
@@ -125,9 +93,7 @@ def main(context):
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>Employment Verification Request</h1>
-    </div>
+    <div class="header"><h1>Employment Verification Request</h1></div>
     <div class="content">
       <p>Dear Recipient,</p>
       <p><strong>{verification_message_str}</strong></p>
@@ -148,8 +114,7 @@ def main(context):
 </body>
 </html>
 """
-
-            text_body = f"""
+    text_body = f"""
 Dear Recipient,
 
 {verification_message_str}
@@ -170,66 +135,169 @@ This email was sent from Zero ID.
 If you received this email in error, you can safely delete it. Please do not reply if you are not the intended recipient.
 © {current_year} Zero ID. All rights reserved.
 """
-            context.log(f"Attempting to send email to: {verifier_email_str}")
-            context.log(f"Company Name: {company_name_str}, Job Title: {job_title_str}")
-            context.log(f"Duration: {start_date_str} to {end_date_str}")
-            context.log(f"Message: {verification_message_str}")
-            context.log(f"Description: {description_str}")
+    context.log(f"Preparing to send email to: {verifier_email_str} for job history {job_history_id_to_fetch}")
+    params = {
+        "from": "Zero ID <bryan@mail.rejections.fyi>",
+        "to": [verifier_email_str],
+        "subject": "[Zero ID] Please verify candidate's past employment",
+        "html": html_body,
+        "text": text_body,
+    }
+
+    email_response = resend.Emails.send(params)
+    context.log(f"Resend API Response for job {job_history_id_to_fetch}: {email_response}")
+
+    # resend-python raises an exception on failure, so if we reach here, it's likely a success.
+    # Check if response has an ID, which is typical for success.
+    if not (isinstance(email_response, dict) and email_response.get('id')):
+        context.warn(f"Email send to {verifier_email_str} for job {job_history_id_to_fetch} may not have succeeded, response: {email_response}")
+        # Depending on Resend's guarantees, you might still consider this a success or raise an error.
+        # For now, we assume if no exception, it's okay.
+
+    context.log(f"Verification email sent successfully for job history {job_history_id_to_fetch} to {verifier_email_str}.")
+    return True
 
 
-            # --- Send Email using Resend ---
-            # For better deliverability:
-            # 1. Ensure 'bryan@mail.rejections.fyi' is a verified sender in Resend.
-            # 2. Configure SPF, DKIM, and DMARC records for 'mail.rejections.fyi' (or 'rejections.fyi')
-            #    in your DNS settings to authorize Resend to send emails on your behalf.
-            # 3. Keep content clear, concise, and avoid spam-trigger words.
-            # 4. The inclusion of both HTML and Text parts is a good practice.
-            params = {
-                "from": "Zero ID <bryan@mail.rejections.fyi>", # Using a display name
-                "to": [verifier_email_str], # 'to' expects a list of strings or a comma-separated string
-                "subject": "[Zero ID] Please verify candidate's past employment",
-                "html": html_body,
-                "text": text_body,
-                # Optional: Add headers like Reply-To if needed
-                # "reply_to": "support@yourdomain.com",
-                # Optional: Add tags for tracking in Resend
-                # "tags": [
-                #    {"name": "type", "value": "employment-verification"},
-                #    {"name": "job_history_id", "value": job_history_id_to_fetch},
-                # ]
-            }
+def main(context):
+    try:
+        validate_env_vars(context)
+    except ValueError:
+        # Error already logged by validate_env_vars
+        return context.res.json({"status": "failure", "message": "Configuration error."}, status_code=500)
 
-            email_response = resend.Emails.send(params)
-            context.log(f"Resend API Response: {email_response}")
+    # Initialize Appwrite Client
+    client = Client()
+    client.set_endpoint(APPWRITE_ENDPOINT)
+    client.set_project(APPWRITE_PROJECT_ID)
+    client.set_key(APPWRITE_API_KEY) # Use API Key for server-side operations
 
-            # Check Resend response (basic check, consult Resend docs for detailed error handling)
-            # resend-python v0.6.0 returns an object with an 'id' on success, or raises an exception.
-            # If an exception wasn't raised by resend.Emails.send(), it's generally considered successful.
+    databases = Databases(client)
+    resend.api_key = RESEND_API_KEY
 
-            return context.res.json({
-                "status": "success",
-                "message": "Verification email sent successfully.",
-                "document_id": document.get("$id"),
-                "resend_email_id": email_response.get('id') if isinstance(email_response, dict) else None
-            })
+    context.log("Cron job started: Looking for pending server actions.")
+    context.log(f"Server Actions Collection ID: {SERVER_ACTIONS_COLLECTION_ID}")
+    context.log(f"Job History Collection ID: {JOB_HISTORY_COLLECTION_ID}")
+    context.log(f"Database ID: {DB_ID}")
 
-        except AppwriteException as err:
-            context.error(f"Appwrite database error while processing '{job_history_id_to_fetch}': {repr(err)}")
-            if err.code == 404: # Document not found
-                 return context.res.json({"status": "failure", "message": f"Job history item with ID '{job_history_id_to_fetch}' not found."}, status_code=404)
-            return context.res.json({"status": "failure", "message": f"Database error: {err.message}"}, status_code=500)
-        except resend.exceptions.ResendError as e: # Catch Resend specific errors
-            context.error(f"Resend API error: {str(e)}")
-            return context.res.json({"status": "failure", "message": f"Failed to send email: {str(e)}"}, status_code=502) # Bad Gateway or specific error
-        except Exception as e:
-            context.error(f"An unexpected error occurred: {str(e)}")
-            # Log the full traceback for unexpected errors for better debugging
-            import traceback
-            context.error(traceback.format_exc())
-            return context.res.json({"status": "failure", "message": "An unexpected server error occurred."}, status_code=500)
+    processed_count = 0
+    failed_count = 0
 
-    elif context.req.path == "/ping" and context.req.method == "GET":
-        return context.res.text("Pong")
-    else:
-        return context.res.json({"status": "failure", "message": "Invalid request method or path. Use POST with 'job_history_id' or GET /ping."}, status_code=405)
+    try:
+        # Fetch pending actions
+        pending_actions_response = databases.list_documents(
+            database_id=DB_ID,
+            collection_id=SERVER_ACTIONS_COLLECTION_ID,
+            queries=[
+                Query.equal("status", "pending"),
+                Query.order_asc("$createdAt"), # Process oldest first
+                Query.limit(MAX_TASKS_PER_RUN)
+            ]
+        )
+        pending_actions = pending_actions_response['documents']
 
+        if not pending_actions:
+            context.log("No pending server actions found.")
+            return context.res.json({"status": "success", "message": "No pending actions to process."})
+
+        context.log(f"Found {len(pending_actions)} pending action(s) to process.")
+
+        for action_doc in pending_actions:
+            action_id = action_doc['$id']
+            action_type = action_doc.get('action_type')
+            payload_str = action_doc.get('payload')
+            current_attempts = action_doc.get('attempts', 0)
+
+            context.log(f"Processing action ID: {action_id}, Type: {action_type}, Attempts: {current_attempts}")
+
+            try:
+                # 1. Mark action as 'processing'
+                databases.update_document(
+                    database_id=DB_ID,
+                    collection_id=SERVER_ACTIONS_COLLECTION_ID,
+                    document_id=action_id,
+                    data={
+                        "status": "processing",
+                        "attempts": current_attempts + 1,
+                        "last_attempt_at": datetime.datetime.now(datetime.timezone.utc).isoformat()
+                    }
+                )
+
+                # 2. Execute the action based on type
+                if action_type == ACTION_TYPE_SEND_VERIFICATION_EMAIL:
+                    if not payload_str:
+                        raise ValueError("Payload is missing for SEND_VERIFICATION_EMAIL action.")
+                    
+                    payload = json.loads(payload_str)
+                    job_history_id = payload.get("job_history_id")
+
+                    if not job_history_id:
+                        raise ValueError("'job_history_id' not found in payload.")
+
+                    context.log(f"Executing SEND_VERIFICATION_EMAIL for job_history_id: {job_history_id}")
+                    _send_verification_email(context, databases, job_history_id) # This will raise on error
+
+                    # 3a. Mark as 'completed' on success
+                    databases.update_document(
+                        database_id=DB_ID,
+                        collection_id=SERVER_ACTIONS_COLLECTION_ID,
+                        document_id=action_id,
+                        data={
+                            "status": "completed",
+                            "last_error": None # Clear any previous error
+                        }
+                    )
+                    context.log(f"Action ID: {action_id} completed successfully.")
+                    processed_count += 1
+                else:
+                    # Unknown action type
+                    raise ValueError(f"Unknown action_type: {action_type}")
+
+            except (AppwriteException, resend.exceptions.ResendError, json.JSONDecodeError, ValueError) as e:
+                # 3b. Mark as 'failed' on error
+                error_message = f"Error processing action {action_id}: {str(e)}. Type: {type(e).__name__}"
+                context.error(error_message)
+                context.error(traceback.format_exc()) # Log full traceback for debugging
+                failed_count += 1
+                try:
+                    databases.update_document(
+                        database_id=DB_ID,
+                        collection_id=SERVER_ACTIONS_COLLECTION_ID,
+                        document_id=action_id,
+                        data={
+                            "status": "failed",
+                            "last_error": error_message[:2048] # Truncate if too long for DB field
+                        }
+                    )
+                except AppwriteException as db_update_err:
+                    context.error(f"CRITICAL: Failed to update action {action_id} status to 'failed' after error: {db_update_err}")
+            except Exception as e: # Catch any other unexpected error
+                error_message = f"Unexpected error processing action {action_id}: {str(e)}. Type: {type(e).__name__}"
+                context.error(error_message)
+                context.error(traceback.format_exc())
+                failed_count += 1
+                try:
+                    databases.update_document(
+                        database_id=DB_ID,
+                        collection_id=SERVER_ACTIONS_COLLECTION_ID,
+                        document_id=action_id,
+                        data={
+                            "status": "failed",
+                            "last_error": error_message[:2048]
+                        }
+                    )
+                except AppwriteException as db_update_err:
+                     context.error(f"CRITICAL: Failed to update action {action_id} status to 'failed' after unexpected error: {db_update_err}")
+
+
+        summary_message = f"Cron job finished. Processed: {processed_count}, Failed: {failed_count}."
+        context.log(summary_message)
+        return context.res.json({"status": "success", "message": summary_message})
+
+    except AppwriteException as e:
+        context.error(f"Appwrite error during cron job execution: {repr(e)}")
+        context.error(traceback.format_exc())
+        return context.res.json({"status": "failure", "message": f"Appwrite error: {e.message}"}, status_code=500)
+    except Exception as e:
+        context.error(f"An unexpected error occurred in cron job: {str(e)}")
+        context.error(traceback.format_exc())
+        return context.res.json({"status": "failure", "message": "An unexpected server error occurred."}, status_code=500)

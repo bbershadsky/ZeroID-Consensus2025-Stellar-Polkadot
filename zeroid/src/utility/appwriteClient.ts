@@ -8,6 +8,7 @@ const resources = {
   candidates: import.meta.env.VITE_APPWRITE_CANDIDATES_ID,
   jobHistory: import.meta.env.VITE_APPWRITE_JOB_HISTORY_ID,
   bucketFiles: import.meta.env.VITE_APPWRITE_BUCKET_FILES_ID,
+  serverActions: import.meta.env.VITE_APPWRITE_SERVER_ACTIONS_ID,
 } as const;
 const appwriteClient = new Appwrite();
 
