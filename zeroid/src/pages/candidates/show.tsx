@@ -348,10 +348,35 @@ export const CandidateShow = () => {
       canEdit={isLoggedIn && user?.$id === candidate.userID}
     // WrapperProps={{ sx: { padding: { xs: 1, sm: 2, md: 3 } } }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: { xs: 2, md: 0 }, mb: 3 }}>
+      <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            gap: 2,
+            mt: { xs: 3, md: 0 },
+            mb: 2,
+          }}
+      >
         <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
           {candidate.name}
         </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column",justifyContent: "space-around" }}>
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 2 }}>
+            {t("jobHistory.title", "Work Experience")}
+          </Typography>
+          <Button
+              variant="outlined"
+              onClick={() => setIsAddExperienceOpen(true)}
+              startIcon={<WorkIcon />}
+          >
+            {t("buttons.addExperience", "Add Experience")}
+          </Button>
+        </Box>
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mt: { xs: 2, md: 0 }, mb: 3 }}>
         {isLoggedIn && user?.$id === candidate.userID && ( // Only show Add Experience if it's the candidate's own profile
           <Button
             variant="outlined"
@@ -429,9 +454,7 @@ export const CandidateShow = () => {
         {/* Job History Section */}
         {jobHistoryItems.length > 0 && (
           <Grid item xs={12} md={5}> {/* Adjusted grid size */}
-            <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 2 }}>
-              {t("jobHistory.title", "Work Experience")}
-            </Typography>
+
             <Grid container spacing={2}>
               {jobHistoryItems.map((job) => (
                 <Grid item xs={12} key={job.$id}>
