@@ -318,7 +318,7 @@ export const CandidateShow = () => {
                                     size="small"
                                     variant="outlined"
                                   >
-                                    {t("buttons.verifyExperienceExample", "Verify Experience (Example)")}
+                                    {t("buttons.verifyExperienceExample", "Verify Experience")}
                                   </Button>
                     </CardContent>
                   </Card>
