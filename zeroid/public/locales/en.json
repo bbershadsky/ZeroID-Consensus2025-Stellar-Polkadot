@@ -67,29 +67,9 @@
       "backHome": "Back Home"
     }
   },
-  "messages": {
-    "messages": "Messages",
-    "myMessages": "My Messages",
-    "newMessage": "New Message",
-    "typeMessage": "Type a message",
-    "searchMessages": "Search Messsages",
-    "selectMessage": "Select a message on the left",
-    "noMessages": "No Messages",
-    "text": "Text",
-    "user": "User"
-  },
-  "quotes": {
-    "quotes": "Quotes",
-    "addQuote": "Add Quote",
-    "quote": "Quote",
-    "author": "Author",
-    "votes": "Votes",
-    "searchPlaceholder": "Search quotes"
-  },
   "users": {
     "add": "Add User",
     "personal": "Personal",
-    "payment": "Payment",
     "name": "Name",
     "nameHelper": "How should we call you?",
     "description": "Bio",
@@ -210,55 +190,11 @@
     "realtime-stats": "Realtime Stats",
     "description": "Best one!"
   },
-  "enum": {
-    "orderStatuses": {
-      "Pending": "Pending",
-      "Ready": "Ready",
-      "On The Way": "On the way",
-      "Delivered": "Delivered",
-      "Cancelled": "Cancelled"
-    }
-  },
-  "orders": {
-    "orders": "Orders",
-    "order": "Order",
-    "newOrder": "New Order",
-    "notes": "Order Notes",
-    "customerID": "Contact Email",
-    "notLoggedIn": "You are not logged in",
-    "enterEmail": "Enter your email",
-    "titles": {
-      "orderDetails": "Order Details",
-      "deliveryMap": "Delivery Map",
-      "deliveryDetails": "Delivery Details",
-      "businessDetails": "Business Details",
-      "products": "Products",
-      "list": "Orders",
-      "show": "Order",
-      "send": "Send"
-    },
+  "candidates": {
     "fields": {
-      "message": "Type a message...",
-      "payment": "Payment",
-      "paymentUnpaid": "UNPAID",
-      "paymentPaid": "PAID",
-      "paymentURL": "Payment QR",
-      "updatedAt": "Updated",
-      "orderNumber": "Order #",
-      "orderID": "Order ID",
-      "status": "Status",
-      "orderStatus": "Status",
-      "store": "Store",
-      "user": "User",
-      "products": "Products",
-      "product": "Product",
-      "createdAt": "CreatedAt",
-      "amount": "Amount",
-      "itemsAmount": "{{amount}} items",
-      "order": "Order",
-      "customer": "Customer",
-      "phone": "Phone",
-      "deliveryTime": "Delivery Time"
+      "name": "Name",
+      "email": "Email",
+      "isVerified": "Verified"
     }
   },
   "employers": {
@@ -298,59 +234,10 @@
       "searchPlaceholder": "Search by name or company...",
       "price": "Price",
       "category": "Category",
-      "language": "Language",
-      "languages": "Languages",
       "createdAt": "Created At",
       "dropImageHere": "Drop Image Here",
       "dragNDrop": "Drag-n-Drop your image or tap to select"
     },
-    "products": {
-      "products-services": "Products / Services",
-      "noneFound": "No other products found.",
-      "products": "Products",
-      "selectedProduct": "Selected Product",
-      "titles": {
-        "list": "Products",
-        "create": "Create Product",
-        "edit": "Edit Product"
-      },
-      "fields": {
-        "id": "ID",
-        "name": "Product Name",
-        "description": "Description",
-        "isActive": {
-          "label": "Status",
-          "true": "Available",
-          "false": "Unavailable"
-        },
-        "price": "Price",
-        "category": "Category",
-        "createdAt": "CreatedAt"
-      },
-      "actions": {
-        "add": "Add new product",
-        "edit": "Edit product"
-      }
-    },
-    "reviews": {
-      "reviews": "Reviews",
-      "titles": {
-        "list": "Reviews"
-      },
-      "fields": {
-        "user": "User",
-        "orderId": "Order",
-        "review": "Review",
-        "rating": "Rating"
-      }
-    },
-    "buttons": {
-      "editProducts": "Edit Products",
-      "addProduct": "Add Product",
-      "outOfStock": "Out Of Stock",
-      "edit": "Edit Product"
-    },
-    "storeProducts": "Store Products",
     "tagFilterDescription": "Use tags to filter your search",
     "all": "All",
     "productSearch": "Product Search",
@@ -361,13 +248,6 @@
     "maxLength": "Maximum length is {{max}}",
     "required": {
       "field": "This field is required"
-    }
-  },
-  "candidates": {
-    "fields": {
-      "name": "Name",
-      "email": "Email",
-      "isVerified": "Verified"
     }
   }
 }

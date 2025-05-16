@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { authProvider } from "../../auth-provider";
+import {ZeroIdLogo} from "../../components/icons/finefoods-logo";
 
 const stellarSvg = (
   <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ verticalAlign: 'middle' }}>
@@ -84,7 +85,7 @@ export const AuthPage: React.FC<{ type: "login" | "register" | "forgotPassword" 
               mb: 1,
             }}
           >
-            ZeroID
+            <ZeroIdLogo logoColor="black"/>
           </Typography>
           <Typography variant="h5" mt={1} color="#fff" fontWeight={700}>
             {isLogin ? "Welcome Back" : "Create your account"}
@@ -107,7 +108,7 @@ l          disabled={loading}
             fontWeight: 600,
             fontSize: "1.1rem",
             borderRadius: 2,
-            background: "linear-gradient(90deg, #1a6cf6 0%, #1a9ff6 100%)",
+            background: "linear-gradient(90deg, rgb(230, 0, 122) 0%, rgb(230, 0, 122) 100%)",
             boxShadow: "0 2px 16px 0 #1a6cf633",
           }}
         >
@@ -128,9 +129,9 @@ l          disabled={loading}
           sx={{ color: "#b0b0b0", fontWeight: 500, mb: 3 }}
         >
           {isLogin ? (
-            <>Need an account? <span style={{ color: "#1a9ff6", marginLeft: 4 }}>Sign up</span></>
+            <>Need an account? <span style={{ color: "rgb(230, 0, 122)", marginLeft: 4 }}>Sign up</span></>
           ) : (
-            <>Already have an account? <span style={{ color: "#1a9ff6", marginLeft: 4 }}>Sign in</span></>
+            <>Already have an account? <span style={{ color: "rgb(230, 0, 122)", marginLeft: 4 }}>Sign in</span></>
           )}
         </Button>
         <Box width="100%" borderTop="1px solid #23232a" mt={2} mb={1} />
