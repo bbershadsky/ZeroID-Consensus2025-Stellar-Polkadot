@@ -1,5 +1,13 @@
 import React, { useState } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import { useGetIdentity, useShow, useList, useTranslate, BaseRecord } from "@refinedev/core"; // Added useList
+import { Databases, ID } from "appwrite";
 import { Show } from "@refinedev/mui";
 import {
   Typography,
@@ -33,7 +41,7 @@ import { Link as RouterLink, useParams } from "react-router-dom"; // Renamed Lin
 
 import { useCardStyles } from "../../components/card-elevated";
 import { ICandidate, IIdentity, IJobHistory } from "../../interfaces";
-import { resources } from "../../utility";
+import {appwriteClient, resources} from "../../utility";
 // import CurrencySelector from "../../components/currency-selector"; // Not used if business section is removed
 // import { LanguageDisplay } from "../../components"; // Not used if business section is removed
 import { JobVerificationRequestModal } from "../../components/order/form-modal"; // Keep if candidate has "orderable" services
@@ -51,7 +59,17 @@ const formatDate = (date?: string | Date | null): string => {
     return date instanceof Date ? date.toString() : date; // Return original if formatting fails
   }
 };
-
+export interface ResumeExperience {
+  candidate_id: string;
+  company_name: string;
+  job_title: string;
+  start_date: string;
+  end_date: string;
+  is_current_job: boolean;
+  description: string;
+  location: string;
+  employment_type: string;
+}
 export const CandidateShow = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
@@ -62,12 +80,14 @@ export const CandidateShow = () => {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [selectedJobHistoryForVerification, setSelectedJobHistoryForVerification] = useState<IJobHistory | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
+  const [isAddExperienceOpen, setIsAddExperienceOpen] = useState(false);
+
   const handleOpenModal = (jobHistoryItem: IJobHistory) => {
     setSelectedJobHistoryForVerification(jobHistoryItem);
     setIsModalOpen(true);
   };
-  
+
   const handleCloseModal = () => {
     setSelectedJobHistoryForVerification(null);
     setIsModalOpen(false);
@@ -85,6 +105,17 @@ export const CandidateShow = () => {
     id: id!,
   });
   const candidate = candidateDataResult?.data;
+  const [newExperience, setNewExperience] = useState<ResumeExperience>({
+    candidate_id: candidate?.id ?? "",
+    company_name: "",
+    job_title: "",
+    start_date: "",
+    end_date: "",
+    is_current_job: false,
+    description: "",
+    location: "",
+    employment_type: ""
+  });
 
   // --- Fetch Job History Data for this Candidate ---
   const {
@@ -115,7 +146,6 @@ export const CandidateShow = () => {
   console.log("Candidate Data:", candidate);
   console.log("Job History Items:", jobHistoryItems);
   console.log("Overall Loading State:", isLoading);
-
   if (candidateError) {
     return (
       <Typography color="error">
@@ -178,39 +208,25 @@ export const CandidateShow = () => {
       canEdit={isLoggedIn && user?.$id === candidate.userID}
     // WrapperProps={{ sx: { padding: { xs: 1, sm: 2, md: 3 } } }} // Optional: Add padding to the Show wrapper
     >
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2, mt: { xs: 3, md: 0 }, mb: 2 }}>
+        <Typography variant="h5" component="h2">
+          {t("jobHistory.title", "Work Experience")}
+        </Typography>
+        <Button
+          variant="outlined"
+          onClick={() => setIsAddExperienceOpen(true)}
+          startIcon={<WorkIcon />}
+        >
+          {t("buttons.addExperience", "Add Experience")}
+        </Button>
+      </Box>
+
       <Grid container spacing={3}>
         {/* Candidate Details Card */}
         <Grid item xs={12} md={jobHistoryItems.length > 0 ? 8 : 12}> {/* Adjust grid size based on job history presence */}
+
           <Card sx={cardStyles} elevation={4}>
             <CardContent>
-              {candidate.productImageURL ? (
-                <CardMedia
-                  component="img"
-                  sx={{ height: 250, mb: 2, borderRadius: 1, objectFit: 'cover' }}
-                  image={candidate.productImageURL}
-                  alt={candidate.name}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    height: 250,
-                    width: "100%",
-                    mb: 2,
-                    borderRadius: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    color: "text.secondary",
-                    backgroundColor: theme.palette.action.hover,
-                  }}
-                >
-                  <PhotoCameraIcon sx={{ fontSize: 60 }} />
-                  <Typography variant="caption">
-                    {t("common.noImage", "No Profile Image")}
-                  </Typography>
-                </Box>
-              )}
               <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
                 {candidate.name}
               </Typography>
@@ -273,9 +289,6 @@ export const CandidateShow = () => {
         {/* Job History Section */}
         {jobHistoryItems.length > 0 && (
           <Grid item xs={12} md={4}> {/* Sidebar for job history or takes full width if candidate card is smaller */}
-            <Typography variant="h5" component="h2" gutterBottom sx={{ mt: { xs: 3, md: 0 } }}>
-              {t("jobHistory.title", "Work Experience")}
-            </Typography>
             <Grid container spacing={2}>
               {jobHistoryItems.map((job) => (
                 <Grid item xs={12} key={job.$id}>
@@ -327,8 +340,6 @@ export const CandidateShow = () => {
             </Grid>
           </Grid>
         )}
-      </Grid>
-
           <JobVerificationRequestModal
                  open={isModalOpen}
                  onClose={handleCloseModal}
@@ -336,6 +347,101 @@ export const CandidateShow = () => {
                  candidateId={candidate.$id || ""}
                  candidateName={candidate.name || ""}
                />
+      </Grid>
+      <Dialog open={isAddExperienceOpen} onClose={() => setIsAddExperienceOpen(false)} fullWidth maxWidth="md">
+        <DialogTitle>{t("jobHistory.addExperience", "Add New Experience")}</DialogTitle>
+        <DialogContent dividers>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Company Name"
+                value={newExperience.company_name}
+                onChange={(e) => setNewExperience({ ...newExperience, company_name: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Job Title"
+                value={newExperience.job_title}
+                onChange={(e) => setNewExperience({ ...newExperience, job_title: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Start Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={newExperience.start_date}
+                onChange={(e) => setNewExperience({ ...newExperience, start_date: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="End Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={newExperience.end_date}
+                onChange={(e) => setNewExperience({ ...newExperience, end_date: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Location"
+                value={newExperience.location}
+                onChange={(e) => setNewExperience({ ...newExperience, location: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Employment Type"
+                value={newExperience.employment_type}
+                onChange={(e) => setNewExperience({ ...newExperience, employment_type: e.target.value })}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                value={newExperience.description}
+                onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
+                fullWidth
+                multiline
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsAddExperienceOpen(false)}>{t("buttons.cancel", "Cancel")}</Button>
+          <Button
+            variant="contained"
+            onClick={async () => {
+              try {
+                if (!id) return;
+
+                const databases = new Databases(appwriteClient);
+                await databases.createDocument(
+                  resources.databaseId,
+                  resources.jobHistory,
+                  ID.unique(),
+                  newExperience
+                );
+
+                console.log("New experience submitted:", newExperience);
+                setIsAddExperienceOpen(false);
+              } catch (error) {
+                console.error("Error submitting experience:", error);
+              }
+            }}
+          >
+            {t("buttons.submit", "Submit")}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Show>
   );
 };

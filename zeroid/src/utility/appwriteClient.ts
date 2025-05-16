@@ -1,4 +1,4 @@
-import { Account, Appwrite, Storage } from "@refinedev/appwrite";
+import {Account, Appwrite, Databases, Storage} from "@refinedev/appwrite";
 
 const APPWRITE_URL = import.meta.env.VITE_NEXT_PUBLIC_APPWRITE_ENDPOINT;
 const APPWRITE_PROJECT = import.meta.env.VITE_APPWRITE_BUSINESS_PROJECT_ID;
@@ -57,6 +57,9 @@ const updateEmail = async (email: string, password: string) => {
     throw error;
   }
 };
+const getDatabase = () => {
+  return new Databases(appwriteClient);
+};
 
 export {
   appwriteClient,
@@ -67,4 +70,5 @@ export {
   updatePrefs,
   updateName,
   updateEmail,
+  getDatabase
 };
