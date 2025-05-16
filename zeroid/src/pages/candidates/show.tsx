@@ -18,7 +18,7 @@ import {
   CardActions,
   Button,
   Grid,
-  useTheme,
+  useTheme, // theme is not used directly in VerificationStatusDisplay but kept for CandidateShow
   Skeleton,
   // CardMedia, // Not used in the provided snippet
   Chip,
@@ -26,6 +26,7 @@ import {
   // ListItem, // Not used in the provided snippet
   // ListItemIcon, // Not used in the provided snippet
   // ListItemText, // Not used in the provided snippet
+  IconButton, // Added for the link icon
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 // import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"; // Not used
@@ -37,15 +38,22 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'; // For rejected status
 import PendingActionsIcon from '@mui/icons-material/PendingActions'; // For pending status
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'; // For verifier confirmed
-
+import LinkIcon from '@mui/icons-material/Link'; // Added for the on-chain link
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link as RouterLink, useParams } from "react-router-dom";
 
 import { useCardStyles } from "../../components/card-elevated";
-import { ICandidate, IIdentity, IJobHistory } from "../../interfaces";
+// Import original IJobHistory and extend it for the new optional field
+import { ICandidate, IIdentity, IJobHistory as OriginalJobHistory } from "../../interfaces";
 import { appwriteClient, resources } from "../../utility";
 import { JobVerificationRequestModal } from "../../components/order/form-modal";
+
+// Extend IJobHistory to include the optional onchain_confirmation_block_hash
+// This assumes that if a job is 'CONFIRMED_ONCHAIN', this field might be populated.
+interface IJobHistory extends OriginalJobHistory {
+  onchain_confirmation_block_hash?: string;
+}
 
 // Helper function to format dates
 const formatDate = (date?: string | Date | null): string => {
@@ -75,13 +83,12 @@ export interface ResumeExperience {
 
 // Helper component to display verification status and action button
 const VerificationStatusDisplay: React.FC<{
-  job: IJobHistory;
-  onVerifyClick: (job: IJobHistory) => void;
+  job: IJobHistory; // Use the extended IJobHistory interface
+  onVerifyClick: (job: IJobHistory) => void; // Can remain OriginalJobHistory if preferred, but IJobHistory is safer
   translate: (key: string, defaultValue?: string) => string;
 }> = ({ job, onVerifyClick, translate }) => {
   const status = job.verification_status;
 
-  // If status is null, undefined, or empty string, show Verify button
   if (!status) {
     return (
       <Button
@@ -89,7 +96,7 @@ const VerificationStatusDisplay: React.FC<{
         startIcon={<VerifiedUserIcon />}
         size="small"
         variant="outlined"
-        sx={{ mt: 1.5 }} // Added margin top for spacing
+        sx={{ mt: 1.5 }}
       >
         {translate("buttons.verifyExperience", "Verify Experience")}
       </Button>
@@ -99,6 +106,7 @@ const VerificationStatusDisplay: React.FC<{
   let chipLabel = status;
   let chipColor: "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" = "default";
   let chipIcon: React.ReactElement | undefined = undefined;
+  let onchainExplorerUrl: string | null = null;
 
   switch (status) {
     case "VERIFICATION_SENT":
@@ -111,17 +119,19 @@ const VerificationStatusDisplay: React.FC<{
       chipColor = "info";
       chipIcon = <CheckCircleOutlineIcon fontSize="small" />;
       break;
-    case "CONFIRMED_ONCHAIN": // Assuming this status comes from your backend
+    case "CONFIRMED_ONCHAIN":
       chipLabel = translate("jobHistory.status.confirmedOnChain", "Confirmed On-Chain");
       chipColor = "success";
       chipIcon = <VerifiedUserIcon fontSize="small" />;
+      if (job.onchain_confirmation_block_hash) {
+        onchainExplorerUrl = `https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Frpc2.paseo.popnetwork.xyz#/explorer/query/${job.onchain_confirmation_block_hash}`;
+      }
       break;
     case "REJECTED_BY_RECIPIENT":
       chipLabel = translate("jobHistory.status.verificationRejected", "Verification Rejected");
       chipColor = "error";
       chipIcon = <ErrorOutlineIcon fontSize="small" />;
       break;
-    // Add any other specific statuses you have
     default:
       chipLabel = translate("jobHistory.status.generic", `Status: ${status}`);
       chipColor = "default";
@@ -129,13 +139,30 @@ const VerificationStatusDisplay: React.FC<{
   }
 
   return (
-    <Chip
-      label={chipLabel}
-      color={chipColor}
-      size="small"
-      icon={chipIcon}
-      sx={{ mt: 1.5 }} // Added margin top for spacing
-    />
+    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1.5 }}>
+      <Chip
+        label={chipLabel}
+        color={chipColor}
+        size="small"
+        icon={chipIcon}
+      />
+      {status === "CONFIRMED_ONCHAIN" && onchainExplorerUrl && (
+        <IconButton
+          aria-label={translate("jobHistory.actions.viewOnChain", "View On-Chain Confirmation")}
+          size="small"
+          onClick={() => window.open(onchainExplorerUrl!, '_blank', 'noopener,noreferrer')}
+          sx={{
+            ml: 0.5,
+            color: '#E91E63', // Pink color
+            '&:hover': {
+              color: '#C2185B', // Darker pink on hover
+            },
+          }}
+        >
+          <LinkIcon fontSize="inherit" />
+        </IconButton>
+      )}
+    </Box>
   );
 };
 
@@ -148,12 +175,12 @@ export const CandidateShow = () => {
   const { data: user } = useGetIdentity<IIdentity | null>();
   const isLoggedIn = !!user;
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false); // For service ordering
-  const [selectedJobHistoryForVerification, setSelectedJobHistoryForVerification] = useState<IJobHistory | null>(null);
+  const [selectedJobHistoryForVerification, setSelectedJobHistoryForVerification] = useState<IJobHistory | null>(null); // Use extended IJobHistory
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false); // Changed from isModalOpen for clarity
 
   const [isAddExperienceOpen, setIsAddExperienceOpen] = useState(false);
 
-  const handleOpenVerificationModal = (jobHistoryItem: IJobHistory) => {
+  const handleOpenVerificationModal = (jobHistoryItem: IJobHistory) => { // Use extended IJobHistory
     setSelectedJobHistoryForVerification(jobHistoryItem);
     setIsVerificationModalOpen(true);
   };
@@ -202,7 +229,7 @@ export const CandidateShow = () => {
     isLoading: isJobHistoryLoading,
     error: jobHistoryError,
     refetch: refetchJobHistory, // Added refetch function
-  } = useList<IJobHistory & BaseRecord>({ // Ensure BaseRecord for $id
+  } = useList<IJobHistory & BaseRecord>({ // Ensure BaseRecord for $id, IJobHistory here refers to the extended one for potential new field
     resource: resources.jobHistory,
     filters: [
       {
@@ -218,7 +245,8 @@ export const CandidateShow = () => {
       pageSize: 50, // Or manage pagination as needed
     }
   });
-  const jobHistoryItems = jobHistoryData?.data || [];
+  const jobHistoryItems: (IJobHistory & BaseRecord)[] = jobHistoryData?.data || [];
+
 
   const isLoading = isCandidateLoading || (!!id && isJobHistoryLoading);
 
@@ -438,7 +466,7 @@ export const CandidateShow = () => {
 
                       {/* Verification Status Display */}
                       <VerificationStatusDisplay
-                        job={job}
+                        job={job} // job is (OriginalJobHistory & BaseRecord), compatible with extended IJobHistory
                         onVerifyClick={handleOpenVerificationModal}
                         translate={t}
                       />
@@ -462,8 +490,8 @@ export const CandidateShow = () => {
         <JobVerificationRequestModal
           open={isVerificationModalOpen}
           onClose={handleCloseVerificationModal}
-          // Ensure selectedJobHistoryForVerification is cast correctly if it doesn't inherently include BaseRecord properties like id
-          jobHistoryItem={selectedJobHistoryForVerification as (IJobHistory & BaseRecord)}
+          // selectedJobHistoryForVerification is already IJobHistory (extended) & BaseRecord implicitly
+          jobHistoryItem={selectedJobHistoryForVerification as (OriginalJobHistory & BaseRecord)}
           candidateId={candidate?.$id || ""} // Pass candidate ID
           candidateName={candidate?.name || ""} // Pass candidate name
         />
