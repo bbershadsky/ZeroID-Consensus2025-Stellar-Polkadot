@@ -6,8 +6,7 @@ import { savePasskeyId, saveContractId, clearPasskeyId, clearContractId } from "
 // import { PasskeyKit } from "passkey-kit";
 // import { Launchtube } from "launchtube";
 
-const APP_NAME = "ZeroID"; // Replace with your app name
-
+const APP_NAME = "ZeroID";
 /**
  * Passwordless authentication using passkey-kit.
  * Wallet provisioning using Launchtube after successful authentication.
@@ -41,6 +40,8 @@ export const authProvider: AuthProvider = {
       };
     }
   },
+  // contractId is wallet address
+  // store contract id and walletid
   register: async () => {
     try {
       const username = generateRandomUsername();

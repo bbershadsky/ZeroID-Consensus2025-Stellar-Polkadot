@@ -1,0 +1,31 @@
+{
+    "name": "Amazon Verified Employer",
+    "description": "This NFT certifies that the holder is a verified employer within the Amazon ecosystem.",
+    "attributes": [
+      {
+        "trait_type": "Type",
+        "value": "Employer"
+      },
+      {
+        "trait_type": "Company",
+        "value": "Amazon"
+      },
+      {
+        "trait_type": "Issuer",
+        "value": "ZeroID"
+      },
+      {
+        "trait_type": "Issued To",
+        "value": "CDI22EKGT7WMXULHDDZ5M6F62LVYWR63VYB4P5EMYT7K6EN3SATCPHQI"
+      },
+      {
+        "trait_type": "Valid From",
+        "value": "2025-05-15"
+      },
+      {
+        "trait_type": "Valid Until",
+        "value": "2026-05-15"
+      }
+    ]
+  }
+  
