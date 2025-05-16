@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -116,6 +116,22 @@ export const CandidateShow = () => {
     location: "",
     employment_type: ""
   });
+
+  useEffect(() => {
+    if (candidate) {
+      setNewExperience({
+        candidate_id: candidate.id ?? "",
+        company_name: "",
+        job_title: "",
+        start_date: "",
+        end_date: "",
+        is_current_job: false,
+        description: "",
+        location: "",
+        employment_type: "",
+      });
+    }
+  }, [candidate]);
 
   // --- Fetch Job History Data for this Candidate ---
   const {
