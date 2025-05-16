@@ -6,8 +6,7 @@
     <img src="https://img.shields.io/badge/-Typescript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6" alt="typescript" />
     <img src="https://img.shields.io/badge/-Refine-black?style=for-the-badge&logoColor=white&logo=refine&color=3178C6" alt="typescript" />
     <img src="https://img.shields.io/badge/-Polkadot-black?style=for-the-badge&logoColor=white&logo=polkadot&color=FD366E" alt="polkadot" />
-
-
+    <img src="https://img.shields.io/badge/-stellar-black?style=for-the-badge&logoColor=white&logo=stellar&color=blue" alt="polkadot" />
   </div>
 
 ZeroID is a decentralized identity verification platform that provides instant, secure, and tamper-proof background checks using blockchain technologies such as Stellar and Polkadot. 
