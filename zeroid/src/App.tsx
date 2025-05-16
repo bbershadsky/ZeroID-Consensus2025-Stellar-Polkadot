@@ -91,16 +91,16 @@ const App: React.FC = () => {
                     icon: <DashboardIcon />,
                   },
                 },
-                {
-                  name: resources.employers, // e.g., "employers"
-                  list: "/employers",       // Component reference
-                  create: "/employers/create",  // Component reference
-                  show: EmployerShow,       // Component reference
-                  meta: {
-                    label: t("employers.employers", "Employers"),
-                    icon: <PeopleIcon />, // Example icon
-                  },
-                },
+                // {
+                //   name: resources.employers, // e.g., "employers"
+                //   list: "/employers",       // Component reference
+                //   create: "/employers/create",  // Component reference
+                //   show: EmployerShow,       // Component reference
+                //   meta: {
+                //     label: t("employers.employers", "Employers"),
+                //     icon: <PeopleIcon />, // Example icon
+                //   },
+                // },
                 {
                   name: resources.candidates, // e.g., "candidates"
                   list: "/candidates",        // Component reference (assuming ProductList is CandidatesList)

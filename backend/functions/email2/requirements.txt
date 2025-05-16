@@ -1,4 +1,4 @@
 appwrite
 resend
 substrate-interface
-python-dotenv
+python-dotenv 
