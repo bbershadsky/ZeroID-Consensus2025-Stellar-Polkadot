@@ -50,7 +50,7 @@ export const CandidateListCard: React.FC<Props> = (props) => {
     if (Array.isArray(data.data)) {
       const filteredResults = data.data.filter(
         (item: ICandidate) =>
-          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          // item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredData(filteredResults);

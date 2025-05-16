@@ -66,7 +66,7 @@ export const BusinessDrawerForm = (props: Props) => {
     defaultValues: {
       productName: "",
       productDescription: "",
-      productPrice: "",
+      // productPrice: "",
       // category: null,
       isActive: true,
       images: [],
@@ -147,9 +147,9 @@ export const BusinessDrawerForm = (props: Props) => {
             }}
           /> */}
 
-          {errors.images && (
-            <FormHelperText error>{errors.images.message}</FormHelperText>
-          )}
+          {/* {errors.images && ( */}
+            {/* // <FormHelperText error>{errors.images.message}</FormHelperText> */}
+          {/* )} */}
         </Box>
 
         <Paper

@@ -134,18 +134,7 @@ const ProductListBusiness: React.FC<ProductListProps> = ({ businessId }) => {
             <Typography color="text.secondary" sx={{ minHeight: '40px' }}> {/* Ensure consistent height */}
               {product.productDescription || t("common.noDescription", "No detailed description available.")}
             </Typography>
-            {product.productPrice !== undefined && product.productPrice !== null && (
-              <Stack direction="row" alignItems="center" spacing={1} mt={1}>
-                <AttachMoneyIcon color="primary" />
-                <Typography variant="body1">
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: business?.currency || product.productCurrency || "USD", // Prefer business currency, then product's, then USD
-                  }).format(Number(product.productPrice))}
-                </Typography>
-              </Stack>
-            )}
-          </CardContent>
+                     </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
             {/* This button now opens the JobVerificationRequestModal.
                 The label and icon should reflect that if this is the intended action.

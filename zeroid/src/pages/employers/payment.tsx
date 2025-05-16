@@ -146,37 +146,14 @@ export const BusinessPayment = () => {
               <Typography variant="h5" gutterBottom>
                 {business?.name}
               </Typography>
-              <Typography variant="body2" color="text.secondary" mb={2}>
-                {business?.description}
-              </Typography>
-
-              {business?.languages && (
-                <Box display="flex" alignItems="center" gap={1} mb={2}>
-                  <TranslateIcon color="action" />
-                  <BusinessLanguagesDisplay languages={business?.languages} />
-                </Box>
-              )}
+             
               {business?.email && (
                 <Box display="flex" alignItems="center" gap={1} mb={2}>
                   <EmailIcon color="action" />
                   <Typography>{business?.email}</Typography>
                 </Box>
               )}
-              {business?.phone && (
-                <Box display="flex" alignItems="center" gap={1} mb={2}>
-                  <PhoneIcon color="action" />
-                  <Typography>{business?.phone}</Typography>
-                </Box>
-              )}
-              {business?.currency && (
-                <Box display="flex" alignItems="center" gap={1}>
-                  <RequestQuoteIcon color="action" />
-                  <CurrencySelector
-                    currentCurrency={business?.currency}
-                    view="label"
-                  />
-                </Box>
-              )}
+             
               {/* <PaymentMethodsForm businessId={business?.id!} /> */}
             </CardContent>
           </Card>

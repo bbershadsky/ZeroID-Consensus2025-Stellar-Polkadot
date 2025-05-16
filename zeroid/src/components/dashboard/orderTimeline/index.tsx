@@ -8,7 +8,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
-import { OrderStatus } from "../../order";
+// import { OrderStatus } from "../../order";
 
 export const OrderTimeline: React.FC = () => {
   const theme = useTheme();
@@ -65,7 +65,7 @@ export const OrderTimeline: React.FC = () => {
                   marginRight: "16px",
                 }}
               >
-                <OrderStatus status={order.orderStatus} />
+                {/* <OrderStatus status={order.orderStatus} /> */}
               </ListItemAvatar>
               <ListItemText primary={`#${order.orderCode}`} />
             </ListItem>

@@ -96,22 +96,22 @@ export const AuthPage: React.FC<{ type: "login" | "register" | "forgotPassword" 
             {error}
           </Typography>
         )}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleAuth(isLogin ? "login" : "register")}
-l          disabled={loading}
-          fullWidth
-          sx={{
-            mb: 2,
-            py: 1.5,
-            fontWeight: 600,
-            fontSize: "1.1rem",
-            borderRadius: 2,
-            background: "linear-gradient(90deg, rgb(230, 0, 122) 0%, rgb(230, 0, 122) 100%)",
-            boxShadow: "0 2px 16px 0 #1a6cf633",
-          }}
-        >
+<Button
+  variant="contained"
+  color="primary"
+  onClick={() => handleAuth(isLogin ? "login" : "register")}
+  disabled={loading}
+  fullWidth
+  sx={{
+    mb: 2,
+    py: 1.5,
+    fontWeight: 600,
+    fontSize: "1.1rem",
+    borderRadius: 2,
+    background: "linear-gradient(90deg, rgb(230, 0, 122) 0%, rgb(230, 0, 122) 100%)",
+    boxShadow: "0 2px 16px 0 #1a6cf633",
+  }}
+>
           {loading ? (
             <CircularProgress size={24} sx={{ color: "#fff" }} />
           ) : isLogin ? (

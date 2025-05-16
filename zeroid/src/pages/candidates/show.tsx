@@ -60,16 +60,16 @@ export const CandidateShow = () => {
   const { data: user } = useGetIdentity<IIdentity | null>();
   const isLoggedIn = !!user;
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-    const [selectedCandidateForVerification, setSelectedCandidateForVerification] = useState<ICandidate | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedJobHistoryForVerification, setSelectedJobHistoryForVerification] = useState<IJobHistory | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const handleOpenModal = (candidate: ICandidate) => {
-    setSelectedCandidateForVerification(candidate);
+  const handleOpenModal = (jobHistoryItem: IJobHistory) => {
+    setSelectedJobHistoryForVerification(jobHistoryItem);
     setIsModalOpen(true);
   };
-
+  
   const handleCloseModal = () => {
-    setSelectedCandidateForVerification(null);
+    setSelectedJobHistoryForVerification(null);
     setIsModalOpen(false);
   };
 
@@ -329,20 +329,12 @@ export const CandidateShow = () => {
         )}
       </Grid>
 
-           <JobVerificationRequestModal
+          <JobVerificationRequestModal
                  open={isModalOpen}
                  onClose={handleCloseModal}
-                 // !!! CRITICAL TYPE MISMATCH WARNING !!!
-                 // The 'jobHistoryItem' prop expects an IJobHistory object.
-                 // You are passing 'selectedCandidateForVerification' which is an ICandidate object.
-                 // This will lead to errors or incorrect behavior inside the modal
-                 // because ICandidate does not have fields like 'job_title', 'company_name', etc.,
-                 // that the modal expects from an IJobHistory item.
-                 // This is done to fulfill the request "jobhistoryitem should be passed",
-                 // but it needs to be corrected with the proper data type or a different modal.
-                 jobHistoryItem={selectedCandidateForVerification as any as (IJobHistory & BaseRecord)}
-                 candidateId={selectedCandidateForVerification?.$id || ""} // Candidate's own ID
-                 candidateName={selectedCandidateForVerification?.name || ""}
+                 jobHistoryItem={selectedJobHistoryForVerification as IJobHistory & BaseRecord}
+                 candidateId={candidate.$id || ""}
+                 candidateName={candidate.name || ""}
                />
     </Show>
   );

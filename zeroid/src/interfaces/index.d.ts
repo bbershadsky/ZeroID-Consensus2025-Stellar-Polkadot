@@ -15,15 +15,15 @@ export interface IEmployer {
 export interface IJobHistory {
   $id: string;
   id: string;
-  candidate_id: string;
-  company_name: string;
-  job_title: string;
-  start_date: Date;
-  end_date: Date;
-  description: string;
-  location: string;
-  employment_type: string;
-  is_current_job: boolean;
+  candidate_id?: string;
+  company_name?: string;
+  job_title?: string;
+  start_date?: Date;
+  end_date?: Date;
+  description?: string;
+  location?: string;
+  employment_type?: string;
+  is_current_job?: boolean;
 }
 
 // export interface IOrder {

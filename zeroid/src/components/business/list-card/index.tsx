@@ -51,7 +51,7 @@ export const BusinessListCard: React.FC<Props> = (props) => {
       const filteredResults = data.data.filter(
         (item: IEmployer) =>
           item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+          item.company_name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredData(filteredResults);
     }
@@ -149,18 +149,7 @@ export const BusinessListCard: React.FC<Props> = (props) => {
                 >
                   {business.name}
                 </Typography>
-                <Typography
-                  sx={{
-                    maxHeight: "3.6em",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                  }}
-                >
-                  {business.description}
-                </Typography>
+               
               </CardContent>
               <CardActions
                 sx={{
@@ -179,7 +168,7 @@ export const BusinessListCard: React.FC<Props> = (props) => {
                     justifyContent: "flex-start",
                   }}
                 >
-                  {business.phone ? (
+                  {/* {business.phone ? (
                     <IconButton
                       size="small"
                       component="a"
@@ -190,7 +179,7 @@ export const BusinessListCard: React.FC<Props> = (props) => {
                     </IconButton>
                   ) : (
                     <span style={{ width: 48, height: 48 }} />
-                  )}
+                  )} */}
                 </Box>
                 <Box
                   sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}

@@ -87,6 +87,7 @@ def main(context):
             context.log(f"Result from get_document: {document}")
 
             # Extract data from the document
+            # verifier_email = document.get("candidate")
             verifier_email = document.get("verifier_email")
             verification_message = document.get("verification_message")
             company_name = document.get("company_name")
@@ -102,14 +103,11 @@ def main(context):
             context.log(f"Job Title: {job_title}")
             context.log(f"Job desc: {description}")
 
-            resend.api_key = os.getenv("RESEND_API_KEY")
-            context.log(f"Resend API Key: {resend.api_key}")
-
             params: resend.Emails.SendParams = {
-                "from": "galindo.bryan08@gmail.com",
-                "to": ["b.boriz@gmail.com"],
-                "subject": "hi",
-                "html": "<strong>hello, world!</strong>",
+                "from": "bryan@mail.rejections.fyi",
+                "to": verifier_email,
+                "subject": "[Zero ID] Please verify our candidate's past employment",
+                "html": "<strong>{verification_message}</strong>\n\nCompany: {company_name}\n\nJob Title: {job_title}\n\nDuration: {start_date} to {end_date}\n\nDescription: {description}",
                 # "reply_to": "to@gmail.com",
                 # "bcc": "bcc@resend.dev",
                 # "cc": ["cc@resend.dev"],
