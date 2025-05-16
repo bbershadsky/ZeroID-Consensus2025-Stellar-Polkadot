@@ -33,6 +33,9 @@ JOB_HISTORY_COLLECTION_ID = os.getenv("APPWRITE_JOB_HISTORY_ID")
 SERVER_ACTIONS_COLLECTION_ID = os.getenv("APPWRITE_SERVER_ACTIONS_COLLECTION_ID")
 RESEND_API_KEY = os.getenv("RESEND_API_KEY") # Uppercase global variable
 
+# --- Application URL for Verification Links ---
+VERIFICATION_BASE_URL = "https://zeroid.me" # As per specific request
+
 # --- Polkadot Configuration ---
 POLKADOT_CONTRACT_ADDRESS = os.getenv("POLKADOT_CONTRACT_ADDRESS")
 POLKADOT_SUBSTRATE_URL = os.getenv("POLKADOT_SUBSTRATE_URL")
@@ -75,14 +78,14 @@ def validate_env_vars(context):
     if POLKADOT_LIBS_AVAILABLE:
         if not all([POLKADOT_CONTRACT_ADDRESS, POLKADOT_SUBSTRATE_URL, ENV]):
             context.warn("Warning: Core Polkadot ENV VARS (CONTRACT_ADDRESS, SUBSTRATE_URL, ENV) are not fully set. CONFIRM_EMPLOYMENT actions may fail.")
-        # Further specific checks for keypair based on ENV are done within the action block
     elif not POLKADOT_LIBS_AVAILABLE:
         context.warn("Warning: Polkadot libraries (substrateinterface, python-dotenv) are not available. CONFIRM_EMPLOYMENT actions cannot be processed.")
     return True
 
 def _send_verification_email(context, databases, job_history_id_to_fetch):
     """
-    Handles the logic for fetching job history and sending the verification email.
+    Handles the logic for fetching job history and sending the verification email
+    with styled ACCEPT/REJECT links.
     """
     context.log(f"Fetching document for email from database '{DB_ID}', collection '{JOB_HISTORY_COLLECTION_ID}', document '{job_history_id_to_fetch}'")
     document = databases.get_document(
@@ -90,7 +93,7 @@ def _send_verification_email(context, databases, job_history_id_to_fetch):
         collection_id=JOB_HISTORY_COLLECTION_ID,
         document_id=job_history_id_to_fetch
     )
-    # ... (rest of the email sending logic as before)
+    
     verifier_email_str = document.get("verifier_email")
     if not verifier_email_str:
         raise ValueError(f"Critical: Verifier email is missing for job history ID: {job_history_id_to_fetch}.")
@@ -102,6 +105,10 @@ def _send_verification_email(context, databases, job_history_id_to_fetch):
     end_date_str = document.get("end_date") or "N/A"
     description_str = document.get("description") or "No additional description provided."
     current_year = datetime.datetime.now().year
+
+    # Construct verification links using the specified base URL
+    accept_link = f"{VERIFICATION_BASE_URL}/verify-employment/{job_history_id_to_fetch}/accept"
+    reject_link = f"{VERIFICATION_BASE_URL}/verify-employment/{job_history_id_to_fetch}/reject"
 
     html_body = f"""
 <!DOCTYPE html>
@@ -124,6 +131,10 @@ def _send_verification_email(context, databases, job_history_id_to_fetch):
     .content strong {{ color: #555555; }}
     .data-item {{ margin-bottom: 10px; padding-left: 10px; }}
     .data-item span {{ font-weight: bold; }}
+    .verification-links p {{ margin-top: 20px; margin-bottom: 20px; text-align: center; }} /* Centered paragraph for links */
+    .verification-links a {{ text-decoration: none; padding: 0 10px; }}
+    .accept-link {{ font-weight: bold; color: green; }}
+    .reject-link {{ font-weight: bold; color: red; }}
     .footer {{ text-align: center; padding-top: 20px; border-top: 1px solid #eeeeee; font-size: 12px; color: #777777; }}
     .footer p {{ margin: 5px 0; }}
   </style>
@@ -141,7 +152,18 @@ def _send_verification_email(context, databases, job_history_id_to_fetch):
       <div class="data-item"><span>Job Description:</span></div>
       <p style="padding-left: 10px;">{description_str}</p>
       <p>Your timely response is greatly appreciated.</p>
-      {""""""}
+      
+      <div class="verification-links">
+        <p>
+          <a href="{accept_link}" class="accept-link" target="_blank">ACCEPT</a>
+          <span style="color: #cccccc;">&nbsp;|&nbsp;</span>
+          <a href="{reject_link}" class="reject-link" target="_blank">REJECT</a>
+        </p>
+      </div>
+
+      <p style="font-size:12px; color: #555555;">If you are unable to click the links above, please copy and paste the appropriate URL into your browser:</p>
+      <p style="font-size:12px; color: #555555;">Accept: {accept_link}</p>
+      <p style="font-size:12px; color: #555555;">Reject: {reject_link}</p>
     </div>
     <div class="footer">
       <p>This email was sent from Zero ID.</p>
@@ -168,7 +190,13 @@ Job Description:
 
 Your timely response is greatly appreciated.
 
-{""""""}
+To process this request, please use the links below:
+
+ACCEPT:
+{accept_link}
+
+REJECT:
+{reject_link}
 
 ---
 This email was sent from Zero ID.
@@ -176,10 +204,12 @@ If you received this email in error, you can safely delete it. Please do not rep
 © {current_year} Zero ID. All rights reserved.
 """
     context.log(f"Preparing to send email to: {verifier_email_str} for job history {job_history_id_to_fetch}")
+    context.log(f"Accept link: {accept_link}")
+    context.log(f"Reject link: {reject_link}")
     params = {
         "from": "Zero ID <bryan@mail.rejections.fyi>",
         "to": [verifier_email_str],
-        "subject": "[Zero ID] Please verify candidate's past employment",
+        "subject": "[Action Required] Employment Verification Request from Zero ID",
         "html": html_body,
         "text": text_body,
     }
@@ -253,25 +283,29 @@ def _handle_confirm_employment(context, databases, payload_str):
     """
     Handles the CONFIRM_EMPLOYMENT action: fetches job history, hashes data, stores on chain,
     and updates job history with confirmation details.
-    Returns a dictionary with transaction details.
+    This function is now triggered AFTER a verifier has clicked "accept".
+    The job_history item should already have verification_status = 'VERIFIED_BY_RECIPIENT' (or similar).
     """
-    context.log("Executing CONFIRM_EMPLOYMENT action.")
-    payload = json.loads(payload_str) # Assuming payload_str is validated before this call
-    job_history_id = payload.get("job_history_id") # Assuming job_history_id is validated
+    context.log("Executing CONFIRM_EMPLOYMENT action (post-verifier acceptance).")
+    payload = json.loads(payload_str) 
+    job_history_id = payload.get("job_history_id")
 
     context.log(f"Fetching job history document ID: {job_history_id} for on-chain confirmation.")
     job_doc = databases.get_document(DB_ID, JOB_HISTORY_COLLECTION_ID, job_history_id)
-    context.log(f"Retrieved job history document: {job_doc.get('$id')}")
+    context.log(f"Retrieved job history document: {job_doc.get('$id')}, current status: {job_doc.get('verification_status')}")
+
+    if job_doc.get('verification_status') != 'VERIFIED_BY_RECIPIENT':
+         context.warn(f"Job history {job_history_id} is being processed for on-chain confirmation, but its status is '{job_doc.get('verification_status')}', not 'VERIFIED_BY_RECIPIENT'. Proceeding with hash based on current data.")
 
     blob_data = {
         "document_id": job_doc.get("$id"), "job_title": job_doc.get("job_title"),
         "company_name": job_doc.get("company_name"), "start_date": job_doc.get("start_date"),
         "end_date": job_doc.get("end_date"), "description": job_doc.get("description"),
         "is_current_job": job_doc.get("is_current_job"),
-        "verification_status": "CONFIRMED", # Will be set to CONFIRMED
+        "verification_status": job_doc.get("verification_status"), 
         "verifier_email": job_doc.get("verifier_email"),
-        "verification_confirmed_at": datetime.datetime.now(datetime.timezone.utc).isoformat(), # Confirmation time
-        "verification_message": job_doc.get("verification_message"),
+        "verification_processed_at": job_doc.get("verification_processed_at"),
+        "verification_message": job_doc.get("verification_message"), 
     }
     blob_text = json.dumps(blob_data, sort_keys=True, separators=(',', ':'))
     context.log(f"Constructed blob_text for hashing (first 100 chars): {blob_text[:100]}...")
@@ -284,17 +318,15 @@ def _handle_confirm_employment(context, databases, payload_str):
     
     update_data = {
         "onchain_confirmation_tx_hash": tx_hash,
-        "onchain_confirmation_block_hash": block_hash, # New field
+        "onchain_confirmation_block_hash": block_hash,
         "onchain_confirmed_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "verification_status": "CONFIRMED" # Update status to CONFIRMED
+        "verification_status": "CONFIRMED_ONCHAIN" 
     }
     try:
         databases.update_document(DB_ID, JOB_HISTORY_COLLECTION_ID, job_history_id, data=update_data)
-        context.log(f"Updated job history {job_history_id} with on-chain details and status CONFIRMED. TxHash: {tx_hash}, BlockHash: {block_hash}")
+        context.log(f"Updated job history {job_history_id} with on-chain details and status CONFIRMED_ONCHAIN. TxHash: {tx_hash}, BlockHash: {block_hash}")
     except AppwriteException as e:
-        context.error(f"Failed to update job history {job_history_id} with on-chain details: {e}. Ensure attributes exist in collection.")
-        # Depending on requirements, you might want to re-raise or handle this differently
-        # For now, we log the error but consider the on-chain part successful if it reached here.
+        context.error(f"Failed to update job history {job_history_id} to CONFIRMED_ONCHAIN: {e}. Ensure attributes exist.")
 
     return {"tx_hash": tx_hash, "block_hash": block_hash}
 
@@ -315,7 +347,6 @@ def main(context):
         resend.api_key = RESEND_API_KEY
 
     context.log("Cron job started: Looking for pending server actions.")
-    # ... (other logs)
 
     processed_count = 0
     failed_count = 0
@@ -389,7 +420,6 @@ def main(context):
                 processed_count += 1
 
             except (AppwriteException, json.JSONDecodeError, ValueError, RuntimeError, FileNotFoundError) as e:
-                # Corrected NameError: Use RESEND_API_KEY (uppercase)
                 resend_error_type = getattr(resend.exceptions, 'ResendError', None) if 'resend' in globals() and RESEND_API_KEY else None
                 if resend_error_type and isinstance(e, resend_error_type):
                     error_message = f"Resend API error processing action {action_id} ({action_type}): {str(e)}. Type: {type(e).__name__}"
@@ -402,7 +432,7 @@ def main(context):
                 try:
                     databases.update_document(
                         DB_ID, SERVER_ACTIONS_COLLECTION_ID, action_id,
-                        data={ "status": "failed", "last_error": error_message[:2048] } # Ensure last_error attribute exists and has enough size
+                        data={ "status": "failed", "last_error": error_message[:2048] } 
                     )
                 except AppwriteException as db_update_err:
                     context.error(f"CRITICAL: Failed to update action {action_id} status to 'failed': {db_update_err}")
@@ -426,10 +456,9 @@ def main(context):
     except AppwriteException as e:
         context.error(f"Appwrite error during cron job execution: {repr(e)}")
         context.error(traceback.format_exc())
-        return context.res.json({"status": "failure", "message": f"Appwrite error: {e.message}"}, 500) # Corrected status code usage
+        return context.res.json({"status": "failure", "message": f"Appwrite error: {e.message}"}, 500)
     except Exception as e:
         context.error(f"An unexpected error occurred in cron job: {str(e)}")
         context.error(traceback.format_exc())
-        # Corrected context.res.json call for Appwrite
         return context.res.json({"status": "failure", "message": f"An unexpected server error occurred: {str(e)}"}, 500)
 
