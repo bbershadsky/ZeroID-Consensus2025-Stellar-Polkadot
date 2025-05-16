@@ -5,8 +5,8 @@ import {
     useCreate,
     useTranslate,
     HttpError,
-    BaseRecord,
-    useNotification,
+    // BaseRecord, // Not explicitly used here, but good for type safety if IJobHistory extends it
+    useNotification, // Corrected import for useNotification
 } from '@refinedev/core';
 import { Typography, Box, CircularProgress, Paper, Button } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -24,6 +24,13 @@ export const ProcessVerificationPage: React.FC = () => {
     const { jobHistoryId, verificationAction } = useParams<VerificationPageParams>();
     const navigate = useNavigate();
 
+    // Correctly using useNotification hook
+    // The 'open' function is typically destructured or accessed via the returned object.
+    // If 'notify' itself is the function: notify({ type: 'success', ... })
+    // If 'notify' is an object with an 'open' method: notify.open({ type: 'success', ... })
+    // The provided code used notify.open?. which is a safe way to call if 'open' might be undefined.
+    // For clarity, if useNotification returns { open, close }, we'd use: const { open: openNotification } = useNotification();
+    // Sticking to the user's provided pattern:
     const notify = useNotification();
     const t = useTranslate();
 
@@ -48,27 +55,26 @@ export const ProcessVerificationPage: React.FC = () => {
         }
 
         const processVerification = async () => {
-            setIsLoading(true);
+            setIsLoading(true); // Ensure loading is true at the start of processing
             setError(null);
             setSuccessMessage(null);
 
             try {
                 if (verificationAction === 'accept') {
-                    // Step 1: Update Job History to "VERIFIED_BY_RECIPIENT" (or similar)
+                    // Step 1: Update Job History to "VERIFIED_BY_RECIPIENT"
                     await new Promise<void>((resolve, reject) => {
                         updateJobHistory(
                             {
                                 resource: resources.jobHistory,
                                 id: jobHistoryId,
                                 values: {
-                                    verification_status: 'VERIFIED_BY_RECIPIENT', // Indicates verifier confirmed
+                                    verification_status: 'VERIFIED_BY_RECIPIENT',
                                     verification_processed_at: new Date().toISOString(),
-                                    // You might want a specific field like 'verifier_confirmed_at'
                                 },
                             },
                             {
                                 onSuccess: () => {
-                                    notify.open?.({
+                                    notify.open?.({ // Using the pattern from user's code
                                         type: 'success',
                                         message: t('verificationProcess.notifications.jobHistoryUpdated', 'Job history status updated.'),
                                     });
@@ -89,23 +95,25 @@ export const ProcessVerificationPage: React.FC = () => {
                     await new Promise<void>((resolve, reject) => {
                         createServerAction(
                             {
-                                resource: resources.serverActions, // Your server_actions collection
+                                resource: resources.serverActions,
                                 values: {
-                                    action_type: 'CONFIRM_EMPLOYMENT', // Matches your Python script
+                                    action_type: 'CONFIRM_EMPLOYMENT',
                                     payload: JSON.stringify({ job_history_id: jobHistoryId }),
                                     status: 'pending',
-                                    triggered_by: `VERIFIER_ACCEPTANCE_${jobHistoryId}`, // Or a generic system ID
+                                    triggered_by: `VERIFIER_ACCEPTANCE_${jobHistoryId}`,
                                     attempts: 0,
                                 },
                             },
                             {
                                 onSuccess: () => {
+                                    // **** UPDATED SUCCESS MESSAGE HERE ****
                                     setSuccessMessage(
-                                        t('verificationProcess.success.accepted', 'Thank you! The employment has been marked as verified and will be processed for on-chain confirmation.')
+                                        t('verificationProcess.success.updatingOnBlockchain', 'Updating on blockchain, thank you.')
                                     );
-                                    notify.open?.({
+                                    notify.open?.({ // Using the pattern from user's code
                                         type: 'success',
-                                        message: t('verificationProcess.notifications.confirmationQueued', 'On-chain confirmation queued.'),
+                                        message: t('verificationProcess.notifications.confirmationQueued', 'On-chain confirmation process initiated.'),
+                                        description: t('verificationProcess.notifications.blockchainUpdatePending', 'The details will be recorded on the blockchain shortly.')
                                     });
                                     resolve();
                                 },
@@ -114,7 +122,6 @@ export const ProcessVerificationPage: React.FC = () => {
                                     setError(
                                         t('verificationProcess.errors.queueFailed', `Failed to queue for on-chain confirmation: ${createError.message}. Please contact support.`)
                                     );
-                                    // Note: Job history was updated, but queuing failed.
                                     reject(createError);
                                 },
                             }
@@ -138,8 +145,8 @@ export const ProcessVerificationPage: React.FC = () => {
                                     setSuccessMessage(
                                         t('verificationProcess.success.rejected', 'Thank you! The employment has been marked as not confirmed.')
                                     );
-                                    notify.open?.({
-                                        type: 'error',
+                                    notify.open?.({ // Using the pattern from user's code
+                                        type: 'error', // Changed to 'error' or 'info' as it's a rejection
                                         message: t('verificationProcess.notifications.rejected', 'Employment verification rejected.'),
                                     });
                                     resolve();
@@ -156,21 +163,25 @@ export const ProcessVerificationPage: React.FC = () => {
                     });
                 }
             } catch (e) {
-                // Errors are handled by individual mutation onError callbacks,
-                // but this catch is for any unexpected flow issues.
-                if (!error) { // If no specific error was set by mutations
-                    setError(t('verificationProcess.errors.unexpected', 'An unexpected error occurred.'));
+                // This catch block handles errors if any promise in the try block is rejected
+                // and not caught by its specific onError.
+                if (!error) {
+                    setError(t('verificationProcess.errors.unexpected', 'An unexpected error occurred during the process.'));
                 }
-                console.error("Overall processing error:", e);
+                console.error("Overall processing error caught in useEffect:", e);
             } finally {
                 setIsLoading(false);
             }
         };
 
         processVerification();
-    }, [jobHistoryId, verificationAction, updateJobHistory, createServerAction, notify, t]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+    }, [jobHistoryId, verificationAction]); // Removed other dependencies as they are stable or setters
 
-    if (isLoading || isUpdateLoading || isCreateLoading) {
+    // Combined loading state for UI
+    const displayLoading = isLoading || isUpdateLoading || isCreateLoading;
+
+    if (displayLoading) {
         return (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '80vh' }}>
                 <CircularProgress size={60} />
@@ -204,7 +215,7 @@ export const ProcessVerificationPage: React.FC = () => {
                 )}
                 <Button
                     variant="contained"
-                    onClick={() => navigate('/')} // Navigate to homepage or a relevant page
+                    onClick={() => navigate('/')}
                     sx={{ mt: 3 }}
                 >
                     {t('buttons.backToSite', 'Return to Site')}

@@ -215,7 +215,7 @@ export const CandidateShow = () => {
       enabled: !!id,
     },
     pagination: {
-      pageSize: 10, // Or manage pagination as needed
+      pageSize: 50, // Or manage pagination as needed
     }
   });
   const jobHistoryItems = jobHistoryData?.data || [];
