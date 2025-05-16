@@ -120,3 +120,4 @@ This on-chain technical architecture ensures that:
 - Stellar Expert Links contract ID: https://stellar.expert/explorer/testnet/contract/CC6PHJZKHTPSSTXPXAGZQTUXK7U4KQTS7WSNJ5JETYCFEYNVQAJ4YN77
 - Stellar Technical Docs: https://whimsical.com/stellar-technical-documentation-9t7f8gdRDDASdwe6QAB2nE
 - Stellar "Why" Narrative: https://docs.google.com/document/d/1KeO1i8kVB-cE7L-3h2MlHyE9ueY-iDe2OcsCPnkubE8/edit?usp=sharing
+- Stellar Demo Video: stellarvideo.zeroid.me
