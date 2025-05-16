@@ -1,6 +1,6 @@
 import { Authenticated, Refine } from "@refinedev/core";
 import { KBarProvider } from "@refinedev/kbar";
-import { appwriteClient, resources } from "./utility"; // Ensure resources.candidates, resources.employers are unique strings
+import { appwriteClient, resources } from "./utility";
 import { Analytics } from "@vercel/analytics/react";
 import {
   useNotificationProvider,
@@ -83,25 +83,21 @@ const App: React.FC = () => {
               notificationProvider={useNotificationProvider}
               resources={[
                 {
-                  name: "dashboard", // Unique name for the dashboard
-                  list: "/", // Component reference
+                  name: "dashboard", 
+                  list: "/", 
                   meta: {
                     label: t("dashboard.title", "Dashboard"),
                     icon: <DashboardIcon />,
-                    // path: "/" // Optional: if you want to explicitly define the path for menu links
                   },
                 },
                 {
                   name: resources.employers, // e.g., "employers"
                   list: "/employers",       // Component reference
                   create: "/employers/create",  // Component reference
-                  // edit: EmployersEdit,   // Add component reference if you have an edit page
                   show: EmployerShow,       // Component reference
                   meta: {
                     label: t("employers.employers", "Employers"),
                     icon: <PeopleIcon />, // Example icon
-                    // canDelete: true, // Example, if you want delete action
-                    // path: "/employers" // Optional
                   },
                 },
                 {
@@ -113,8 +109,6 @@ const App: React.FC = () => {
                   meta: {
                     label: t("candidates.candidates", "Candidates"),
                     icon: <AccountBoxIcon />, // Example icon (Inventory can also be used)
-                    // canDelete: true, // Example
-                    // path: "/candidates" // Optional
                   },
                 },
               ]}

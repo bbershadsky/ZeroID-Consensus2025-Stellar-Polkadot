@@ -9,7 +9,6 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Avatar,
   Tooltip,
   TextField,
   InputAdornment,
@@ -17,16 +16,11 @@ import {
 // import { TablePagination } from "@mui/material";
 import debounce from "lodash.debounce";
 import SearchIcon from "@mui/icons-material/Search";
-import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
-import { IEmployer, ICategory, ICandidate } from "../../../interfaces";
+import { ICategory, ICandidate } from "../../../interfaces";
 import { resources } from "../../../utility";
 import { UseDataGridReturnType } from "@refinedev/mui";
-import CurrencySelector from "../../currency-selector";
-import { LanguageDisplay } from "../..";
 import TableSkeleton from "../../table";
-import { Edit } from "@mui/icons-material";
-import { BusinessLanguagesDisplay } from "../../languages-chip";
 type Props = {
   categories: ICategory[];
 } & UseDataGridReturnType<ICandidate>;
@@ -58,8 +52,7 @@ export const CandidateListTable = ({ categories, ...dataGridProps }: Props) => {
     if (data && data.data) {
       const filteredResults = data.data.filter(
         (item): item is ICandidate =>
-          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+          item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredData(filteredResults);
     }

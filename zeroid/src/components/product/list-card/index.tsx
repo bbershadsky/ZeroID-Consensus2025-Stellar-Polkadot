@@ -56,6 +56,16 @@ export const ProductListCard: React.FC<Props> = (props) => {
     }
   }, [searchTerm, products]);
 
+  const handleRowClick = (params: { id: any }) => {
+      go({
+        to: {
+          action: "show",
+          resource: resources.candidates,
+          id: params.id,
+        },
+      });
+  };
+  
   return (
     <>
       <TextField
@@ -88,13 +98,7 @@ export const ProductListCard: React.FC<Props> = (props) => {
             <Card
               sx={{ height: "100%" }}
               onClick={() => {
-                go({
-                  to: {
-                    action: "show",
-                    resource: resources.candidates,
-                    id: product.id!,
-                  },
-                });
+                handleRowClick({ id: product.id });
               }}
             >
               {product.productImageURL ? (

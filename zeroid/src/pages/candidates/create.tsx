@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { ProductDrawerForm } from "../../components";
+import { CandidateDrawerForm } from "../../components";
 
-// Import the CandidateFormValues type from the shared location
 
 export interface CandidateFormValues {
   name: string;
@@ -27,11 +26,10 @@ export const CandidatesCreate = () => {
   };
 
   return (
-    <ProductDrawerForm
+    <CandidateDrawerForm
       action="create"
       open={isDrawerOpen}
       onClose={handleDrawerClose}
-      // onFinish={handleFinish}
     />
   );
 };

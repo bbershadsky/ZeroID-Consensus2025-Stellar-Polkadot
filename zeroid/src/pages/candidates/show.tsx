@@ -4,11 +4,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
-// import FormControlLabel from "@mui/material/FormControlLabel"; // Not used in the provided snippet for add experience
-// import Checkbox from "@mui/material/Checkbox"; // Not used in the provided snippet for add experience
 import { useGetIdentity, useShow, useList, useTranslate, BaseRecord } from "@refinedev/core";
 import { Databases, ID } from "appwrite";
-import { Show } from "@refinedev/mui";
 import {
   Typography,
   Box,
@@ -18,19 +15,11 @@ import {
   CardActions,
   Button,
   Grid,
-  useTheme, // theme is not used directly in VerificationStatusDisplay but kept for CandidateShow
   Skeleton,
-  // CardMedia, // Not used in the provided snippet
   Chip,
-  // List, // Not used in the provided snippet
-  // ListItem, // Not used in the provided snippet
-  // ListItemIcon, // Not used in the provided snippet
-  // ListItemText, // Not used in the provided snippet
   IconButton, // Added for the link icon
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
-// import PhotoCameraIcon from "@mui/icons-material/PhotoCamera"; // Not used
-// import BusinessCenterIcon from "@mui/icons-material/BusinessCenter"; // Not used
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WorkIcon from '@mui/icons-material/Work';
@@ -44,7 +33,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link as RouterLink, useParams } from "react-router-dom";
 
 import { useCardStyles } from "../../components/card-elevated";
-// Import original IJobHistory and extend it for the new optional field
 import { ICandidate, IIdentity, IJobHistory as OriginalJobHistory } from "../../interfaces";
 import { appwriteClient, resources } from "../../utility";
 import { JobVerificationRequestModal } from "../../components/order/form-modal";
@@ -169,7 +157,6 @@ const VerificationStatusDisplay: React.FC<{
 
 export const CandidateShow = () => {
   const { id } = useParams<{ id: string }>();
-  // const theme = useTheme(); // theme is not used
   const cardStyles = useCardStyles();
   const t = useTranslate();
   const { data: user } = useGetIdentity<IIdentity | null>();
@@ -229,7 +216,7 @@ export const CandidateShow = () => {
     isLoading: isJobHistoryLoading,
     error: jobHistoryError,
     refetch: refetchJobHistory, // Added refetch function
-  } = useList<IJobHistory & BaseRecord>({ // Ensure BaseRecord for $id, IJobHistory here refers to the extended one for potential new field
+  } = useList<IJobHistory & BaseRecord>({ 
     resource: resources.jobHistory,
     filters: [
       {
@@ -242,18 +229,13 @@ export const CandidateShow = () => {
       enabled: !!id,
     },
     pagination: {
-      pageSize: 50, // Or manage pagination as needed
+      pageSize: 50, 
     }
   });
   const jobHistoryItems: (IJobHistory & BaseRecord)[] = jobHistoryData?.data || [];
 
 
   const isLoading = isCandidateLoading || (!!id && isJobHistoryLoading);
-
-  // Console logs for debugging
-  // console.log("Candidate Data:", candidate);
-  // console.log("Job History Items:", jobHistoryItems);
-  // console.log("Overall Loading State:", isLoading);
 
 
   if (candidateError) {
@@ -342,12 +324,7 @@ export const CandidateShow = () => {
 
 
   return (
-    <Show
-      isLoading={isLoading} // This isLoading is for the main candidate data
-      canDelete={isLoggedIn && user?.$id === candidate.userID}
-      canEdit={isLoggedIn && user?.$id === candidate.userID}
-    // WrapperProps={{ sx: { padding: { xs: 1, sm: 2, md: 3 } } }}
-    >
+    <>
       <Box
           sx={{
             display: "flex",
@@ -605,6 +582,6 @@ export const CandidateShow = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Show>
+    </>
   );
 };

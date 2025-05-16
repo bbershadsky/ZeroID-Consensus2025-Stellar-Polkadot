@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useOne, useTranslate } from "@refinedev/core";
+import { useOne } from "@refinedev/core";
 import { CircularProgress } from "@mui/material";
-import { ProductDrawerForm } from "../../components";
+import { CandidateDrawerForm } from "../../components";
 import { resources } from "../../utility";
 import { ICandidate } from "../../interfaces";
 
@@ -22,12 +21,10 @@ export const ProductEdit = () => {
   }
 
   return (
-    <ProductDrawerForm
+    <CandidateDrawerForm
       action="edit"
       open={true}
       onClose={() => {}}
-      // product={data?.data}
-      // isDrawerOpen={false}
     />
   );
 };

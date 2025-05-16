@@ -50,8 +50,8 @@ export const CandidateListCard: React.FC<Props> = (props) => {
     if (Array.isArray(data.data)) {
       const filteredResults = data.data.filter(
         (item: ICandidate) =>
-          // item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+          typeof item.name === "string" &&
+          item.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredData(filteredResults);
     }
@@ -82,60 +82,13 @@ export const CandidateListCard: React.FC<Props> = (props) => {
                 go({
                   to: {
                     action: "show",
-                    resource: resources.employers,
+                    resource: resources.candidates,
                     id: candidate.id ?? "",
                   },
                 });
               }}
             >
-              {candidate.imageURL ? (
-                <CardMedia
-                  component="img"
-                  height="160"
-                  image={candidate.imageURL}
-                  alt={candidate.name}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    height: "160px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    color: "text.secondary",
-                  }}
-                >
-                  <PhotoCameraIcon sx={{ fontSize: 40 }} />
-                  <Typography variant="caption">
-                    {t("common.no-image")}
-                  </Typography>
-                </Box>
-              )}
-              {/* <Button
-                className="view-button"
-                variant="contained"
-                color="inherit"
-                size="small"
-                startIcon={<EditOutlinedIcon />}
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering the card's onClick
-                  go({
-                    to: {
-                      action: "edit",
-                      resource: resources.businesses,
-                      id: business.id,
-                    },
-                  });
-                }}
-                sx={{
-                  position: "absolute",
-                  top: "8px",
-                  right: "8px",
-                }}
-              >
-                {t("buttons.edit")}
-              </Button> */}
+              
               <CardContent>
                 <Typography
                   sx={{

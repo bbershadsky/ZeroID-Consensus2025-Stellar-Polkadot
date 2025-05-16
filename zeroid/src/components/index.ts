@@ -9,8 +9,6 @@ export * from "./customer";
 export * from "./refine-list-view";
 export * from "./drawer";
 export * from "./category";
-export * from "./store";
-export * from "./courier";
 export * from "./dropzone";
 export * from "./language-selector";
 export * from "./currency-selector";

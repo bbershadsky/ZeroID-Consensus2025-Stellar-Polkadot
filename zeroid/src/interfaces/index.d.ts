@@ -27,20 +27,6 @@ export interface IJobHistory {
   verification_status?: string;
 }
 
-// export interface IOrder {
-//   id: number;
-//   user: IUser;
-//   createdAt: string;
-//   products: IProduct[];
-//   status: IOrderStatus;
-//   adress: IAddress;
-//   store: IStore;
-//   courier: ICourier;
-//   events: IEvent[];
-//   orderNumber: number;
-//   amount: number;
-// }
-
 interface NavigationProps {
   to: {
     action: string;
@@ -89,103 +75,6 @@ interface ProductListCardProps {
   onEditProduct: (product: ICandidate) => void;
 }
 
-export interface IOrder {
-  orderComplete?: boolean;
-  orderisPaid?: boolean; //todo should be capitalized
-  orderOwnerID?: string;
-  orderCustomerID?: string;
-  orderStatus: OrderStatus;
-  orderCode?: string;
-  orderCurrency?: string;
-  orderDescription?: string;
-  orderNotes?: string;
-  orderFiles?: string[];
-  orderOfferPrice?: string;
-  orderSalePrice?: number;
-  orderFinalPrice?: string;
-  orderImageURL?: string;
-  orderPaymentURL?: string;
-  orderProductID?: string;
-  createdAt: string;
-  $updatedAt: string;
-  id: string;
-  $id: string;
-  $createdAt: string;
-  products: ICandidate[];
-  address: IAddress;
-  store: IStore;
-  courier: ICourier;
-  user: IUser;
-  events: IEvent[];
-}
-
-export interface IOrderAssets {
-  $createdAt: string;
-  orderID: string;
-  file1: string;
-  customerNotes: string;
-}
-
-export interface IMessage {
-  $id?: string;
-  id?: string;
-  text: string;
-  $createdAt?: string;
-  ownerID: string;
-  readByOther: boolean;
-  destination: string;
-  senderName: string;
-  $modifiedAt?: string;
-}
-
-export interface IChatProps {
-  destinationId: string;
-}
-
-enum OrderStatus {
-  Pending = "Pending",
-  Ready = "Ready",
-  OnTheWay = "On The Way",
-  Delivered = "Delivered",
-  Cancelled = "Cancelled",
-}
-
-export interface IOrderStatus {
-  count: number;
-  status:
-    | "waiting"
-    | "ready"
-    | "on the way"
-    | "delivered"
-    | "could not be delivered";
-}
-
-export interface IOrderChart {
-  count: number;
-  status:
-    | "waiting"
-    | "ready"
-    | "on the way"
-    | "delivered"
-    | "could not be delivered";
-}
-
-export interface IOrderTotalCount {
-  total: number;
-  totalDelivered: number;
-}
-
-export interface ISalesChart {
-  date: string;
-  title: "Order Count" | "Order Amount";
-  value: number;
-}
-
-export interface IOrderStatus {
-  id: number;
-  text: "Pending" | "Ready" | "On The Way" | "Delivered" | "Cancelled";
-}
-
 export interface IUser {
   id: string;
   name: string;
@@ -206,7 +95,7 @@ export interface IUser {
   isActive: boolean;
   avatar: IFile[];
   addresses: IAddress[];
-  userID: string; // ownerID
+  userID: string; 
   isPrivate: boolean;
 }
 
@@ -241,16 +130,6 @@ export interface IFile {
   url: string;
   lastModified: number;
 }
-// export interface IFile {
-//   lastModified?: number;
-//   name: string;
-//   percent?: number;
-//   size: number;
-//   status?: "error" | "success" | "done" | "uploading" | "removed";
-//   type: string;
-//   uid?: string;
-//   url: string;
-// }
 
 export interface IEvent {
   date: string;

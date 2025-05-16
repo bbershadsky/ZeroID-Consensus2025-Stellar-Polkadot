@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useForm, Controller, FieldValues, Control } from "react-hook-form"; // Added Control
+import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
   Button,
@@ -34,7 +34,6 @@ interface EmployerFormValues {
   languages: string[];
   currency: string;
   isPublic: boolean;
-  // originalFilename?: string; // Add this if you intend to save the filename from FileDropzone
 }
 
 export const EmployersCreate: React.FC = () => {
@@ -42,8 +41,6 @@ export const EmployersCreate: React.FC = () => {
   const t = useTranslate();
 
   const [imageURL, setImageURL] = useState("");
-  // const [isUploadLoading, setIsUploadLoading] = useState(false); // This state doesn't seem to be used for rendering. FileDropzone has its own.
-  // const [filename, setFilename] = useState(""); // If you need to store the filename in the form, add it to EmployerFormValues and use setValue
 
   const { data: user } = useGetIdentity<IIdentity | null>();
 

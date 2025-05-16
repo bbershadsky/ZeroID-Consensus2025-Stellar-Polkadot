@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import { Skeleton, Badge, Typography, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
@@ -59,7 +58,6 @@ const Info2: React.FC<InfoProps> = ({
         justifyContent="center"
         sx={
           {
-            //   color: theme.palette.primary.main,
           }
         }
       >

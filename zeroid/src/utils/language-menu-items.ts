@@ -5,5 +5,4 @@ export const languageMenuItems = [
   { key: "it", label: "Italian" },
   { key: "fr", label: "French" },
   { key: "de", label: "German" },
-  // { key: "hi", label: "Hindi" },
 ];

@@ -19,7 +19,6 @@ import { useTranslate, HttpError } from '@refinedev/core';
 import { FileDropzone } from '../../dropzone'; // Adjusted path to common dropzone location
 import { resources } from '../../../utility'; // Adjusted path to common utility location
 
-// Interface for Candidate Form Values
 interface CandidateFormValues {
   name: string;
   email: string;
@@ -30,21 +29,20 @@ interface CandidateFormValues {
   verification_status: string;
 }
 
-interface ProductDrawerFormProps {
+interface CandidateDrawerFormProps {
   open: boolean;
   onClose: () => void;
   action: 'create' | 'edit';
   id?: string;
 }
 
-export const ProductDrawerForm: React.FC<ProductDrawerFormProps> = ({
+export const CandidateDrawerForm: React.FC<CandidateDrawerFormProps> = ({
   open,
   onClose,
   action,
   id,
 }) => {
   const t = useTranslate();
-  // const { mode } = useContext(ColorModeContext); // Assuming ColorModeContext is custom
   const mode = 'light'; // Fallback if ColorModeContext is not used/available
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resumeFileDetails, setResumeFileDetails] = useState<{ id?: string, name?: string, url?: string }>({});

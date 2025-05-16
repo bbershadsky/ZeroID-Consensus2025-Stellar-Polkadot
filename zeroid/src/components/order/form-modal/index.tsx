@@ -19,14 +19,14 @@ import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   useTranslate,
   useUpdate,
-  useCreate, // Added for creating server actions
+  useCreate, 
   HttpError,
   useGetIdentity,
   BaseRecord,
   useNotification,
 } from "@refinedev/core";
-import { IJobHistory, IIdentity } from "../../../interfaces"; // Ensure IJobHistory includes new verification fields
-import { resources } from "../../../utility"; // Assuming resources.serverActions is defined here
+import { IJobHistory, IIdentity } from "../../../interfaces"; 
+import { resources } from "../../../utility";
 
 // Interface for the verification request form values
 interface VerificationFormValues {

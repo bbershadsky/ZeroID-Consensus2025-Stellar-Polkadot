@@ -8,5 +8,4 @@ export const languageMenuItems: LanguageItem[] = [
   { key: "it", label: "Italian", flag: "/images/flags/it.svg" },
   { key: "fr", label: "French", flag: "/images/flags/fr.svg" },
   { key: "de", label: "German", flag: "/images/flags/de.svg" },
-  // { key: "hi", label: "Hindi", flag: "/images/flags/hi.svg" },
 ];

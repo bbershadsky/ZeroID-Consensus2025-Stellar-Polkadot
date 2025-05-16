@@ -3,23 +3,16 @@ import {
   Card,
   CardActions,
   Button,
-  // IconButton, // Not used currently
-  // Modal, // Not used directly
   Box,
   Typography,
-  Stack,
   CardContent,
   CardMedia,
-  // CircularProgress, // Not used currently
   Skeleton,
 } from "@mui/material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'; // Changed icon
 import { BaseRecord, useList, useShow, useTranslate } from "@refinedev/core";
 import { IEmployer, ICandidate, IJobHistory } from "../../../interfaces"; // Added IJobHistory, BaseRecord
 import { resources } from "../../../utility";
-// import SaveIcon from "@mui/icons-material/Save"; // Not used
-// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"; // Replaced by VerifiedUserIcon for this button
 import { useCardStyles } from "../../card-elevated/index";
 import { JobVerificationRequestModal } from "../../order/form-modal";
 
@@ -157,14 +150,7 @@ const ProductListBusiness: React.FC<ProductListProps> = ({ businessId }) => {
         <JobVerificationRequestModal
           open={isModalOpen}
           onClose={handleCloseModal}
-          // !!! CRITICAL TYPE MISMATCH WARNING !!!
-          // The 'jobHistoryItem' prop expects an IJobHistory object.
-          // You are passing 'selectedCandidateForVerification' which is an ICandidate object.
-          // This will lead to errors or incorrect behavior inside the modal
-          // because ICandidate does not have fields like 'job_title', 'company_name', etc.,
-          // that the modal expects from an IJobHistory item.
-          // This is done to fulfill the request "jobhistoryitem should be passed",
-          // but it needs to be corrected with the proper data type or a different modal.
+         
           jobHistoryItem={selectedCandidateForVerification as any as (IJobHistory & BaseRecord)}
           candidateId={selectedCandidateForVerification.$id || ""} // Candidate's own ID
           candidateName={selectedCandidateForVerification.name}

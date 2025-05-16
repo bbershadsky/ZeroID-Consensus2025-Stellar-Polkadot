@@ -1,4 +1,0 @@
-appwrite
-resend
-substrate-interface
-python-dotenv

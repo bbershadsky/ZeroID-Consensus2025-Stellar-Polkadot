@@ -5,8 +5,7 @@ import {
     useCreate,
     useTranslate,
     HttpError,
-    // BaseRecord, // Not explicitly used here, but good for type safety if IJobHistory extends it
-    useNotification, // Corrected import for useNotification
+    useNotification,
 } from '@refinedev/core';
 import { Typography, Box, CircularProgress, Paper, Button } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';

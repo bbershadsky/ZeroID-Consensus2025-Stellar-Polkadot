@@ -184,17 +184,19 @@
     "importProgress": "Importing: {{processed}}/{{total}}"
   },
   "dashboard": {
+    "zeroid": "Zero ID",
     "title": "Dashboard",
     "total-employers": "Total Employers",
     "total-candidates": "Total Candidates",
     "realtime-stats": "Realtime Stats",
-    "description": "Best one!"
+    "description": "Instant, blockchain powered background checks!"
   },
   "candidates": {
     "fields": {
       "name": "Name",
       "email": "Email",
-      "isVerified": "Verified"
+      "isVerified": "Verified",
+      "searchPlaceholder": "Search by name or email..."
     }
   },
   "employers": {

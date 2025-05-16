@@ -1,6 +1,6 @@
 import { useGetIdentity, useShow } from "@refinedev/core";
 import { Show, RefreshButton, ListButton } from "@refinedev/mui";
-import { Chip, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import {
   Grid,
   Box,
@@ -11,26 +11,20 @@ import {
   Modal,
 } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import TranslateIcon from "@mui/icons-material/Translate";
-import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import { IEmployer, IIdentity } from "../../interfaces";
 import ProductListBusiness from "../../components/product/list-in-business";
 import { useState } from "react";
-import CurrencySelector from "../../components/currency-selector";
-import { BusinessLanguagesDisplay } from "../../components/languages-chip";
-import PaymentMethodsList from "../../components/payment-methods-list";
-import { useParams } from "react-router-dom"; // <--- IMPORT useParams
-import { resources } from "../../utility"; // <--- IMPORT your resources object
+import { useParams } from "react-router-dom"; 
+import { resources } from "../../utility"; 
 
 export const BusinessShow = () => {
-  const { id } = useParams<{ id: string }>(); // <--- GET id FROM URL PARAMS
+  const { id } = useParams<{ id: string }>(); 
 
   const { queryResult } = useShow<IEmployer>({
-    resource: resources.employers, // <--- EXPLICITLY PROVIDE THE RESOURCE NAME
-    id: id,                        // <--- EXPLICITLY PROVIDE THE ID
+    resource: resources.employers, 
+    id: id,                        
   });
-  const { data: businessData, isLoading: businessLoading, error } = queryResult; // <--- ADD error for debugging
+  const { data: businessData, isLoading: businessLoading, error } = queryResult; 
   const business = businessData?.data;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -160,16 +154,6 @@ export const BusinessShow = () => {
               <Typography variant="h5" gutterBottom>
                 {business?.name}
               </Typography>
-              {/* <Typography variant="body2" color="text.secondary" mb={2}>
-                {business?.description}
-              </Typography> */}
-
-              {/* {business?.languages && (
-                <Box display="flex" alignItems="center" gap={1} mb={2}>
-                  <TranslateIcon color="action" />
-                  <BusinessLanguagesDisplay languages={business?.languages} />
-                </Box>
-              )} */}
               {business?.email && (
                 <Box display="flex" alignItems="center" gap={1} mb={2}>
                   <EmailIcon color="action" />

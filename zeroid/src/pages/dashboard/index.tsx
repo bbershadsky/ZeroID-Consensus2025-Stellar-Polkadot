@@ -55,10 +55,6 @@ export const DashboardPage: React.FC = () => {
               >
                 {t("dashboard.description")}
               </Typography>
-              {/* <Alert severity="info">
-                <AlertTitle>{t("dashboard.goldenkey-beta")}</AlertTitle>
-                {t("dashboard.certain-features")}
-              </Alert> */}
             </Stack>
           </CardActions>
         </Card>
