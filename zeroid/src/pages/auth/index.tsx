@@ -99,7 +99,7 @@ export const AuthPage: React.FC<{ type: "login" | "register" | "forgotPassword" 
           variant="contained"
           color="primary"
           onClick={() => handleAuth(isLogin ? "login" : "register")}
-          disabled={loading}
+l          disabled={loading}
           fullWidth
           sx={{
             mb: 2,
