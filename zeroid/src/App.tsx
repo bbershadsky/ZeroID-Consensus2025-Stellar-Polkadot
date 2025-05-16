@@ -35,6 +35,7 @@ import { useTranslation } from "react-i18next";
 import { accessControlProvider } from "./utils"; // Assuming this exists and is correctly set up
 import { authProvider } from "./auth-provider"; // Assuming this exists and is correctly set up
 import { ProcessVerificationPage } from "./pages/ProcessVerificationPage";
+import ApplicationRedirect from "./pages/ApplicationRedirect";
 
 interface I18nProviderProps {
   translate: (key: string, params?: Record<string, any>) => string;
@@ -117,6 +118,22 @@ const App: React.FC = () => {
                 <Routes>
                   {/* Protected Routes (Dashboard, Employers, Candidates) */}
                   <Route
+                      path="/polkadot"
+                      element={<ApplicationRedirect url="https://docs.google.com/document/d/18B-Q9szD-nLwfFH1BWQeqc6-RR-OsG4WNiIblXJE7vI/edit?usp=sharing"/>}
+                  />
+                  <Route
+                      path="/stellar/docs"
+                      element={<ApplicationRedirect url="https://whimsical.com/stellar-technical-documentation-9t7f8gdRDDASdwe6QAB2nE" />}
+                  />
+                  <Route
+                      path="/stellar/why"
+                      element={<ApplicationRedirect url="https://docs.google.com/document/d/1KeO1i8kVB-cE7L-3h2MlHyE9ueY-iDe2OcsCPnkubE8/edit?usp=sharing" />}
+                  />
+                  <Route
+                      path="/repo"
+                      element={<ApplicationRedirect url="https://github.com/bryangalindo/ZeroID-Consensus2025-Stellar-Polkadot" />}
+                  />
+                  <Route
                     element={
                       <Authenticated
                         key="protected-routes" // ADDED KEY HERE
@@ -175,6 +192,22 @@ const App: React.FC = () => {
                       </Authenticated>
                     }
                   >
+                    <Route
+                        path="/polkadot"
+                        element={<ApplicationRedirect url="https://docs.google.com/document/d/18B-Q9szD-nLwfFH1BWQeqc6-RR-OsG4WNiIblXJE7vI/edit?usp=sharing"/>}
+                    />
+                    <Route
+                        path="/stellar/docs"
+                        element={<ApplicationRedirect url="https://whimsical.com/stellar-technical-documentation-9t7f8gdRDDASdwe6QAB2nE" />}
+                    />
+                    <Route
+                        path="/stellar/why"
+                        element={<ApplicationRedirect url="https://docs.google.com/document/d/1KeO1i8kVB-cE7L-3h2MlHyE9ueY-iDe2OcsCPnkubE8/edit?usp=sharing" />}
+                    />
+                    <Route
+                        path="/repo"
+                        element={<ApplicationRedirect url="https://github.com/bryangalindo/ZeroID-Consensus2025-Stellar-Polkadot" />}
+                    />
                     <Route
                       path="/login"
                       element={<AuthPage type="login" />}
