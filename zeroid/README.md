@@ -17,6 +17,9 @@
 
 RESOURCES: https://docs.google.com/document/d/1_OOIK8ZYRTQFpZWE-7ZT2KYUMuBiL6bdWNgisKTSTpY/edit?tab=t.0
 
+POST 
+{"job_history_id": "68261c1a000945c303ea"}
+
 ## 📋 <a name="table">Table of Contents</a>
 
 1. 🤖 [Introduction](#introduction)

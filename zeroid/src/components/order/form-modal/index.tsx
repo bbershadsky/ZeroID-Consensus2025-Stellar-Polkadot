@@ -120,9 +120,21 @@ export const JobVerificationRequestModal: React.FC<JobVerificationRequestModalPr
           });
         },
         onSuccess: () => {
-          // The console.log for blockchain is removed as it's out of scope here.
-          // If blockchain interaction is needed, it should be a separate, well-defined process.
-          // TODO now we send the email through a webhook
+          const body = { "job_history_id": jobHistoryItem.id }
+          fetch("http://68268379bb8b76e21d6f.gersu.com/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+            mode: 'no-cors'
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
           openNotification?.({
             type: "success",
             message: t("verificationRequests.notifications.success", "Verification request sent successfully!"),
