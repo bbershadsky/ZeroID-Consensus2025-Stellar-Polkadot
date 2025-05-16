@@ -11,6 +11,9 @@
 
 ZeroID is a decentralized identity verification platform that provides instant, secure, and tamper-proof background checks using blockchain technologies such as Stellar and Polkadot. 
 
+Video Explanation Below:
+  [![Instant Background Checks on the Blockchain](http://img.youtube.com/vi/d9nJv8kOYUs/0.jpg)](http://www.youtube.com/watch?v=d9nJv8kOYUs "ZeroID")
+
 ![Sign Up Page](https://i.imgur.com/k9DcuQB.png)
 ![Dashboard](https://i.imgur.com/ltd8LbX.png)
 ![Candidate View](https://i.imgur.com/PwIuMN1.png)
