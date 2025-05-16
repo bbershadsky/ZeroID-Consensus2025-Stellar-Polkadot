@@ -10,7 +10,7 @@ export const ZeroIdLogo: React.FC<ZeroIdLogoProps> = (props) => {
   return (
     <img
       src={logoColor === "black" ? "/images/zeroIdBlack.png" : "/images/zeroIdLogo.png"}
-      style={{ width: "100%", height: "40px" }}
+      style={{ width: "100%" }}
       {...rest}
     />
   );

@@ -19,7 +19,7 @@ export const Title: React.FC<TitleProps> = ({ collapsed }) => {
         }}
       >
         {collapsed ? (
-          <ZeroIdLogo />
+            <></>
         ) : (
           <>
             <ZeroIdLogo />
